@@ -161,7 +161,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
                 <span>{eyebrowSuffix}</span>
               </p>
               <h1
-                className={`${headingClass} text-[2.7rem] leading-[1.01] text-white sm:text-[4.45rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
+                className={`${headingClass} text-[2.4rem] leading-[1.01] text-white sm:text-[3rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
               >
                 <span className="block">Дерев&apos;яні ферми МЗП</span>
                 <span className="block">для дахів ЖК, складів,</span>
@@ -288,7 +288,7 @@ function GallerySection({
       </div>
 
       <div className="relative mt-10 space-y-8 sm:mt-12">
-        <div className="relative min-h-[500px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326]">
+        <div className="relative min-h-[320px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326] sm:min-h-[420px] lg:min-h-[500px]">
           <button
             type="button"
             onClick={() => setActiveImage(featured)}
@@ -821,7 +821,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {page.applications.map((application, index) => (
               <div
                 key={application.title}
@@ -1186,7 +1186,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {economicsCards.map((card, index) => (
               <div
                 key={card.title}
@@ -1251,7 +1251,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </p>
           </div>
 
-          <div className="relative mt-10 grid gap-4 lg:mt-12 lg:grid-cols-4">
+          <div className="relative mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:grid-cols-4">
             {processCards.map((card) => (
               <div
                 key={card.step}
