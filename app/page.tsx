@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LineIcon } from "../components/home-visuals";
+import type { IconName } from "../components/home-visuals";
+import { StandardQuizCta } from "../components/standard-quiz-cta";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -10,9 +12,23 @@ const groupHeadingClass = `${headingClass} text-[1.9rem] leading-[1.08] text-whi
 const navItems = [
   { label: "Продукти", href: "#products" },
   { label: "Рішення", href: "#solutions" },
-  { label: "Кейси", href: "#cases" },
+  { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
-  { label: "Контакти", href: "#cta" },
+  { label: "Контакти", href: "/contacts/" },
+];
+const productMenuItems = [
+  { label: "Модульні будинки", href: "/modulni-budynky/" },
+  { label: "Клеєні конструкції", href: "/kleyeni-konstruktsii/" },
+  { label: "Ферми МЗП", href: "/derevyani-fermy-mzp/" },
+  { label: "Каркасно-панельні будинки", href: "/karkasno-panelni-budynky/" },
+  { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
+  { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
+];
+const solutionMenuItems = [
+  { label: "Для девелоперів", href: "/modulni-budynky/dlya-developeriv/" },
+  { label: "Для забудовників", href: "/modulni-budynky/dlya-zhk/" },
+  { label: "Для генпідрядників", href: "/kleyeni-konstruktsii/dlya-genpidriadnykiv/" },
+  { label: "Для громад (B2G)", href: "/modulni-budynky/dlya-gromad/" },
 ];
 
 const footerProductPages = [
@@ -23,15 +39,21 @@ const footerProductPages = [
   { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
   { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
 ];
+const footerSolutionPages = [
+  { label: "Для девелоперів", href: "/modulni-budynky/dlya-developeriv/" },
+  { label: "Для забудовників", href: "/modulni-budynky/dlya-zhk/" },
+  { label: "Для генпідрядників", href: "/kleyeni-konstruktsii/dlya-genpidriadnykiv/" },
+  { label: "Для громад (B2G)", href: "/modulni-budynky/dlya-gromad/" },
+];
 
 const footerServicePages = [
-  { label: "Кейси", href: "/modulni-budynky/cases/" },
+  { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
   { label: "Про компанію", href: "/about/" },
   { label: "Контакти", href: "/contacts/" },
 ];
 
-const solutionPoints = [
+const solutionPoints: Array<{ icon: IconName; title: string; description: string }> = [
   {
     icon: "calculator",
     title: "Контроль строків",
@@ -49,7 +71,15 @@ const solutionPoints = [
   },
 ];
 
-const audiences = [
+const audiences: Array<{
+  title: string;
+  description: string;
+  href: string;
+  icon: IconName;
+  imageSrc: string;
+  imageClassName: string;
+  overlayClassName: string;
+}> = [
   {
     title: "Для девелоперів",
     description:
@@ -154,7 +184,7 @@ const productGroups = [
   },
 ];
 
-const processSteps = [
+const processSteps: Array<{ icon: IconName; title: string; description: string }> = [
   {
     icon: "request",
     title: "Запит",
@@ -181,7 +211,7 @@ const processSteps = [
   },
 ];
 
-const heroTrust = [
+const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
   {
     icon: "projects",
     value: "150+",
@@ -271,13 +301,31 @@ export default function Home() {
 
                 <nav className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/6 p-2.5 text-[15px] text-white/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:flex">
                   {navItems.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="rounded-full border border-transparent px-5 py-2.5 font-medium transition duration-200 hover:-translate-y-0.5 hover:border-[#F2994A]/35 hover:bg-white/10 hover:text-[#F2994A]"
-                    >
-                      {item.label}
-                    </Link>
+                    <div key={item.label} className="group relative">
+                      <Link
+                        href={item.href}
+                        className="inline-flex rounded-full border border-transparent px-5 py-2.5 font-medium transition duration-200 hover:-translate-y-0.5 hover:border-[#F2994A]/35 hover:bg-white/10 hover:text-[#F2994A]"
+                      >
+                        {item.label}
+                      </Link>
+                      {item.label === "Продукти" || item.label === "Рішення" ? (
+                        <div className="pointer-events-none absolute left-0 top-[calc(100%+0.6rem)] z-30 min-w-[18rem] translate-y-1 rounded-[14px] border border-white/12 bg-[rgba(18,19,21,0.96)] p-2 opacity-0 shadow-[0_24px_64px_rgba(0,0,0,0.38)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                          <div className="flex flex-col gap-1">
+                            {(item.label === "Продукти" ? productMenuItems : solutionMenuItems).map(
+                              (subItem) => (
+                                <Link
+                                  key={subItem.label}
+                                  href={subItem.href}
+                                  className="rounded-[10px] border border-transparent px-3 py-2 text-sm text-white/86 transition hover:border-[#F2994A]/28 hover:bg-white/6 hover:text-[#F2994A]"
+                                >
+                                  {subItem.label}
+                                </Link>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
                   ))}
                 </nav>
 
@@ -744,7 +792,7 @@ export default function Home() {
                     </div>
 
                     <Link
-                      href="/modulni-budynky/cases/"
+                      href="/cases/"
                       className="mt-8 inline-flex items-center justify-center rounded bg-[#F2994A] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#de8232]"
                     >
                       Дивитися більше кейсів
@@ -844,87 +892,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="cta" className="pb-6">
-          <div className="relative overflow-hidden rounded-[30px] border border-[#F2994A]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-8 shadow-[0_34px_90px_rgba(0,0,0,0.24)] md:p-10 lg:p-12">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 opacity-75"
-              style={{
-                background:
-                  "radial-gradient(circle at top left, rgba(242,153,74,0.14), transparent 30%), linear-gradient(180deg, rgba(242,153,74,0.05) 0%, transparent 18%, rgba(255,255,255,0.025) 100%)",
-              }}
-            />
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.42),rgba(242,153,74,0.0))]" />
+        <StandardQuizCta id="cta" className="pb-6" />
 
-            <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-              <div className="max-w-3xl">
-                <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
-                  Квіз для прорахунку
-                </p>
-                <SectionHeading title="Отримайте попередній прорахунок вашого проєкту" />
-                <p className="mt-6 max-w-3xl text-lg leading-8 text-white/80">
-                  Дайте відповіді на 6 коротких питань і ми підготуємо релевантне
-                  рішення, строки реалізації та попередній прорахунок для вашого
-                  проєкту.
-                </p>
-
-                <ul className="mt-8 space-y-4 text-lg leading-8 text-white/82">
-                  <li className="flex gap-3">
-                    <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                    <span>6 коротких питань без зайвих дзвінків на старті</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                    <span>релевантне рішення під тип вашого проєкту</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                    <span>попередній прорахунок і розуміння строків реалізації</span>
-                  </li>
-                </ul>
-
-                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-                  <Link
-                    href="#"
-                    className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-white transition hover:bg-[#de8232] sm:w-auto"
-                  >
-                    Почати прорахунок
-                  </Link>
-                  <Link
-                    href="#"
-                    className="inline-flex w-full items-center justify-center rounded border border-white/20 px-6 py-4 text-center text-base font-semibold text-white transition hover:border-white/40 hover:bg-white/5 sm:w-auto"
-                  >
-                    <span>
-                      Завантажити каталог Timber
-                      <span className="text-[#F2994A]">X</span>
-                      {" "}виробництва
-                    </span>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="relative mx-auto w-full max-w-[34rem] lg:justify-self-end">
-                <div className="absolute inset-0 rounded-[28px] bg-[radial-gradient(circle,rgba(242,153,74,0.14)_0%,rgba(242,153,74,0.06)_28%,transparent_68%)] blur-[24px]" />
-                <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-3 shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
-                  <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.46),rgba(242,153,74,0))]" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.1),transparent_28%)]" />
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-[#ECE6DA]">
-                    <Image
-                      src="/images/cta/timberx-estimate-preview.png"
-                      alt="Приклад попереднього прорахунку TimberX для девелоперського або модульного проєкту"
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1024px) 420px, 100vw"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <footer className="border-t border-white/8 pt-8 pb-10">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto_1.16fr] lg:items-start">
+        <footer className="border-t border-white/8 pt-10 pb-12">
+          <div className="grid gap-10 lg:grid-cols-[minmax(220px,0.78fr)_minmax(700px,1.22fr)_minmax(420px,1.08fr)] lg:items-start">
             <div className="space-y-4 lg:-mt-4">
               <Link href="/" className="inline-flex items-center">
                 <Image
@@ -936,14 +907,14 @@ export default function Home() {
                   priority
                 />
               </Link>
-              <p className="max-w-[17.5rem] text-sm leading-7 text-white/62">
+              <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/66">
                 TimberX — інженерні дерев’яні конструкції, модульні будинки та заводське виробництво для B2B і B2G проєктів.
               </p>
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 lg:min-w-[36rem] lg:justify-self-center">
+            <div className="mx-auto grid w-full max-w-[54rem] gap-10 sm:grid-cols-3 lg:justify-self-center">
               <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
                   Продукти
                 </p>
                 <div className="flex flex-col gap-2">
@@ -951,7 +922,7 @@ export default function Home() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-sm text-white/68 transition hover:text-[#F2994A]"
+                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
                     >
                       {item.label}
                     </Link>
@@ -960,7 +931,24 @@ export default function Home() {
               </div>
 
               <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
+                  Рішення
+                </p>
+                <div className="flex flex-col gap-2">
+                  {footerSolutionPages.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
                   Меню
                 </p>
                 <div className="flex flex-col gap-2">
@@ -968,7 +956,7 @@ export default function Home() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-sm text-white/68 transition hover:text-[#F2994A]"
+                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
                     >
                       {item.label}
                     </Link>
@@ -977,32 +965,36 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="space-y-3 lg:justify-self-end lg:text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+            <div className="space-y-4 lg:w-full lg:max-w-[30rem] lg:justify-self-end lg:border-l lg:border-white/10 lg:pl-10 lg:text-left">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
                 Контакти
               </p>
-              <div className="flex max-w-[28rem] flex-col gap-3 text-sm leading-6 text-white/68 lg:items-start">
+              <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/70 lg:items-start">
                 <p>
-                  Телефон:{" "}
-                  <a href="tel:+380674121310" className="transition hover:text-[#F2994A]">
+                  <span className="font-medium text-white/88">Телефон:</span>{" "}
+                  <a href="tel:+380674121310" className="font-medium transition hover:text-[#F2994A]">
                     +380674121310
                   </a>
                 </p>
                 <p>
-                  Email:{" "}
-                  <a href="mailto:eko-roof@ukr.net" className="transition hover:text-[#F2994A]">
+                  <span className="font-medium text-white/88">Email:</span>{" "}
+                  <a href="mailto:eko-roof@ukr.net" className="font-medium transition hover:text-[#F2994A]">
                     eko-roof@ukr.net
                   </a>
                 </p>
-                <p>Офіс: 10001, м. Житомир, проспект Незалежності, 184, офіс 210</p>
                 <p>
-                  Виробництво: 09100, Київська область, Білоцерківський район, м. Біла Церква, вул. Павлюченка, 31
+                  <span className="font-medium text-white/88">Офіс:</span> 10001, м. Житомир, проспект
+                  Незалежності, 184, офіс 210
+                </p>
+                <p>
+                  <span className="font-medium text-white/88">Виробництво:</span> 09100, Київська область,
+                  Білоцерківський район, м. Біла Церква, вул. Павлюченка, 31
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 border-t border-white/8 pt-5 text-xs text-white/42 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-10 flex flex-col gap-3 border-t border-white/8 pt-6 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 TimberX. Всі права захищені.</p>
             <div className="flex flex-col items-start gap-2 text-left sm:items-end sm:text-right">
               <p>

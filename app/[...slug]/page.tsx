@@ -7,17 +7,21 @@ import { findSitePage, sitePages } from "../../lib/site-pages";
 type RouteParams = {
   slug: string[];
 };
+type RouteProps = {
+  params: Promise<RouteParams>;
+};
 
 export function generateStaticParams() {
   return sitePages.map((page) => ({ slug: page.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: RouteParams;
-}): Metadata {
-  const page = findSitePage(params.slug);
+  params: Promise<RouteParams>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const page = findSitePage(slug);
 
   if (!page) {
     return {};
@@ -29,18 +33,17 @@ export function generateMetadata({
   };
 }
 
-export default function SitePage({
+export default async function SitePage({
   params,
-}: {
-  params: RouteParams;
-}) {
-  const page = findSitePage(params.slug);
+}: RouteProps) {
+  const { slug } = await params;
+  const page = findSitePage(slug);
 
   if (!page) {
     notFound();
   }
 
-  const canonicalPath = `/${params.slug.join("/")}/`;
+  const canonicalPath = `/${slug.join("/")}/`;
 
   return <SitePlaceholderPage page={page} canonicalPath={canonicalPath} />;
 }

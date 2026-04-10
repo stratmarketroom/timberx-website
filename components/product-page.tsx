@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LineIcon } from "@/components/home-visuals";
+import type { IconName } from "@/components/home-visuals";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { StandardQuizCta } from "@/components/standard-quiz-cta";
 import type { ProductFaqItem, ProductGalleryImage, ProductPageData } from "@/lib/product-pages/types";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
@@ -13,11 +15,14 @@ const bodyClass = "font-['Inter',_Arial,_sans-serif]";
 const sectionNav = [
   { label: "Задача", href: "#problem" },
   { label: "Рішення", href: "#solution" },
-  { label: "Кейси", href: "#cases" },
-  { label: "Галерея", href: "#gallery" },
+  { label: "Кейси", href: "#applications" },
   { label: "Специфікація", href: "#specs" },
+  { label: "Галерея", href: "#gallery" },
+  { label: "Економіка", href: "#economics" },
+  { label: "Процес", href: "#process" },
+  { label: "Гарантія", href: "#trust" },
   { label: "FAQ", href: "#faq" },
-  { label: "Прорахунок", href: "#cta" },
+  { label: "Розрахунок", href: "#cta" },
 ];
 const applicationImages = [
   {
@@ -45,6 +50,32 @@ const applicationImages = [
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.7)_34%,rgba(17,18,20,0.22)_100%)]",
   },
 ] as const;
+const economicsImages = [
+  {
+    src: "/images/fermy-mzp/production-truss-frame-2.png",
+    className: "object-[50%_52%]",
+    overlay:
+      "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.7)_36%,rgba(17,18,20,0.24)_100%)]",
+  },
+  {
+    src: "/images/fermy-mzp/shipment-truss-truck-2.jpg",
+    className: "object-[52%_56%]",
+    overlay:
+      "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.68)_36%,rgba(17,18,20,0.24)_100%)]",
+  },
+  {
+    src: "/images/fermy-mzp/object-roof-joint-detail-1.jpg",
+    className: "object-[50%_48%]",
+    overlay:
+      "bg-[linear-gradient(90deg,rgba(17,18,20,0.92)_0%,rgba(17,18,20,0.72)_36%,rgba(17,18,20,0.2)_100%)]",
+  },
+  {
+    src: "/images/fermy-mzp/object-timber-hall-2.jpg",
+    className: "object-[50%_50%]",
+    overlay:
+      "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.7)_34%,rgba(17,18,20,0.24)_100%)]",
+  },
+] as const;
 const applicationIcons = ["projects", "factory", "delivery", "beam"] as const;
 const caseSlideMetricIcons = ["beam", "weight", "snow", "wind"] as const;
 function SectionShell({
@@ -53,15 +84,17 @@ function SectionShell({
   title,
   description,
   children,
+  className = "",
 }: {
   id?: string;
   eyebrow?: string;
   title: string;
   description?: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <section id={id} className="rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-9">
+    <section id={id} className={`rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-9 ${className}`}>
       <div className="max-w-3xl">
         {eyebrow ? (
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
@@ -119,9 +152,12 @@ function HeroSection({ page }: { page: ProductPageData }) {
                 <span>/</span>
                 <span className="text-white">Дерев&apos;яні ферми МЗП</span>
               </nav>
-              <p className="mb-5 inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
-                <span>{eyebrowPrefix}Timber</span>
-                <span className="text-[#F2994A]">X</span>
+              <p className="mb-5 inline-flex max-w-full flex-wrap items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
+                <span>{eyebrowPrefix}</span>
+                <span className="whitespace-nowrap">
+                  <span>Timber</span>
+                  <span className="font-bold text-[#F2994A]">X</span>
+                </span>
                 <span>{eyebrowSuffix}</span>
               </p>
               <h1
@@ -178,127 +214,199 @@ function GallerySection({
   description: string;
   images: ProductGalleryImage[];
 }) {
+  const [activeImage, setActiveImage] = useState<ProductGalleryImage | null>(null);
+
   if (!images.length) {
     return null;
   }
 
-  const categories = ["Виробництво", "Відвантаження", "Об'єкт"] as const;
-  const groupedImages = categories
-    .map((category) => ({
-      category,
-      images: images.filter((image) => image.label === category),
-    }))
-    .filter((group) => group.images.length > 0);
-
-  const featured = groupedImages[0]?.images[0];
+  const featured = images[0];
 
   if (!featured) {
     return null;
   }
 
+  const stripPool = images.slice(1);
+  const byLabel: Record<string, ProductGalleryImage[]> = {
+    "Виробництво": stripPool.filter((image) => image.label === "Виробництво"),
+    "Об'єкт": stripPool.filter((image) => image.label === "Об'єкт"),
+    "Відвантаження": stripPool.filter((image) => image.label === "Відвантаження"),
+  };
+  const stripOrderPattern: Array<"Виробництво" | "Об'єкт" | "Відвантаження" | "Об'єкт"> = [
+    "Виробництво",
+    "Об'єкт",
+    "Відвантаження",
+    "Об'єкт",
+  ];
+  const stripImages: ProductGalleryImage[] = [];
+
+  while (
+    byLabel["Виробництво"].length ||
+    byLabel["Об'єкт"].length ||
+    byLabel["Відвантаження"].length
+  ) {
+    let pushedInCycle = false;
+
+    for (const label of stripOrderPattern) {
+      const next = byLabel[label].shift();
+
+      if (next) {
+        stripImages.push(next);
+        pushedInCycle = true;
+      }
+    }
+
+    if (!pushedInCycle) {
+      break;
+    }
+  }
+
+  if (stripImages.length >= 8) {
+    const temp = stripImages[3];
+    stripImages[3] = stripImages[7];
+    stripImages[7] = temp;
+  }
+
   return (
-    <SectionShell
+    <section
       id="gallery"
-      title={title}
-      description={description}
-      eyebrow="Візуальний доказ"
+      className="relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9"
     >
-      <div className="space-y-8">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <div className="relative min-h-[360px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326]">
+      <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+      <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+
+      <div className="relative max-w-3xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+          ГАЛЕРЕЯ РОБІТ
+        </p>
+        <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+          {title}
+        </h2>
+        <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
+          {description}
+        </p>
+      </div>
+
+      <div className="relative mt-10 space-y-8 sm:mt-12">
+        <div className="relative min-h-[500px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326]">
+          <button
+            type="button"
+            onClick={() => setActiveImage(featured)}
+            className="group absolute inset-0 block cursor-zoom-in text-left"
+            aria-label="Відкрити велике фото"
+          >
             <Image
               src={featured.src}
               alt={featured.alt}
               fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover transition duration-300 group-hover:scale-[1.01]"
+              sizes="100vw"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,18,20,0.04)_0%,rgba(16,18,20,0.58)_100%)]" />
-            <span className="absolute bottom-4 left-4 rounded-full border border-white/10 bg-[#1b1d1f]/82 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-[#f4dfcf]">
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,18,20,0.08)_0%,rgba(16,18,20,0.64)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,18,20,0.1)_0%,rgba(16,18,20,0.06)_45%,rgba(16,18,20,0.36)_100%)]" />
+            <span className="absolute left-4 top-4 rounded-full border border-white/10 bg-[#1b1d1f]/82 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-[#f4dfcf] sm:left-5 sm:top-5">
               {featured.label}
             </span>
-          </div>
 
-          <div className="rounded-[1.75rem] border border-white/10 bg-[#202326] p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-              Логіка галереї
-            </p>
-            <div className={`${bodyClass} mt-4 space-y-4 text-sm leading-7 text-[#d0d0d0]`}>
-              <p>
-                Галерея побудована як маршрут довіри: спочатку замовник бачить
-                реальне виробництво, далі логістику й відвантаження, а потім
-                готові об&apos;єкти та монтаж.
+            <div className="absolute bottom-4 left-4 right-4 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,rgba(27,29,31,0.88),rgba(27,29,31,0.78))] p-4 shadow-[0_24px_46px_rgba(0,0,0,0.35)] backdrop-blur-[2px] sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-[36rem] sm:p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
+                Від цеху до об&apos;єкта
               </p>
-              <p>
-                Це допомагає швидко відповісти на три питання: чи ви реально
-                виробляєте, чи вмієте відвантажувати, і чи є підтверджені
-                об&apos;єкти в роботі.
-              </p>
+              <div className={`${bodyClass} mt-4 space-y-4 text-sm leading-7 text-[#d0d0d0]`}>
+                <p>
+                  Індивідуальний розрахунок та повний контроль вузлів: від нарізки в цеху до
+                  фінального монтажу
+                </p>
+              </div>
             </div>
-          </div>
+          </button>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          {groupedImages.map((group) => (
-            <div
-              key={group.category}
-              className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <h3 className={`${headingClass} text-xl text-white`}>{group.category}</h3>
-                <span className="rounded-full border border-white/10 bg-white/6 px-3 py-1 text-xs text-[#d0d0d0]">
-                  {group.images.length} фото
-                </span>
-              </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                {group.images.map((image) => (
-                  <div
-                    key={`${image.src}-${image.label}`}
-                    className="relative min-h-[170px] overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#17191b]"
-                  >
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 28vw, 50vw"
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,18,20,0.03)_0%,rgba(16,18,20,0.62)_100%)]" />
-                    <span className="absolute bottom-3 left-3 rounded-full border border-white/10 bg-[#1b1d1f]/82 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#f4dfcf]">
-                      {group.category}
-                    </span>
-                  </div>
-                ))}
-              </div>
+        <div className="relative overflow-hidden rounded-[1.75rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-3 shadow-[0_24px_68px_rgba(0,0,0,0.22)]">
+          <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+          <div className="relative overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max gap-3">
+              {stripImages.map((image) => (
+                <button
+                  type="button"
+                  key={`${image.src}-${image.label}`}
+                  onClick={() => setActiveImage(image)}
+                  className="group relative h-[190px] w-[230px] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-[#f2994a]/20 bg-[#17191b] text-left transition hover:border-[#f2994a]/48"
+                  aria-label={`Відкрити фото: ${image.alt}`}
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.5),rgba(242,153,74,0))]" />
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                    sizes="230px"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,18,20,0.03)_0%,rgba(16,18,20,0.62)_100%)]" />
+                  <span className="absolute bottom-3 left-3 rounded-full border border-white/10 bg-[#1b1d1f]/82 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#f4dfcf]">
+                    {image.label}
+                  </span>
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
-    </SectionShell>
+
+      {activeImage ? (
+        <div
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0d0f12]/88 p-4"
+          onClick={() => setActiveImage(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Перегляд фото"
+        >
+          <button
+            type="button"
+            className="absolute right-4 top-4 rounded-full border border-white/20 bg-[#1b1d1f]/82 px-3 py-1.5 text-xl leading-none text-white transition hover:border-[#f2994a]/40 hover:text-[#f2994a] sm:right-6 sm:top-6"
+            onClick={() => setActiveImage(null)}
+            aria-label="Закрити перегляд фото"
+          >
+            ×
+          </button>
+          <div
+            className="relative max-h-[92vh] max-w-[92vw]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Image
+              src={activeImage.src}
+              alt={activeImage.alt}
+              width={2200}
+              height={1600}
+              className="h-auto max-h-[92vh] w-auto max-w-[92vw] rounded-[0.75rem] object-contain"
+              sizes="92vw"
+              priority
+            />
+            <span className="absolute bottom-3 left-3 rounded-full border border-white/16 bg-[#1b1d1f]/82 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#f4dfcf]">
+              {activeImage.label}
+            </span>
+          </div>
+        </div>
+      ) : null}
+    </section>
   );
 }
 
 function FaqSection({ items }: { items: ProductFaqItem[] }) {
   return (
-    <SectionShell
-      id="faq"
-      title="FAQ"
-      description="Короткі відповіді на питання, які найчастіше виникають у забудовників, генпідрядників і замовників перед попереднім прорахунком."
-      eyebrow="Питання та відповіді"
-    >
-      <div className="mb-6 flex flex-wrap gap-3">
-        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#f4dfcf]">
-          4 ключові питання
-        </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#a9abad]">
-          Ціна
-        </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#a9abad]">
-          Строки
-        </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#a9abad]">
-          Великі прольоти
-        </span>
+    <section id="faq" className="space-y-8">
+      <div className="max-w-3xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+          Питання та відповіді
+        </p>
+        <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+          FAQ
+        </h2>
+        <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
+          Короткі відповіді на питання, які найчастіше виникають у забудовників, генпідрядників і
+          замовників перед попереднім прорахунком.
+        </p>
       </div>
       <div className="space-y-4">
         {items.map((item) => (
@@ -310,8 +418,11 @@ function FaqSection({ items }: { items: ProductFaqItem[] }) {
               className={`${headingClass} flex cursor-pointer list-none items-start justify-between gap-4 text-lg text-white`}
             >
               <span>{item.question}</span>
-              <span className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a] transition group-open:rotate-45">
-                +
+              <span className="relative mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_14px_30px_rgba(242,153,74,0.12)]">
+                <span className="absolute inset-[5px] rounded-[10px] border border-[#f2994a]/18" />
+                <span className="relative text-xl font-semibold leading-none transition group-open:rotate-45">
+                  +
+                </span>
               </span>
             </summary>
             <p className={`${bodyClass} mt-4 max-w-4xl border-t border-white/8 pt-4 text-sm leading-7 text-[#d0d0d0]`}>
@@ -320,13 +431,14 @@ function FaqSection({ items }: { items: ProductFaqItem[] }) {
           </details>
         ))}
       </div>
-    </SectionShell>
+    </section>
   );
 }
 
 export function ProductPage({ page }: { page: ProductPageData }) {
   const [currentCase, setCurrentCase] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [activeSectionHref, setActiveSectionHref] = useState("#problem");
 
   const caseSlides = [
     {
@@ -350,17 +462,19 @@ export function ProductPage({ page }: { page: ProductPageData }) {
       ? {
           key: "case-02",
           badge: "Case 02",
-          title: page.secondaryCaseStudy.title,
-          challenge: page.secondaryCaseStudy.challenge,
-          solution: page.secondaryCaseStudy.solution,
-          result: page.secondaryCaseStudy.result,
+          title: "Серійна забудова ЖК",
+          challenge: "Оптимізація строків зведення ідентичних дахових систем у багатоквартирному будівництві.",
+          solution: "Заміна традиційної кроквяної системи на серійний заводський префаб з повною ідентичністю вузлів.",
+          result: "Монтаж покрівельної системи виконано у 3 рази швидше порівняно з традиційними методами.",
           metrics: [
-            { value: "3x", label: "швидший монтаж покрівельної системи" },
-            ...(page.secondaryCaseStudy.metrics ?? []),
+            { value: "800 мм", label: "крок ферм", icon: "beam" },
+            { value: "207 кг", label: "вага ферми", icon: "weight" },
+            { value: "850 N/m²", label: "снігове навантаження", icon: "snow" },
+            { value: "470 N/m²", label: "вітрове навантаження", icon: "wind" },
           ],
-          imageSrc: "/images/fermy-mzp/object-block-building-1.jpg",
+          imageSrc: "/images/fermy-mzp/case-zhk-serial.png",
           imageAlt: "Серійна забудова ЖК з дерев'яними фермами МЗП",
-          imageClassName: "object-[50%_34%]",
+          imageClassName: "object-[50%_32%]",
         }
       : null,
   ].filter(Boolean) as Array<{
@@ -370,11 +484,99 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     challenge: string;
     solution: string;
     result: string;
-    metrics: Array<{ value: string; label: string }>;
+    metrics: Array<{ value: string; label: string; icon?: IconName }>;
     imageSrc: string;
     imageAlt: string;
     imageClassName: string;
   }>;
+  const economicsCards = [
+    {
+      value: "20-30%",
+      title: "Менше ризику перевитрат",
+      description: "Заводська комплектація дає керований обсяг матеріалу й менше доробок на об'єкті.",
+    },
+    {
+      value: "на 14-30 днів",
+      title: "Швидший запуск наступних етапів",
+      description: "Короткий монтажний цикл допомагає раніше переходити до покрівельних і внутрішніх робіт.",
+    },
+    {
+      value: "в 2.5 рази",
+      title: "Оптимізація людського ресурсу",
+      description:
+        "Менше персоналу на майданчику в умовах дефіциту кадрів та потреби у швидкому введенні об'єкта в експлуатацію.",
+    },
+    {
+      value: "100%",
+      title: "Прозора модель закупівлі",
+      description:
+        "Замовник отримує фіксований комплект із прорахованими параметрами, а не відкритий кошторис із невідомими.",
+    },
+  ] as const;
+  const economicsIcons = [
+    applicationIcons[0],
+    applicationIcons[1],
+    applicationIcons[3],
+    applicationIcons[2],
+  ] as const;
+  const processCards = [
+    {
+      step: "01",
+      title: "Запит та аналіз",
+      description:
+        "Аналізуємо ваші креслення, архітектуру та специфіку об'єкта для вибору оптимальної конфігурації ферм.",
+    },
+    {
+      step: "02",
+      title: "Прорахунок за 48 год та КП",
+      description:
+        "Виконуємо точне інженерне моделювання. Ви отримуєте фіксовану вартість та технічне рішення протягом двох діб.",
+    },
+    {
+      step: "03",
+      title: "Заводське виробництво",
+      description:
+        "Автоматизована нарізка та пресування на лінії MiTek. Виготовлення комплекту займає від 3 до 14 робочих днів.",
+    },
+    {
+      step: "04",
+      title: "Логістика та шеф-монтаж",
+      description:
+        "Доставка маркованого комплекту на об'єкт. Надаємо схеми збірки або виїзд інженера для контролю монтажу.",
+    },
+  ] as const;
+
+  useEffect(() => {
+    const trackedSections = sectionNav
+      .map((item) => item.href.replace("#", ""))
+      .filter((id) => id !== "applications")
+      .map((id) => document.getElementById(id))
+      .filter((node): node is HTMLElement => Boolean(node));
+
+    if (!trackedSections.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry?.target?.id) {
+          setActiveSectionHref(`#${visibleEntry.target.id}`);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-34% 0px -54% 0px",
+        threshold: [0.15, 0.35, 0.6, 0.9],
+      },
+    );
+
+    trackedSections.forEach((section) => observer.observe(section));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const handleCaseSwipe = (touchEndX: number) => {
     if (touchStartX === null) return;
@@ -406,6 +608,18 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             transform: translateY(0);
           }
         }
+
+        @keyframes specHotspotReveal {
+          from {
+            opacity: 0;
+            transform: translateX(14px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
       `}</style>
       <HeroSection page={page} />
       <main className="mx-auto w-full max-w-[88rem] px-4 pb-12 md:px-6 md:pb-16 lg:px-6 lg:pb-20">
@@ -415,7 +629,12 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`${bodyClass} inline-flex rounded-full border border-transparent px-4 py-2 text-sm text-[#d0d0d0] transition hover:border-[#f2994a]/35 hover:bg-white/6 hover:text-white`}
+                  aria-current={activeSectionHref === item.href ? "page" : undefined}
+                  className={`${bodyClass} inline-flex rounded-full border px-4 py-2 text-sm transition ${
+                    activeSectionHref === item.href
+                      ? "border-[#f2994a]/70 bg-[#f2994a]/14 text-white shadow-[0_0_0_1px_rgba(242,153,74,0.2)_inset]"
+                      : "border-transparent text-[#d0d0d0] hover:border-[#f2994a]/35 hover:bg-white/6 hover:text-white"
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -425,7 +644,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         </nav>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:items-start lg:gap-12">
-	          <aside className="hidden lg:block">
+          <aside className="hidden lg:block">
             <div className="sticky top-24 rounded-[1.75rem] border border-white/10 bg-[#17191b]/92 p-4 backdrop-blur">
               <p className="px-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
                 Навігація
@@ -436,9 +655,18 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className={`${bodyClass} flex items-center rounded-[0.95rem] border border-transparent px-3 py-3 text-sm text-[#d0d0d0] transition hover:border-[#f2994a]/25 hover:bg-white/6 hover:text-white`}
+                        aria-current={activeSectionHref === item.href ? "page" : undefined}
+                        className={`${bodyClass} flex items-center rounded-[0.95rem] border px-3 py-3 text-sm transition ${
+                          activeSectionHref === item.href
+                            ? "border-[#f2994a]/40 bg-[#f2994a]/12 text-white shadow-[0_0_0_1px_rgba(242,153,74,0.16)_inset]"
+                            : "border-transparent text-[#d0d0d0] hover:border-[#f2994a]/25 hover:bg-white/6 hover:text-white"
+                        }`}
                       >
-                        <span className="mr-3 h-1.5 w-1.5 rounded-full bg-[#f2994a]" />
+                        <span
+                          className={`mr-3 h-1.5 w-1.5 rounded-full ${
+                            activeSectionHref === item.href ? "bg-[#f2994a]" : "bg-[#f2994a]/70"
+                          }`}
+                        />
                         <span>{item.label}</span>
                       </Link>
                     </li>
@@ -617,7 +845,9 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                     <div className="absolute left-7 top-7 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[18px] border border-[#f2994a]/45 bg-[linear-gradient(180deg,rgba(242,153,74,0.24),rgba(242,153,74,0.09))] text-[#f2994a] shadow-[0_22px_44px_rgba(242,153,74,0.14)] transition duration-200 group-hover:border-[#f2994a]/65 group-hover:bg-[linear-gradient(180deg,rgba(242,153,74,0.3),rgba(242,153,74,0.12))] group-hover:shadow-[0_28px_52px_rgba(242,153,74,0.2)]">
                       <div className="absolute inset-[6px] rounded-[13px] border border-[#f2994a]/20" />
                       <LineIcon
-                        name={applicationIcons[index] ?? "beam"}
+                        name={
+                          applicationIcons[index === 2 ? 3 : index === 3 ? 2 : index] ?? "beam"
+                        }
                         className="relative h-10 w-10"
                       />
                     </div>
@@ -635,8 +865,6 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         </section>
 
           </div>
-        </div>
-
         <section
           id="cases"
           className="relative mt-14 mb-14 lg:col-span-2 lg:mt-16 lg:mb-16"
@@ -706,7 +934,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                                 <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
                                   <div className="absolute inset-[5px] rounded-[10px] border border-[#f2994a]/18" />
                                   <LineIcon
-                                    name={caseSlideMetricIcons[metricIndex] ?? "beam"}
+                                    name={metric.icon ?? caseSlideMetricIcons[metricIndex] ?? "beam"}
                                     className="relative h-6 w-6"
                                   />
                                 </div>
@@ -750,8 +978,8 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                     {slideIndex === caseSlides.length - 1 ? (
                       <div className="mt-8">
                         <Link
-                          href={page.caseStudy.href ?? "/derevyani-fermy-mzp/cases/"}
-                          className="inline-flex items-center rounded-[1rem] bg-[#f2994a] px-6 py-4 text-base font-semibold text-[#1b1d1f] shadow-[0_18px_42px_rgba(242,153,74,0.24)] transition hover:-translate-y-0.5 hover:bg-[#ffab5f]"
+                          href="/cases/"
+                          className="inline-flex items-center rounded-[1rem] border border-[#f2994a]/52 bg-transparent px-6 py-4 text-base font-semibold text-[#f2994a] shadow-[0_18px_42px_rgba(10,12,18,0.34)] transition hover:-translate-y-0.5 hover:border-[#f2994a] hover:bg-[#f2994a] hover:text-[#1b1d1f] hover:shadow-[0_18px_42px_rgba(242,153,74,0.24)]"
                         >
                           Дивитись інші кейси
                         </Link>
@@ -807,246 +1035,303 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         </section>
 
         <div className="flex min-w-0 flex-col gap-10 lg:col-start-2 lg:gap-12">
+        <section id="specs" className="space-y-10">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                Специфікація
+              </p>
+              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                Технічні стандарти та точність
+              </h2>
+            </div>
+            <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
+              Проєктування та виробництво за міжнародними стандартами: повний контроль параметрів від розрахунку до фінального монтажу.
+            </p>
+          </div>
+          <div className="h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="relative p-5">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                <LineIcon name="calculator" className="relative h-7 w-7" />
+              </div>
+              <p className={`${headingClass} mt-4 text-2xl text-white`}>MiTek Pamir</p>
+              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                Ліцензійний софт для розрахунку кожної крокви.
+              </p>
+            </div>
+            <div className="relative p-5">
+              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                <LineIcon name="snow" className="relative h-7 w-7" />
+              </div>
+              <p className={`${headingClass} mt-4 text-2xl text-white`}>EN 1995 (Eurocode 5)</p>
+              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                Розрахунок під реальні кліматичні навантаження об&apos;єкта.
+              </p>
+            </div>
+            <div className="relative p-5">
+              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                <LineIcon name="settings" className="relative h-7 w-7" />
+              </div>
+              <p className={`${headingClass} mt-4 text-2xl text-white`}>1-2 мм точність</p>
+              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                Максимальне геометричне відхилення за рахунок заводської нарізки.
+              </p>
+            </div>
+            <div className="relative p-5">
+              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                <LineIcon name="beam" className="relative h-7 w-7" />
+              </div>
+              <p className={`${headingClass} mt-4 text-2xl text-white`}>800-1000 мм</p>
+              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                Оптимальний крок встановлення ферм для надійності покрівлі.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
+
+          <div className="mt-1 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-stretch lg:gap-12">
+            <div className="relative -mt-4 rounded-[1.5rem] lg:-ml-4">
+              <Image
+                src="/images/fermy-mzp/grafik-elements-2.png"
+                alt="Технічне креслення ферми МЗП"
+                width={1200}
+                height={900}
+                className="h-full w-full object-contain object-left"
+              />
+              {["14%", "35%", "56%", "78%"].map((top) => (
+                <div
+                  key={`spec-edge-line-${top}`}
+                  className="absolute -right-3 hidden h-px w-28 bg-[linear-gradient(90deg,rgba(242,153,74,0.52)_0%,rgba(242,153,74,0.22)_68%,rgba(242,153,74,0.04)_100%)] lg:block"
+                  style={{ top }}
+                >
+                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#f2994a] shadow-[0_0_0_4px_rgba(242,153,74,0.2)]" />
+                </div>
+              ))}
+            </div>
+
+            <div className="relative grid gap-2 lg:block lg:h-full lg:pl-4">
+              {[
+                {
+                  top: "9%",
+                  title: "Прольоти до 30 м без опор",
+                  description:
+                    "Можливість перекривати великі приміщення без внутрішніх стін та зайвих колон.",
+                },
+                {
+                  top: "30%",
+                  title: "5 мм: Точність вузлів",
+                  description:
+                    "Суворе позиціонування МЗП-пластин забезпечує проектну міцність кожного з'єднання.",
+                },
+                {
+                  top: "53%",
+                  title: "Деревина C22 / C24",
+                  description:
+                    "Використовуємо лише калібровану сосну з підбором товщини заготовки 45–60 мм під розрахунок.",
+                },
+                {
+                  top: "75%",
+                  title: "7–10 мм: Розрахункові прогини",
+                  description:
+                    "Мінімальна деформація конструкції під навантаженням завдяки жорсткості вузлів.",
+                },
+              ].map((item, index) => (
+                <div
+                  key={item.title}
+                  className="p-3.5 lg:absolute lg:left-0 lg:right-0 lg:p-0"
+                  style={{
+                    opacity: 0,
+                    animation: "specHotspotReveal 0.55s ease-out forwards",
+                    animationDelay: `${120 + index * 120}ms`,
+                    top: item.top,
+                  }}
+                >
+                  <p className={`${headingClass} text-[1.12rem] leading-[1.22] text-[#f2994a]`}>{item.title}</p>
+                  <p className={`${bodyClass} mt-1.5 text-sm leading-6 text-[#d0d0d0]`}>{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </section>
+
         <GallerySection
-          title={page.gallery.title}
-          description={page.gallery.description}
+          title="Реалізації та масштаби виробництва"
+          description="Від серійних рішень для котеджних містечок до складних індустріальних об'єктів в Україні та Європі."
           images={page.gallery.images}
         />
 
-        <SectionShell id="scale" title="Масштаб реалізації" eyebrow="Потужність і охоплення">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {page.scale.map((metric) => (
-              <div key={metric.label} className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <p className="text-2xl font-semibold text-white">{metric.value}</p>
-                <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                  {metric.label}
-                </p>
+        <section id="economics" className="space-y-10">
+          <div className="max-w-[58rem]">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#f2994a]">
+              Бізнес-ефект
+            </p>
+            <h2 className={`${headingClass} text-3xl leading-tight text-white sm:text-4xl lg:text-[2.8rem]`}>
+              Економіка рішення
+            </h2>
+            <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
+              Готові ферми МЗП зменшують обсяг ручних робіт, скорочують час перебування бригади на
+              майданчику та прибирають частину непередбачуваних витрат, які зазвичай з&apos;являються
+              під час складання покрівельної системи на місці.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            {economicsCards.map((card, index) => (
+              <div
+                key={card.title}
+                className="group relative min-h-[23rem] overflow-hidden rounded border border-white/12 bg-[#25282b] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:border-[#f2994a]/42 hover:shadow-[0_32px_84px_rgba(0,0,0,0.32)]"
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
+                <div className="relative h-full min-h-[21rem] overflow-hidden bg-[#202326]">
+                  <Image
+                    src={economicsImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-2.png"}
+                    alt={card.title}
+                    fill
+                    className={`object-cover transition duration-300 group-hover:scale-[1.04] ${
+                      economicsImages[index]?.className ?? "object-[50%_50%]"
+                    }`}
+                    sizes="(min-width: 1024px) 42vw, 100vw"
+                  />
+                  <div className={`absolute inset-0 ${economicsImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.18)_42%,rgba(17,18,20,0.72)_100%)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.14),transparent_34%)] opacity-60 transition duration-200 group-hover:opacity-100" />
+
+                  <div className="relative flex h-full min-h-[21rem] flex-col justify-end px-7 pb-7 pt-28">
+                    <div className="absolute left-7 top-7 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[18px] border border-[#f2994a]/45 bg-[linear-gradient(180deg,rgba(242,153,74,0.24),rgba(242,153,74,0.09))] text-[#f2994a] shadow-[0_22px_44px_rgba(242,153,74,0.14)] transition duration-200 group-hover:border-[#f2994a]/65 group-hover:bg-[linear-gradient(180deg,rgba(242,153,74,0.3),rgba(242,153,74,0.12))] group-hover:shadow-[0_28px_52px_rgba(242,153,74,0.2)]">
+                      <div className="absolute inset-[6px] rounded-[13px] border border-[#f2994a]/20" />
+                      <LineIcon
+                        name={economicsIcons[index] ?? "beam"}
+                        className="relative h-10 w-10"
+                      />
+                    </div>
+                    <p className={`${headingClass} mt-2 text-[2rem] leading-[1.02] text-white sm:text-[2.35rem]`}>
+                      {card.value}
+                    </p>
+                    <h3 className={`${headingClass} mt-4 max-w-[22rem] text-[1.55rem] leading-[1.12] text-white transition group-hover:text-[#f2994a]`}>
+                      {card.title}
+                    </h3>
+                    <p className={`${bodyClass} mt-4 max-w-[30rem] text-base leading-7 text-white/78`}>
+                      {card.description}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </SectionShell>
+        </section>
 
-        <SectionShell
-          id="specs"
-          title="Технічний блок"
-          description="Цей блок має працювати як аргумент для технічного директора, генпідрядника або девелопера: що саме ми проєктуємо, в яких межах працюємо і які параметри контролюємо."
-          eyebrow="Специфікація"
+        <section
+          id="process"
+          className="relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:p-10"
         >
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-[1.5rem] border border-[#f2994a]/20 bg-[#202326] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Прольоти
-              </p>
-              <p className="mt-3 text-3xl font-semibold text-white">до 22 м</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Індивідуальне проєктування без проміжних опор для великопролітних рішень.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Матеріал
-              </p>
-              <p className="mt-3 text-2xl font-semibold text-white">C22 / C24</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Сортова сосна з підбором товщини заготовок 45-60 мм під розрахунок.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Розрахунок
-              </p>
-              <p className="mt-3 text-2xl font-semibold text-white">MiTek Pamir</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Ліцензійний інженерний розрахунок і моделювання кожної конструкції.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Норми
-              </p>
-              <p className="mt-3 text-2xl font-semibold text-white">EN 1995</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Перевірка за Eurocode 5 з урахуванням реальних навантажень по об&apos;єкту.
-              </p>
-            </div>
+          <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+
+          <div className="relative max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+              Від запиту до монтажу
+            </p>
+            <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+              Алгоритм реалізації проєкту
+            </h2>
+            <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
+              Відточений процес: мінімізуємо ваше залучення в рутинні питання, забезпечуючи
+              прогнозований результат у чіткі терміни
+            </p>
           </div>
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-            <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#202326]">
-              <div className="border-b border-white/8 px-5 py-4">
-                <h3 className={`${headingClass} text-xl text-white`}>Конструктив і нормативи</h3>
-                <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                  Базові параметри, в межах яких ми проєктуємо, виготовляємо і погоджуємо рішення.
-                </p>
-              </div>
-              <table className={`${bodyClass} w-full border-collapse text-sm text-[#d0d0d0]`}>
-                <tbody>
-                  {page.specs.map((spec) => (
-                    <tr key={spec.label} className="border-b border-white/8 last:border-b-0">
-                      <th className="px-5 py-4 text-left font-medium text-white">{spec.label}</th>
-                      <td className="px-5 py-4">{spec.value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="grid gap-4">
-              <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <h3 className={`${headingClass} text-xl text-white`}>Розрахункові навантаження</h3>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {page.loads.map((item) => (
-                    <div key={item.label} className="rounded-[1rem] border border-white/10 bg-white/4 p-4">
-                      <p className="text-lg font-semibold text-white">{item.value}</p>
-                      <p className={`${bodyClass} mt-1 text-sm text-[#d0d0d0]`}>{item.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <h3 className={`${headingClass} text-xl text-white`}>Точність і допуски</h3>
-                <div className="mt-4 grid gap-3">
-                  {page.precision.map((item) => (
-                    <div key={item.label} className="rounded-[1rem] border border-white/10 bg-white/4 p-4">
-                      <p className="text-lg font-semibold text-white">{item.value}</p>
-                      <p className={`${bodyClass} mt-1 text-sm text-[#d0d0d0]`}>{item.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-[1.5rem] border border-dashed border-[#f2994a]/35 bg-[#f2994a]/8 p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffd7b4]">
-                  Що це дає на об&apos;єкті
-                </p>
-                <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#f4dfcf]`}>
-                  Замовник отримує не просто ферму, а прогнозований інженерний виріб:
-                  контроль геометрії, підтверджені навантаження, монтаж без доробок і
-                  комплект технічних даних для реалізації.
-                </p>
-              </div>
-            </div>
-          </div>
-        </SectionShell>
-
-        <SectionShell
-          id="economics"
-          title="Економіка рішення"
-          description="Тут важливо показати не просто технічну ефективність, а прямий бізнес-результат для девелопера, генпідрядника й власника об'єкта."
-          eyebrow="Бізнес-ефект"
-        >
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
-            <div className="grid gap-4 sm:grid-cols-2">
-              {page.economics.map((metric, index) => (
-                <div
-                  key={metric.label}
-                  className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                    Ефект {index + 1}
-                  </p>
-                  <p className="mt-3 text-2xl font-semibold text-white">{metric.value}</p>
-                  <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                    {metric.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="rounded-[1.75rem] border border-[#f2994a]/20 bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.16),transparent_58%),#202326] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Як це впливає на бюджет проєкту
-              </p>
-              <p className={`${bodyClass} mt-4 text-sm leading-7 text-[#d0d0d0]`}>
-                Готові ферми МЗП зменшують обсяг ручних робіт, скорочують час перебування
-                бригади на майданчику та прибирають частину непередбачуваних витрат, які
-                зазвичай з&apos;являються під час складання покрівельної системи на місці.
-              </p>
-              <div className="mt-6 space-y-3">
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">Швидший запуск наступних етапів</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    Короткий монтажний цикл допомагає раніше переходити до покрівельних і внутрішніх робіт.
-                  </p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">Менше ризику перевитрат</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    Заводська комплектація дає керований обсяг матеріалу й менше доробок на об&apos;єкті.
-                  </p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">Зрозуміла модель закупівлі</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    Замовник отримує фіксований комплект із прорахованими параметрами, а не відкритий кошторис із невідомими.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SectionShell>
-
-        <SectionShell id="process" title="Процес роботи" eyebrow="Від запиту до монтажу">
-          <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
-            {page.process.map((step, index) => (
-              <div key={step} className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
+          <div className="relative mt-10 grid gap-4 lg:mt-12 lg:grid-cols-4">
+            {processCards.map((card) => (
+              <div
+                key={card.step}
+                className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),#202326)] p-5 shadow-[0_14px_34px_rgba(0,0,0,0.26)] transition duration-200 hover:-translate-y-1 hover:border-[#f2994a]/42 hover:shadow-[0_20px_44px_rgba(242,153,74,0.16)]"
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.35),rgba(242,153,74,0))]" />
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                  Крок {index + 1}
+                  КРОК {card.step}
                 </p>
-                <p className={`${headingClass} mt-3 text-lg text-white`}>{step}</p>
+                <p className={`${headingClass} mt-3 text-xl text-white`}>{card.title}</p>
+                <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
+                  {card.description}
+                </p>
               </div>
             ))}
           </div>
-        </SectionShell>
+        </section>
 
         <SectionShell
           id="trust"
-          title="Довіра та стандарти"
-          description="Цей блок має знімати ключові сумніви перед запитом: хто рахує конструкцію, які документи супроводжують поставку та які гарантії отримує замовник."
+          title="Гарантії та технічний супровід"
+          description="Кожна поставка TimberX супроводжується повним пакетом документів, що гарантують юридичну та конструктивну безпеку об'єкта."
           eyebrow="Чому це працює"
         >
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.9fr)]">
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {page.trust.map((item, index) => (
-                <div
-                  key={item.title}
-                  className="rounded-[1.5rem] border border-[#f2994a]/20 bg-[#202326] p-5"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                    Опора {index + 1}
-                  </p>
-                  <h3 className={`${headingClass} mt-3 text-xl text-white`}>{item.title}</h3>
-                  <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="rounded-[1.75rem] border border-white/12 bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.18),transparent_60%),#202326] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Що отримує замовник у поставці
-              </p>
-              <ul className={`${bodyClass} mt-5 space-y-3 text-sm leading-7 text-[#d0d0d0]`}>
-                <li>Проєктний розрахунок у ліцензійному середовищі MiTek Pamir.</li>
-                <li>Монтажні схеми й технічний паспорт на партію.</li>
-                <li>Пакет даних для технічного узгодження на стороні генпідрядника.</li>
-                <li>Офіційні гарантійні зобов&apos;язання на конструктивну цілісність.</li>
+          <div className="grid gap-8 lg:grid-cols-[1.18fr_0.82fr] lg:items-center">
+            <div className="flex flex-col justify-center py-2">
+              <ul className="space-y-5 text-lg leading-8 text-white/84">
+                <li className="flex items-start gap-3">
+                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                  <span>
+                    <strong className="font-semibold text-white">Ліцензійний паспорт MiTek:</strong>{" "}
+                    офіційний розрахунок навантажень для кожної крокви.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                  <span>
+                    <strong className="font-semibold text-white">Повний монтажний комплект:</strong>{" "}
+                    деталізовані схеми збірки та специфікація вузлів.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                  <span>
+                    <strong className="font-semibold text-white">Юридична фіксація:</strong> гарантія
+                    10–15 років, прописана в договорі.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                  <span>
+                    <strong className="font-semibold text-white">Технічний паспорт на партію:</strong>{" "}
+                    сертифікати на деревину та МЗП-пластини.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                  <span>
+                    <strong className="font-semibold text-white">Одна точка відповідальності:</strong>{" "}
+                    ми відповідаємо за проєкт від розрахунку до фінальної геометрії.
+                  </span>
+                </li>
               </ul>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Розрахунок
+            </div>
+
+            <div className="flex justify-start lg:justify-end">
+              <div className="group relative flex min-h-[20rem] w-full max-w-[32rem] flex-col overflow-hidden rounded-[1.75rem] border border-[#F2994A]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.24),rgba(242,153,74,0.1)_38%,rgba(37,40,43,0.98))] p-8 shadow-[0_30px_80px_rgba(242,153,74,0.14)] transition duration-200 hover:-translate-y-1 hover:border-[#F2994A]/62 hover:shadow-[0_38px_96px_rgba(242,153,74,0.22)]">
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.78),rgba(242,153,74,0))]" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.28),transparent_38%)] opacity-90 transition duration-200 group-hover:opacity-100" />
+                <div className="relative flex h-full flex-col">
+                  <div className="relative flex h-[4.75rem] w-[4.75rem] items-center justify-center rounded-[18px] border border-[#F2994A]/55 bg-[linear-gradient(180deg,rgba(242,153,74,0.3),rgba(242,153,74,0.12))] text-[#F2994A] shadow-[0_24px_52px_rgba(242,153,74,0.2)]">
+                    <div className="absolute inset-[6px] rounded-[13px] border border-[#F2994A]/24" />
+                    <LineIcon name="shield" className="relative h-11 w-11" />
+                  </div>
+                  <p className="mt-8 text-sm font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                    Гарантії TimberX
                   </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>MiTek Pamir</p>
-                </div>
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Документи
-                  </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>Паспорт + схеми</p>
-                </div>
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Гарантія
-                  </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>10-15 років</p>
+                  <h3 className={`${headingClass} mt-4 text-[2.35rem] leading-[1.12] text-white`}>
+                    ГАРАНТІЯ 10–15 РОКІВ НА КОНСТРУКЦІЇ
+                  </h3>
                 </div>
               </div>
             </div>
@@ -1055,100 +1340,12 @@ export function ProductPage({ page }: { page: ProductPageData }) {
 
         <FaqSection items={page.faq} />
 
-        <SectionShell
-          id="cta"
-          title={page.finalCta.title}
-          description={page.finalCta.description}
-          eyebrow="Фінальний CTA"
-        >
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.9fr)]">
-            <div className="rounded-[1.75rem] border border-[#f2994a]/20 bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.14),transparent_58%),#202326] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Наступний крок
-              </p>
-              <p className={`${headingClass} mt-4 text-2xl leading-tight text-white`}>
-                Швидкий вхід у попередній прорахунок без довгого первинного брифу
-              </p>
-              <ul className={`${bodyClass} mt-5 space-y-3 text-sm leading-7 text-[#d0d0d0]`}>
-                {page.finalCta.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href={page.finalCta.primaryCta.href}
-                  className={`${bodyClass} inline-flex items-center justify-center rounded-full bg-[#f2994a] px-6 py-3 text-sm font-semibold text-[#1b1d1f] transition hover:bg-[#ffb46f]`}
-                >
-                  {page.finalCta.primaryCta.label}
-                </Link>
-                <Link
-                  href={page.finalCta.secondaryCta.href}
-                  className={`${bodyClass} inline-flex items-center justify-center rounded-full border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-[#f2994a]/60 hover:bg-white/8`}
-                >
-                  {page.finalCta.secondaryCta.label}
-                </Link>
-              </div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Формат
-                  </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>Квіз + консультація</p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Старт
-                  </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>2-3 хвилини</p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#828282]">
-                    Результат
-                  </p>
-                  <p className={`${headingClass} mt-2 text-lg text-white`}>Попередній прорахунок</p>
-                </div>
-              </div>
-            </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-[#202326] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#828282]">
-                Що буде в квізі
-              </p>
-              <div className="mt-4 space-y-3">
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">1. Тип об&apos;єкта</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    ЖК, склад, комерційна будівля або інший сценарій застосування.
-                  </p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">2. Базові параметри</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    Проліт, орієнтовні габарити, строки й стадія проєкту.
-                  </p>
-                </div>
-                <div className="rounded-[1rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-white">3. Зворотний зв&apos;язок</p>
-                  <p className={`${bodyClass} mt-1 text-sm leading-6 text-[#d0d0d0]`}>
-                    Контакт для уточнення й переходу до предметної технічної розмови.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 rounded-[1rem] border border-dashed border-[#f2994a]/35 bg-[#f2994a]/8 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd7b4]">
-                  На виході
-                </p>
-                <p className={`${bodyClass} mt-2 text-sm leading-7 text-[#f4dfcf]`}>
-                  Замовник отримує попередній інженерний прорахунок, розуміння строків
-                  виробництва і релевантну конфігурацію рішення під свій об&apos;єкт.
-                </p>
-              </div>
-            </div>
+        <StandardQuizCta id="cta" />
           </div>
-        </SectionShell>
-          </div>
+        </div>
 
       </main>
-      <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-10">
+      <div className="mx-auto w-full max-w-[88rem] px-4 md:px-6 lg:px-6">
         <SiteFooter />
       </div>
     </div>
