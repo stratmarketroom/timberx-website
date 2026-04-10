@@ -65,7 +65,7 @@ const audiences = [
     title: "Для забудовників",
     description:
       "Контролюйте собівартість і строки завдяки фіксованій ціні, точності до 2 мм і мінімізації переробок.",
-    href: "/modulni-budynky/dlya-zabudovnykiv/",
+    href: "/modulni-budynky/dlya-zhk/",
     icon: "factory",
     imageSrc: "/images/audiences/audience-builders.png",
     imageClassName: "object-[56%_48%]",

@@ -11,7 +11,10 @@ type IconName =
   | "request"
   | "calculator"
   | "delivery"
-  | "beam";
+  | "beam"
+  | "weight"
+  | "snow"
+  | "wind";
 
 type MockupName =
   | "module"
@@ -188,6 +191,33 @@ export function LineIcon({
           <path d="M28 24v16" />
           <path d="M38 24v16" />
           <path d="M48 24v16" />
+        </SvgFrame>
+      );
+    case "weight":
+      return (
+        <SvgFrame className={className}>
+          <path d="M20 22h24l6 26H14z" />
+          <path d="M26 22a6 6 0 0 1 12 0" />
+          <path d="M32 29v11" />
+          <path d="M32 40l7-4" />
+        </SvgFrame>
+      );
+    case "snow":
+      return (
+        <SvgFrame className={className}>
+          <path d="M32 14v36" />
+          <path d="M17 23l30 18" />
+          <path d="M17 41l30-18" />
+          <path d="M26 18l6 6 6-6" />
+          <path d="M26 46l6-6 6 6" />
+        </SvgFrame>
+      );
+    case "wind":
+      return (
+        <SvgFrame className={className}>
+          <path d="M12 24h24c6 0 8-8 2-10" />
+          <path d="M10 34h34c8 0 10-10 2-12" />
+          <path d="M16 44h20c6 0 8 8 2 10" />
         </SvgFrame>
       );
     default:
