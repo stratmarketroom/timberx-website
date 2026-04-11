@@ -381,10 +381,11 @@ export default function Home() {
                 Виробництво модульних будинків, клеєних конструкцій та ферм МЗП
               </p>
               <h1
-                className={`${headingClass} max-w-[20ch] text-[2.9rem] leading-[0.98] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}
+                className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}
               >
-                Інженерні дерев’яні конструкції та модульні будинки для
-                девелоперів, забудовників і громад
+                Інженерні дерев’яні конструкції та модульні будинки{" "}
+                <span className="whitespace-nowrap">для девелоперів,</span>{" "}
+                забудовників і громад
               </h1>
               <div className="mt-6 max-w-[44rem] space-y-4 text-base leading-7 text-white/78 md:text-lg">
                 <p>

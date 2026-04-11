@@ -119,7 +119,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
   const [eyebrowPrefix, eyebrowSuffix = ""] = page.hero.eyebrow.split("TimberX");
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden md:min-h-[100vh]">
+    <section className="relative overflow-hidden lg:min-h-[100vh]">
       <div className="absolute inset-0">
         <Image
           src={page.hero.imageSrc}
@@ -138,8 +138,8 @@ function HeroSection({ page }: { page: ProductPageData }) {
         <SiteHeader />
       </div>
 
-      <div className="relative z-10 flex min-h-[100svh] items-center md:min-h-[100vh]">
-        <div className="w-full px-4 pb-14 pt-10 md:px-6 md:pb-20 md:pt-14 lg:px-6 lg:pb-24 lg:pt-16">
+      <div className="relative z-10 flex items-start lg:min-h-[100vh] lg:items-center">
+        <div className="w-full px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-8 lg:px-6 lg:pb-24 lg:pt-16">
           <div className="mx-auto max-w-[88rem]">
             <div className="max-w-[56rem]">
               <nav
@@ -161,7 +161,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
                 <span>{eyebrowSuffix}</span>
               </p>
               <h1
-                className={`${headingClass} text-[2.4rem] leading-[1.01] text-white sm:text-[3rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
+                className={`${headingClass} text-[2.1rem] leading-[1.02] text-white sm:text-[3rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
               >
                 <span className="block">Дерев&apos;яні ферми МЗП</span>
                 <span className="block">для дахів ЖК, складів,</span>
@@ -186,14 +186,14 @@ function HeroSection({ page }: { page: ProductPageData }) {
                 </Link>
               </div>
 
-              <div className="mt-8 grid w-full max-w-[46rem] gap-x-8 gap-y-3 border-t border-white/10 pt-7 text-sm text-white/78 sm:mt-12 sm:grid-cols-3 sm:pt-8 sm:text-base">
+              <div className="mt-8 grid w-full max-w-[46rem] grid-cols-3 gap-x-2 gap-y-3 border-t border-white/10 pt-7 text-[0.72rem] text-white/78 sm:mt-12 sm:gap-x-8 sm:pt-8 sm:text-base">
                 {page.hero.badges.map((badge) => (
-                  <div key={badge} className="flex items-center gap-2.5">
+                  <div key={badge} className="flex min-w-0 items-center gap-1.5 sm:gap-2.5">
                     <span className="relative flex h-6 w-6 items-center justify-center rounded-[999px] border border-[#F2994A]/38 bg-[linear-gradient(180deg,rgba(242,153,74,0.16),rgba(242,153,74,0.05))] text-[#F2994A] shadow-[0_10px_20px_rgba(242,153,74,0.1)]">
                       <span className="absolute inset-[3px] rounded-[999px] border border-[#F2994A]/16" />
                       <span className="relative text-[0.7rem] font-semibold">✓</span>
                     </span>
-                    <span>{badge}</span>
+                    <span className="whitespace-nowrap">{badge}</span>
                   </div>
                 ))}
               </div>
@@ -439,6 +439,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const [currentCase, setCurrentCase] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [activeSectionHref, setActiveSectionHref] = useState("#problem");
+  const topLevelSectionGapClass = "gap-10 lg:gap-12";
 
   const caseSlides = [
     {
@@ -623,14 +624,14 @@ export function ProductPage({ page }: { page: ProductPageData }) {
       `}</style>
       <HeroSection page={page} />
       <main className="mx-auto w-full max-w-[88rem] px-4 pb-12 md:px-6 md:pb-16 lg:px-6 lg:pb-20">
-        <nav className="sticky top-3 z-20 overflow-x-auto rounded-full border border-white/10 bg-[#17191b]/90 px-3 py-3 backdrop-blur lg:hidden">
-          <ul className="flex min-w-max items-center gap-2">
+        <nav className="sticky top-3 z-20 overflow-x-auto rounded-full border border-white/10 bg-[#17191b]/90 pl-2.5 pr-8 py-3 backdrop-blur lg:hidden">
+          <ul className="flex min-w-max items-center gap-1.5">
             {sectionNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={activeSectionHref === item.href ? "page" : undefined}
-                  className={`${bodyClass} inline-flex rounded-full border px-4 py-2 text-sm transition ${
+                  className={`${bodyClass} inline-flex rounded-full border px-3 py-2 text-sm transition ${
                     activeSectionHref === item.href
                       ? "border-[#f2994a]/70 bg-[#f2994a]/14 text-white shadow-[0_0_0_1px_rgba(242,153,74,0.2)_inset]"
                       : "border-transparent text-[#d0d0d0] hover:border-[#f2994a]/35 hover:bg-white/6 hover:text-white"
@@ -641,9 +642,19 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               </li>
             ))}
           </ul>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
+            <div className="absolute inset-y-0 right-0 w-10 bg-[linear-gradient(90deg,rgba(23,25,27,0),rgba(23,25,27,0.92)_60%)]" />
+            <span className="relative inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/18 bg-[#17191b]/90 text-white/72">
+              <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" aria-hidden="true">
+                <path d="M7 4.5L12.5 10L7 15.5" stroke="currentColor" strokeWidth="1.3" />
+              </svg>
+            </span>
+          </div>
         </nav>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:items-start lg:gap-12">
+        <div
+          className={`mt-10 grid ${topLevelSectionGapClass} lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:items-start`}
+        >
           <aside className="hidden lg:block">
             <div className="sticky top-24 rounded-[1.75rem] border border-white/10 bg-[#17191b]/92 p-4 backdrop-blur">
               <p className="px-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
@@ -676,7 +687,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </div>
           </aside>
 
-          <div className="flex min-w-0 flex-col gap-10 lg:gap-12 lg:pt-5">
+          <div className={`flex min-w-0 flex-col ${topLevelSectionGapClass} lg:pt-5`}>
         <section id="problem" className="space-y-12">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
             <div>
@@ -867,7 +878,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         <section
           id="cases"
-          className="relative mt-14 mb-14 lg:col-span-2 lg:mt-16 lg:mb-16"
+          className="relative lg:col-span-2"
           onTouchStart={(event) => setTouchStartX(event.touches[0]?.clientX ?? null)}
           onTouchEnd={(event) => handleCaseSwipe(event.changedTouches[0]?.clientX ?? 0)}
         >
@@ -920,7 +931,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                       </div>
 
                       <div className="space-y-8 self-stretch lg:pt-[4.6rem]">
-                        <div className="grid h-full content-between gap-5">
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-5 lg:h-full lg:grid-cols-1 lg:content-between">
                           {slide.metrics.map((metric, metricIndex) => (
                             <div
                               key={`${slide.key}-${metric.label}`}
@@ -930,7 +941,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                                 animationDelay: `${metricIndex * 120}ms`,
                               }}
                             >
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2.5 sm:gap-3">
                                 <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
                                   <div className="absolute inset-[5px] rounded-[10px] border border-[#f2994a]/18" />
                                   <LineIcon
@@ -938,7 +949,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                                     className="relative h-6 w-6"
                                   />
                                 </div>
-                                <p className="text-xl font-semibold text-white">{metric.value}</p>
+                                <p className="text-lg font-semibold text-white sm:text-xl">{metric.value}</p>
                               </div>
                               <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
                                 {metric.label}
@@ -1034,7 +1045,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         </section>
 
-        <div className="flex min-w-0 flex-col gap-10 lg:col-start-2 lg:gap-12">
+        <div className={`flex min-w-0 flex-col ${topLevelSectionGapClass} lg:col-start-2`}>
         <section id="specs" className="space-y-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
             <div>
