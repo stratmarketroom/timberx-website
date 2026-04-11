@@ -122,7 +122,7 @@ export default function ContactsPage() {
                           target="_blank"
                           rel="noreferrer"
                           aria-label="Telegram"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-white"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-[#1B1D1F]"
                         >
                           <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="currentColor" aria-hidden="true">
                             <path d="M21.4 4.4a1 1 0 0 0-1-.1L3.3 11.2a1 1 0 0 0 .1 1.9l4.3 1.4 1.6 4.8a1 1 0 0 0 1.8.3l2.4-3.1 4.2 3.1a1 1 0 0 0 1.6-.6l2.4-13.6a1 1 0 0 0-.3-1zM9.6 14.1l7.8-6.1-6.5 7.4-.3 1.9-1-3.2z" />
@@ -131,7 +131,7 @@ export default function ContactsPage() {
                         <a
                           href="viber://chat?number=%2B380674121310"
                           aria-label="Viber"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-white"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-[#1B1D1F]"
                         >
                           <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="currentColor" aria-hidden="true">
                             <path d="M12 2C6.5 2 4 4.1 4 8.8v4.5c0 2.2 1.3 3.8 3.6 4.3v2.6a1 1 0 0 0 1.6.8l3.2-2.4H12c5.5 0 8-2.1 8-6.8V8.8C20 4.1 17.5 2 12 2zm4.4 9.7a.8.8 0 0 1-1.1.3l-1.1-.6c-.4-.2-.9-.2-1.2.2l-.5.5c-.4.4-1.1.5-1.6.2-1-.6-2-1.6-2.6-2.7-.3-.5-.2-1.2.2-1.6l.5-.5c.3-.3.4-.8.2-1.2l-.6-1.1a.8.8 0 0 1 .3-1.1l.5-.3c.4-.2.8-.2 1.1.1l.7.7c.3.3.4.8.3 1.2l-.1.5c0 .2 0 .3.1.5.4.7 1 1.3 1.7 1.7.1.1.3.1.5.1l.5-.1c.4-.1.9 0 1.2.3l.7.7c.3.3.4.7.1 1.1l-.3.5z" />
@@ -142,7 +142,7 @@ export default function ContactsPage() {
                           target="_blank"
                           rel="noreferrer"
                           aria-label="WhatsApp"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-white"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-[#1B1D1F]"
                         >
                           <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="currentColor" aria-hidden="true">
                             <path d="M12 3a8.9 8.9 0 0 0-7.7 13.4L3 21l4.8-1.3A9 9 0 1 0 12 3zm0 16.2c-1.3 0-2.5-.3-3.6-1l-.3-.2-2.8.8.8-2.7-.2-.3a7.2 7.2 0 1 1 6.1 3.4zm4-5.5c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.6.1l-.4.5c-.2.2-.3.3-.6.2-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.9-.1-.3 0-.4.1-.6l.3-.4c.1-.1.1-.3.2-.4.1-.1 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.6 4 3.5 2.3.9 2.3.6 2.8.6.4 0 1.3-.5 1.5-1 .2-.5.2-1 .1-1.1z" />
@@ -167,7 +167,7 @@ export default function ContactsPage() {
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="tel:+380674121310"
-                  className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-5 py-3 text-center text-base font-semibold text-white shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
+                  className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-5 py-3 text-center text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
                 >
                   Зателефонувати
                 </a>
@@ -224,7 +224,7 @@ export default function ContactsPage() {
                   href={location.mapsHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 inline-flex items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] px-5 py-3 text-base font-semibold text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-white"
+                  className="mt-6 inline-flex items-center justify-center rounded-[10px] border border-[#F2994A]/34 bg-[rgba(242,153,74,0.12)] px-5 py-3 text-base font-semibold text-[#f4dfcf] transition hover:border-[#F2994A]/58 hover:bg-[#F2994A] hover:text-[#1B1D1F]"
                 >
                   Відкрити на Google Maps
                 </a>
@@ -249,7 +249,7 @@ export default function ContactsPage() {
             <div className="mt-6">
               <a
                 href="tel:+380674121310"
-                className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-white shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
+                className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
               >
                 Зв&apos;язатися
               </a>

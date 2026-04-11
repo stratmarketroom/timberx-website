@@ -331,7 +331,7 @@ export default function Home() {
 
                 <Link
                   href="#cta"
-                  className="hidden items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-white shadow-[0_16px_32px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_20px_40px_rgba(242,153,74,0.34)] sm:inline-flex"
+                  className="hidden items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_20px_40px_rgba(242,153,74,0.34)] sm:inline-flex"
                 >
                   Отримати прорахунок
                 </Link>
@@ -362,7 +362,7 @@ export default function Home() {
                     <div className="mt-4 border-t border-white/10 pt-4">
                       <Link
                         href="#cta"
-                        className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
+                        className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
                       >
                         Отримати прорахунок
                       </Link>
@@ -398,7 +398,7 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
                 <Link
                   href="#cta"
-                  className="inline-flex w-full items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-4 text-base font-semibold text-white shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_22px_44px_rgba(242,153,74,0.34)] sm:w-auto"
+                  className="inline-flex w-full items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_22px_44px_rgba(242,153,74,0.34)] sm:w-auto"
                 >
                   Отримати прорахунок проєкту
                 </Link>
@@ -615,7 +615,7 @@ export default function Home() {
                         </p>
                         <Link
                           href={item.href}
-                          className="mt-auto inline-flex min-h-10 w-full items-center justify-center rounded-[10px] border border-[#F2994A]/24 bg-[rgba(242,153,74,0.12)] px-4 py-2.5 text-center text-sm font-semibold text-[#F6C08A] transition hover:border-[#F2994A]/48 hover:bg-[#F2994A] hover:text-white"
+                          className="mt-auto inline-flex min-h-10 w-full items-center justify-center rounded-[10px] border border-[#F2994A]/24 bg-[rgba(242,153,74,0.12)] px-4 py-2.5 text-center text-sm font-semibold text-[#F6C08A] transition hover:border-[#F2994A]/48 hover:bg-[#F2994A] hover:text-[#1B1D1F]"
                         >
                           {`Детальніше про ${item.title.toLowerCase()}`}
                         </Link>
@@ -794,7 +794,7 @@ export default function Home() {
 
                     <Link
                       href="/cases/"
-                      className="mt-8 inline-flex items-center justify-center rounded bg-[#F2994A] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#de8232]"
+                      className="mt-8 inline-flex items-center justify-center rounded bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] transition hover:bg-[#de8232]"
                     >
                       Дивитися більше кейсів
                     </Link>

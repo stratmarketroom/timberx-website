@@ -94,7 +94,7 @@ export function SiteHeader() {
 
             <Link
               href="#cta"
-              className="hidden items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-white shadow-[0_16px_32px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_20px_40px_rgba(242,153,74,0.34)] sm:inline-flex"
+              className="hidden items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_20px_40px_rgba(242,153,74,0.34)] sm:inline-flex"
             >
               Отримати прорахунок
             </Link>
@@ -125,7 +125,7 @@ export function SiteHeader() {
                 <div className="mt-4 border-t border-white/10 pt-4">
                   <Link
                     href="#cta"
-                    className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
+                    className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
                   >
                     Отримати прорахунок
                   </Link>

@@ -215,7 +215,7 @@ export default function CasesPage() {
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   <a
                     href="#cta"
-                    className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-white shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
+                    className="inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
                   >
                     Отримати прорахунок проєкту
                   </a>

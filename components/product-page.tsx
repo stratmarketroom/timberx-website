@@ -174,7 +174,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
               <div className="mt-10 grid w-full max-w-[46rem] gap-4 sm:grid-cols-2">
                 <Link
                   href={page.hero.primaryCta.href}
-                  className="inline-flex w-full items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-4 text-base font-semibold text-white shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_22px_44px_rgba(242,153,74,0.34)]"
+                  className="inline-flex w-full items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_22px_44px_rgba(242,153,74,0.34)]"
                 >
                   {page.hero.primaryCta.label}
                 </Link>

@@ -52,7 +52,7 @@ export function StandardQuizCta({ id = "cta", className = "" }: StandardQuizCtaP
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
               <Link
                 href="#"
-                className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-white transition hover:bg-[#de8232] sm:w-auto"
+                className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
               >
                 Почати прорахунок
               </Link>
