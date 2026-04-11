@@ -55,9 +55,9 @@ export function SiteHeader() {
               <Image
                 src="/images/logo/logo-manual-updated.png"
                 alt="TimberX"
-                priority
                 width={2000}
                 height={2000}
+                sizes="(max-width: 640px) 112px, (max-width: 1024px) 128px, 176px"
                 className="h-14 w-auto shrink-0 object-contain sm:h-16 lg:h-[4.4rem]"
               />
             </Link>
@@ -150,11 +150,11 @@ export function SiteFooter() {
               alt="TimberX"
               width={188}
               height={188}
+              sizes="96px"
               className="h-24 w-auto object-contain"
-              priority
             />
           </Link>
-          <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/66">
+          <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/80">
             TimberX — інженерні дерев&apos;яні конструкції, модульні будинки та
             заводське виробництво для B2B і B2G проєктів.
           </p>
@@ -170,7 +170,7 @@ export function SiteFooter() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                  className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                 >
                   {item.label}
                 </Link>
@@ -187,7 +187,7 @@ export function SiteFooter() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                  className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                 >
                   {item.label}
                 </Link>
@@ -204,7 +204,7 @@ export function SiteFooter() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                  className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                 >
                   {item.label}
                 </Link>
@@ -217,7 +217,7 @@ export function SiteFooter() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
             Контакти
           </p>
-          <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/70 lg:items-start">
+          <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/82 lg:items-start">
             <p>
               <span className="font-medium text-white/88">Телефон:</span>{" "}
               <a href="tel:+380674121310" className="font-medium transition hover:text-[#F2994A]">

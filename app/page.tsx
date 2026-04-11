@@ -86,7 +86,7 @@ const audiences: Array<{
       "Запускайте продажі на 2–3 місяці раніше завдяки заводській готовності конструкцій і монтажу за 1–3 дні.",
     href: "/modulni-budynky/dlya-developeriv/",
     icon: "projects",
-    imageSrc: "/images/audiences/audience-developers.png",
+    imageSrc: "/images/audiences/audience-developers.jpg",
     imageClassName: "object-[50%_50%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.88)_0%,rgba(17,18,20,0.74)_28%,rgba(17,18,20,0.28)_62%,rgba(17,18,20,0.18)_100%)]",
@@ -97,7 +97,7 @@ const audiences: Array<{
       "Контролюйте собівартість і строки завдяки фіксованій ціні, точності до 2 мм і мінімізації переробок.",
     href: "/modulni-budynky/dlya-zhk/",
     icon: "factory",
-    imageSrc: "/images/audiences/audience-builders.png",
+    imageSrc: "/images/audiences/audience-builders.jpg",
     imageClassName: "object-[56%_48%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.78)_30%,rgba(17,18,20,0.36)_64%,rgba(17,18,20,0.24)_100%)]",
@@ -108,7 +108,7 @@ const audiences: Array<{
       "Скорочуйте ризики на майданчику: готові інженерні вузли спрощують монтаж і технагляд.",
     href: "/kleyeni-konstruktsii/dlya-genpidriadnykiv/",
     icon: "contractor",
-    imageSrc: "/images/audiences/audience-general-contractors.png",
+    imageSrc: "/images/audiences/audience-general-contractors.jpg",
     imageClassName: "object-[56%_42%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.94)_0%,rgba(17,18,20,0.82)_34%,rgba(17,18,20,0.34)_66%,rgba(17,18,20,0.2)_100%)]",
@@ -119,7 +119,7 @@ const audiences: Array<{
       "Фіксований бюджет і строки. Швидка реалізація соціальних об’єктів із відповідністю ДБН і гарантією на конструкції.",
     href: "/modulni-budynky/dlya-gromad/",
     icon: "community",
-    imageSrc: "/images/audiences/audience-communities.png",
+    imageSrc: "/images/audiences/audience-communities.jpg",
     imageClassName: "object-[52%_52%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.76)_28%,rgba(17,18,20,0.3)_62%,rgba(17,18,20,0.18)_100%)]",
@@ -274,7 +274,7 @@ export default function Home() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero/hero-factory.png"
+            src="/images/hero/hero-factory.jpg"
             alt="Виробництво дерев'яних конструкцій та модульних будинків TimberX"
             fill
             priority
@@ -292,9 +292,9 @@ export default function Home() {
                   <Image
                     src="/images/logo/logo-manual-updated.png"
                     alt="TimberX"
-                    priority
                     width={2000}
                     height={2000}
+                    sizes="(max-width: 640px) 112px, (max-width: 1024px) 128px, 176px"
                     className="h-14 w-auto shrink-0 object-contain sm:h-16 lg:h-[4.4rem]"
                   />
                 </Link>
@@ -477,7 +477,7 @@ export default function Home() {
                     <p className={cardHeadingClass}>
                       {item.title}
                     </p>
-                    <p className="mt-5 max-w-[19rem] text-base leading-7 text-white/74">
+                    <p className="mt-5 max-w-[19rem] text-base leading-7 text-white/84">
                       {item.description}
                     </p>
                   </div>
@@ -725,7 +725,7 @@ export default function Home() {
           <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 overflow-hidden shadow-[0_34px_90px_rgba(0,0,0,0.22)]">
             <div className="absolute inset-0">
               <Image
-                src="/images/cases/sosnovel-case.png"
+                src="/images/cases/sosnovel-case.jpg"
                 alt="Реалізований кейс TimberX Сосновель для девелоперського проєкту"
                 fill
                 className="object-cover"
@@ -883,7 +883,7 @@ export default function Home() {
                     <p className={cardHeadingClass}>
                       {step.title}
                     </p>
-                    <p className="max-w-xs text-base leading-7 text-white/72 md:mx-0 lg:mx-auto">
+                    <p className="max-w-xs text-base leading-7 text-white/84 md:mx-0 lg:mx-auto">
                       {step.description}
                     </p>
                   </div>
@@ -904,11 +904,11 @@ export default function Home() {
                   alt="TimberX"
                   width={188}
                   height={188}
+                  sizes="96px"
                   className="h-24 w-auto object-contain"
-                  priority
                 />
               </Link>
-              <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/66">
+              <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/80">
                 TimberX — інженерні дерев’яні конструкції, модульні будинки та заводське виробництво для B2B і B2G проєктів.
               </p>
             </div>
@@ -923,7 +923,7 @@ export default function Home() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                      className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                     >
                       {item.label}
                     </Link>
@@ -940,7 +940,7 @@ export default function Home() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                      className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                     >
                       {item.label}
                     </Link>
@@ -957,7 +957,7 @@ export default function Home() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-[1.03rem] leading-8 font-medium text-white/74 transition hover:text-[#F2994A]"
+                      className="text-[1.03rem] leading-8 font-medium text-white/84 transition hover:text-[#F2994A]"
                     >
                       {item.label}
                     </Link>
@@ -970,7 +970,7 @@ export default function Home() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
                 Контакти
               </p>
-              <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/70 lg:items-start">
+              <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/82 lg:items-start">
                 <p>
                   <span className="font-medium text-white/88">Телефон:</span>{" "}
                   <a href="tel:+380674121310" className="font-medium transition hover:text-[#F2994A]">

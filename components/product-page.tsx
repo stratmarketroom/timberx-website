@@ -381,7 +381,6 @@ function GallerySection({
               height={1600}
               className="h-auto max-h-[92vh] w-auto max-w-[92vw] rounded-[0.75rem] object-contain"
               sizes="92vw"
-              priority
             />
             <span className="absolute bottom-3 left-3 rounded-full border border-white/16 bg-[#1b1d1f]/82 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#f4dfcf]">
               {activeImage.label}
@@ -455,7 +454,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         { value: "1370 N/m²", label: "снігове навантаження" },
         { value: "500 N/m²", label: "вітрове навантаження" },
       ],
-      imageSrc: "/images/fermy-mzp/case-wide-span-hall.png",
+      imageSrc: "/images/fermy-mzp/case-wide-span-hall.jpg",
       imageAlt: "Великопролітна конструкція з дерев'яними фермами МЗП",
       imageClassName: "object-[50%_32%]",
     },
@@ -473,7 +472,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             { value: "850 N/m²", label: "снігове навантаження", icon: "snow" },
             { value: "470 N/m²", label: "вітрове навантаження", icon: "wind" },
           ],
-          imageSrc: "/images/fermy-mzp/case-zhk-serial.png",
+          imageSrc: "/images/fermy-mzp/case-zhk-serial.jpg",
           imageAlt: "Серійна забудова ЖК з дерев'яними фермами МЗП",
           imageClassName: "object-[50%_32%]",
         }

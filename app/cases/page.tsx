@@ -14,10 +14,10 @@ const bodyClass = "font-['Inter',_Arial,_sans-serif]";
 const cases = [
   {
     title: "Кейс №1: Модульні будинки для заміського комплексу «Сосновель» (Київська обл.)",
-    imageSrc: "/images/cases/sosnovel-case.png",
+    imageSrc: "/images/cases/sosnovel-case.jpg",
     imageAlt: "Модульні будинки TimberX у заміському комплексі «Сосновель»",
     gallery: [
-      { src: "/images/cases/sosnovel-case.png", alt: "Кейс Сосновель: загальний вигляд комплексу" },
+      { src: "/images/cases/sosnovel-case.jpg", alt: "Кейс Сосновель: загальний вигляд комплексу" },
       { src: "/images/fermy-mzp/object-frame-house-1.jpg", alt: "Модульний будинок TimberX: фасад" },
       { src: "/images/fermy-mzp/object-frame-house-2.jpg", alt: "Модульний будинок TimberX: етап реалізації" },
       { src: "/images/fermy-mzp/object-frame-house-3.jpg", alt: "Модульний будинок TimberX: готовий об'єкт" },
@@ -34,10 +34,10 @@ const cases = [
   },
   {
     title: "Кейс №2: Клеєні конструкції для великопролітного складу",
-    imageSrc: "/images/fermy-mzp/case-wide-span-hall.png",
+    imageSrc: "/images/fermy-mzp/case-wide-span-hall.jpg",
     imageAlt: "Великопролітний склад на базі клеєних конструкцій TimberX",
     gallery: [
-      { src: "/images/fermy-mzp/case-wide-span-hall.png", alt: "Склад із великопролітними конструкціями" },
+      { src: "/images/fermy-mzp/case-wide-span-hall.jpg", alt: "Склад із великопролітними конструкціями" },
       { src: "/images/fermy-mzp/object-hall-interior-1.jpg", alt: "Інтер'єр великопролітного складу" },
       { src: "/images/fermy-mzp/object-hall-exterior-1.jpg", alt: "Екстер'єр великопролітного складу" },
       { src: "/images/fermy-mzp/object-wide-frame-1.jpg", alt: "Каркас великопролітної будівлі" },
@@ -54,10 +54,10 @@ const cases = [
   },
   {
     title: "Кейс №3: Серійна забудова ЖК — швидке закриття контуру даху",
-    imageSrc: "/images/fermy-mzp/case-zhk-serial.png",
+    imageSrc: "/images/fermy-mzp/case-zhk-serial.jpg",
     imageAlt: "Серійна забудова ЖК з фермами МЗП TimberX",
     gallery: [
-      { src: "/images/fermy-mzp/case-zhk-serial.png", alt: "ЖК із серійним монтажем ферм МЗП" },
+      { src: "/images/fermy-mzp/case-zhk-serial.jpg", alt: "ЖК із серійним монтажем ферм МЗП" },
       { src: "/images/fermy-mzp/object-crane-installation-1.jpg", alt: "Монтаж ферм МЗП краном на об'єкті" },
       { src: "/images/fermy-mzp/object-block-building-1.jpg", alt: "Серійна забудова з фермами МЗП TimberX" },
       { src: "/images/fermy-mzp/object-roof-joint-detail-1.jpg", alt: "Вузол покрівельної системи МЗП" },
@@ -81,7 +81,7 @@ const directions = [
       "Масштабування серійної забудови, швидкісні кроквяні системи та ферми МЗП.",
     href: "/modulni-budynky/dlya-developeriv/",
     icon: "community" as IconName,
-    imageSrc: "/images/audiences/audience-developers.png",
+    imageSrc: "/images/audiences/audience-developers.jpg",
     imageClassName: "object-[50%_50%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.88)_0%,rgba(17,18,20,0.74)_28%,rgba(17,18,20,0.28)_62%,rgba(17,18,20,0.18)_100%)]",
@@ -92,7 +92,7 @@ const directions = [
       "Великопролітні конструкції для складів, ангарів та виробництв.",
     href: "/kleyeni-konstruktsii/dlya-genpidriadnykiv/",
     icon: "blueprint" as IconName,
-    imageSrc: "/images/audiences/audience-general-contractors.png",
+    imageSrc: "/images/audiences/audience-general-contractors.jpg",
     imageClassName: "object-[56%_42%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.94)_0%,rgba(17,18,20,0.82)_34%,rgba(17,18,20,0.34)_66%,rgba(17,18,20,0.2)_100%)]",
@@ -103,7 +103,7 @@ const directions = [
       "Прискорення темпів монтажу у 3 рази та робота мінімальною кількістю персоналу.",
     href: "/modulni-budynky/dlya-zhk/",
     icon: "projects" as IconName,
-    imageSrc: "/images/audiences/audience-builders.png",
+    imageSrc: "/images/audiences/audience-builders.jpg",
     imageClassName: "object-[56%_48%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.78)_30%,rgba(17,18,20,0.36)_64%,rgba(17,18,20,0.24)_100%)]",
@@ -114,7 +114,7 @@ const directions = [
       "Соціальні об’єкти, амбулаторії та модульне житло з гарантованою ціною.",
     href: "/modulni-budynky/dlya-gromad/",
     icon: "developers" as IconName,
-    imageSrc: "/images/audiences/audience-communities.png",
+    imageSrc: "/images/audiences/audience-communities.jpg",
     imageClassName: "object-[52%_52%]",
     overlayClassName:
       "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.76)_28%,rgba(17,18,20,0.3)_62%,rgba(17,18,20,0.18)_100%)]",
@@ -171,7 +171,7 @@ export default function CasesPage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/cases/sosnovel-case.png"
+            src="/images/cases/sosnovel-case.jpg"
             alt="Реалізовані кейси TimberX"
             fill
             priority
