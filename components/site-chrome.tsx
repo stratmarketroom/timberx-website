@@ -123,6 +123,23 @@ export function SiteHeader() {
                 </nav>
 
                 <div className="mt-4 border-t border-white/10 pt-4">
+                  <p className="px-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
+                    Рішення
+                  </p>
+                  <div className="mt-2 flex flex-col gap-1">
+                    {solutionMenuItems.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className="rounded-[10px] border border-transparent px-3 py-2 text-sm font-medium text-white/82 transition hover:border-[#F2994A]/28 hover:bg-white/6 hover:text-[#F2994A]"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 border-t border-white/10 pt-4">
                   <Link
                     href="#cta"
                     className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
