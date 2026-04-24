@@ -11,9 +11,9 @@ const navItems = [
 const productMenuItems = [
   { label: "Модульні будинки", href: "/modulni-budynky/" },
   { label: "Клеєні конструкції", href: "/kleyeni-konstruktsii/" },
-  { label: "Ферми МЗП", href: "/derevyani-fermy-mzp/" },
-  { label: "Каркасно-панельні будинки", href: "/karkasno-panelni-budynky/" },
-  { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
+  { label: "Ферми з металозубчатими пластинами", href: "/derevyani-fermy-mzp/" },
+  { label: "Каркасно-модульні будинки", href: "/karkasno-panelni-budynky/" },
+  { label: "Санітарно-технічні модулі", href: "/sanitarni-moduli/" },
   { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
 ];
 const solutionMenuItems = [
@@ -26,9 +26,9 @@ const solutionMenuItems = [
 const footerProductPages = [
   { label: "Модульні будинки", href: "/modulni-budynky/" },
   { label: "Клеєні конструкції", href: "/kleyeni-konstruktsii/" },
-  { label: "Ферми МЗП", href: "/derevyani-fermy-mzp/" },
-  { label: "Каркасно-панельні будинки", href: "/karkasno-panelni-budynky/" },
-  { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
+  { label: "Ферми з металозубчатими пластинами", href: "/derevyani-fermy-mzp/" },
+  { label: "Каркасно-модульні будинки", href: "/karkasno-panelni-budynky/" },
+  { label: "Санітарно-технічні модулі", href: "/sanitarni-moduli/" },
   { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
 ];
 const footerSolutionPages = [
@@ -172,8 +172,8 @@ export function SiteFooter() {
             />
           </Link>
           <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/80">
-            TimberX — інженерні дерев&apos;яні конструкції, модульні будинки та
-            заводське виробництво для B2B і B2G проєктів.
+            TimberX - інженерно-дерев&apos;яні конструкції, панельно-модульні
+            будинки заводського виготовлення для B2B і B2G
           </p>
         </div>
 

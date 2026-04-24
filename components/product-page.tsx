@@ -150,7 +150,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
                   Головна
                 </Link>
                 <span>/</span>
-                <span className="text-white">Дерев&apos;яні ферми МЗП</span>
+                <span className="text-white">Дерев&apos;яні ферми з металозубчатими пластинами</span>
               </nav>
               <p className="mb-5 inline-flex max-w-full flex-wrap items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
                 <span>{eyebrowPrefix}</span>
@@ -163,7 +163,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
               <h1
                 className={`${headingClass} text-[2.1rem] leading-[1.02] text-white sm:text-[3rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
               >
-                <span className="block">Дерев&apos;яні ферми МЗП</span>
+                <span className="block">Дерев&apos;яні ферми з металозубчатими пластинами</span>
                 <span className="block">для дахів ЖК, складів,</span>
                 <span className="block">бізнес-об&apos;єктів та будинків</span>
               </h1>
@@ -455,7 +455,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         { value: "500 N/m²", label: "вітрове навантаження" },
       ],
       imageSrc: "/images/fermy-mzp/case-wide-span-hall.jpg",
-      imageAlt: "Великопролітна конструкція з дерев'яними фермами МЗП",
+      imageAlt: "Великопролітна конструкція з дерев'яними фермами з металозубчатими пластинами",
       imageClassName: "object-[50%_32%]",
     },
     page.secondaryCaseStudy
@@ -473,7 +473,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             { value: "470 N/m²", label: "вітрове навантаження", icon: "wind" },
           ],
           imageSrc: "/images/fermy-mzp/case-zhk-serial.jpg",
-          imageAlt: "Серійна забудова ЖК з дерев'яними фермами МЗП",
+          imageAlt: "Серійна забудова ЖК з дерев'яними фермами з металозубчатими пластинами",
           imageClassName: "object-[50%_32%]",
         }
       : null,
@@ -534,12 +534,18 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     },
     {
       step: "03",
+      title: "Підписання договору",
+      description:
+        "Фіксуємо чітку вартість, порядок оплат і терміни реалізації проєкту.",
+    },
+    {
+      step: "04",
       title: "Заводське виробництво",
       description:
         "Автоматизована нарізка та пресування на лінії MiTek. Виготовлення комплекту займає від 3 до 14 робочих днів.",
     },
     {
-      step: "04",
+      step: "05",
       title: "Логістика та шеф-монтаж",
       description:
         "Доставка маркованого комплекту на об'єкт. Надаємо схеми збірки або виїзд інженера для контролю монтажу.",
@@ -745,7 +751,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                   Що дає рішення від Timber<span className="text-[#f2994a]">X</span>
                 </h2>
                 <p className={`${bodyClass} mt-4 max-w-2xl text-base leading-8 text-[#d0d0d0]`}>
-                  Дерев&apos;яні ферми МЗП подаються як інженерний продукт для швидкого
+                  Дерев&apos;яні ферми з металозубчатими пластинами подаються як інженерний продукт для швидкого
                   й прогнозованого будівництва, а не як ручна збірка на об&apos;єкті.
                 </p>
               </div>
@@ -753,7 +759,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               <div className="relative min-h-[26rem] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326] shadow-[0_26px_70px_rgba(0,0,0,0.28)]">
                 <Image
                   src="/images/fermy-mzp/object-roof-joint-detail-1.jpg"
-                  alt="Інженерний вузол дерев'яної ферми МЗП на об'єкті"
+                  alt="Інженерний вузол дерев'яної ферми з металозубчатими пластинами на об'єкті"
                   fill
                   className="object-cover"
                   sizes="(min-width: 1024px) 36vw, 100vw"
@@ -826,7 +832,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               Де це вже працює
             </h2>
             <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
-              Ферми МЗП працюють там, де важливі повторюваність конструкцій,
+              Ферми з металозубчатими пластинами працюють там, де важливі повторюваність конструкцій,
               швидкий монтаж і прогнозована логіка перекриття великих площ.
             </p>
           </div>
@@ -1113,7 +1119,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             <div className="relative -mt-4 rounded-[1.5rem] lg:-ml-4">
               <Image
                 src="/images/fermy-mzp/grafik-elements-2.png"
-                alt="Технічне креслення ферми МЗП"
+                alt="Технічне креслення ферми з металозубчатими пластинами"
                 width={1200}
                 height={900}
                 className="h-full w-full object-contain object-left"
@@ -1141,7 +1147,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                   top: "30%",
                   title: "5 мм: Точність вузлів",
                   description:
-                    "Суворе позиціонування МЗП-пластин забезпечує проектну міцність кожного з'єднання.",
+                    "Суворе позиціонування металозубчатих пластин забезпечує проектну міцність кожного з'єднання.",
                 },
                 {
                   top: "53%",
@@ -1190,7 +1196,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               Економіка рішення
             </h2>
             <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
-              Готові ферми МЗП зменшують обсяг ручних робіт, скорочують час перебування бригади на
+              Готові ферми з металозубчатими пластинами зменшують обсяг ручних робіт, скорочують час перебування бригади на
               майданчику та прибирають частину непередбачуваних витрат, які зазвичай з&apos;являються
               під час складання покрівельної системи на місці.
             </p>
@@ -1261,7 +1267,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </p>
           </div>
 
-          <div className="relative mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+          <div className="relative mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:grid-cols-5">
             {processCards.map((card) => (
               <div
                 key={card.step}
@@ -1307,14 +1313,14 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                   <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
                   <span>
                     <strong className="font-semibold text-white">Юридична фіксація:</strong> гарантія
-                    10–15 років, прописана в договорі.
+                    10 років, прописана в договорі.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
                   <span>
                     <strong className="font-semibold text-white">Технічний паспорт на партію:</strong>{" "}
-                    сертифікати на деревину та МЗП-пластини.
+                    сертифікати на деревину та металозубчаті пластини.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -1340,7 +1346,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                     Гарантії TimberX
                   </p>
                   <h3 className={`${headingClass} mt-4 text-[2.35rem] leading-[1.12] text-white`}>
-                    ГАРАНТІЯ 10–15 РОКІВ НА КОНСТРУКЦІЇ
+                    ГАРАНТІЯ 10 РОКІВ НА КОНСТРУКЦІЇ
                   </h3>
                 </div>
               </div>

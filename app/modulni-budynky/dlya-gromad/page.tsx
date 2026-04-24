@@ -82,12 +82,12 @@ const specs = [
   ["Точність виготовлення", "Допуск розміщення кріплення та геометрії 1-2 мм"],
   ["Утеплення", "Базальтова вата / ековата (150-250 мм), енергоефективний контур"],
   ["Термін експлуатації", "50+ років для несучих конструкцій"],
-  ["Гарантія на конструктив", "10-15 років офіційної гарантії"],
+  ["Гарантія на конструктив", "10 років офіційної гарантії"],
 ] as const;
 
 const processSteps = [
   "Запит та інженерний прорахунок",
-  "Договір та фіксація ціни",
+  "Підписання договору з фіксацією чіткої вартості, порядку оплат і термінів реалізації проєкту",
   "Паралельне виконання",
   "Монтаж та здача",
 ];
@@ -96,7 +96,7 @@ const internalLinks = [
   { label: "Модульні будинки TimberX", href: "/modulni-budynky/" },
   { label: "Кейси реалізації", href: "/cases/" },
   { label: "FAQ по модульних будинках", href: "/modulni-budynky/faq/" },
-  { label: "Санітарні модулі для громад", href: "/sanitarni-moduli/dlya-gromad/" },
+  { label: "Санітарно-технічні модулі для громад", href: "/sanitarni-moduli/dlya-gromad/" },
 ];
 
 const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
@@ -164,12 +164,13 @@ export default function ModularHomesForCommunitiesPage() {
               <span className="text-white">Для громад</span>
             </nav>
 
-            <p className="mb-4 inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-              Модульні будинки для громад
+            <p className="mb-4 inline-flex max-w-[56rem] items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[9px] font-semibold uppercase leading-5 tracking-[0.18em] text-white/85 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[10px] sm:tracking-[0.22em] md:text-[11px] md:tracking-[0.26em]">
+              Виробництво каркасно-модульних будинків, конструкцій з клеєної
+              деревини та дерев&apos;яних ферм з металозубчатими пластинами.
             </p>
-            <h1 className={`${headingClass} max-w-none text-[2rem] leading-[1.06] text-white sm:text-[2.45rem] lg:text-[2.85rem]`}>
-              <span className="block md:whitespace-nowrap">Швидке відновлення житлової та соціальної</span>
-              <span className="block md:whitespace-nowrap">інфраструктури до 2-х місяців</span>
+            <h1 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}>
+              Інженерні дерев&apos;яні конструкції та каркасно-модульні будинки
+              для девелоперів і громад
             </h1>
             <p className={`${bodyClass} mt-5 max-w-3xl text-base leading-8 text-white/92 md:text-lg`}>
               Серійні заводські рішення з готовністю до експлуатації за 30-60 днів.
@@ -378,7 +379,7 @@ export default function ModularHomesForCommunitiesPage() {
                 снігові (до 1370 N/m2) та вітрові навантаження згідно з кліматичним зонуванням України.
               </li>
               <li>
-                <span className="font-semibold text-[#1B1D1F]">Технологія МЗП:</span> З&apos;єднання вузлів металевими зубчастими
+                <span className="font-semibold text-[#1B1D1F]">Технологія металозубчатих пластин:</span> З&apos;єднання вузлів металевими зубчастими
                 пластинами під тиском 30-50 тонн створює монолітну конструкцію, стійку до деформацій.
               </li>
             </ul>
@@ -416,7 +417,7 @@ export default function ModularHomesForCommunitiesPage() {
             <ul className={`${bodyClass} mt-4 space-y-3 text-base leading-7 text-[#828282]`}>
               <li>
                 <span className="font-semibold text-[#1B1D1F]">Технології:</span> Використання ЧПУ-обладнання для ідеальної
-                нарізки та складання каркасно-панельних, CLT-панельних або комбінованих металево-дерев&apos;яних модулів.
+                нарізки та складання каркасно-модульних, CLT-панельних або комбінованих металево-дерев&apos;яних модулів.
               </li>
               <li>
                 <span className="font-semibold text-[#1B1D1F]">Логістична оптимізація:</span> Доставка здійснюється у форматі
@@ -561,7 +562,7 @@ export default function ModularHomesForCommunitiesPage() {
                     Гарантії TimberX
                   </p>
                   <h3 className={`${headingClass} mt-4 text-[2.1rem] leading-[1.12] text-[#1B1D1F]`}>
-                    ГАРАНТІЯ 10-15 РОКІВ НА КОНСТРУКЦІЇ
+                    ГАРАНТІЯ 10 РОКІВ НА КОНСТРУКЦІЇ
                   </h3>
                 </div>
               </article>

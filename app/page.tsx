@@ -19,9 +19,9 @@ const navItems = [
 const productMenuItems = [
   { label: "Модульні будинки", href: "/modulni-budynky/" },
   { label: "Клеєні конструкції", href: "/kleyeni-konstruktsii/" },
-  { label: "Ферми МЗП", href: "/derevyani-fermy-mzp/" },
-  { label: "Каркасно-панельні будинки", href: "/karkasno-panelni-budynky/" },
-  { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
+  { label: "Ферми з металозубчатими пластинами", href: "/derevyani-fermy-mzp/" },
+  { label: "Каркасно-модульні будинки", href: "/karkasno-panelni-budynky/" },
+  { label: "Санітарно-технічні модулі", href: "/sanitarni-moduli/" },
   { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
 ];
 const solutionMenuItems = [
@@ -34,9 +34,9 @@ const solutionMenuItems = [
 const footerProductPages = [
   { label: "Модульні будинки", href: "/modulni-budynky/" },
   { label: "Клеєні конструкції", href: "/kleyeni-konstruktsii/" },
-  { label: "Ферми МЗП", href: "/derevyani-fermy-mzp/" },
-  { label: "Каркасно-панельні будинки", href: "/karkasno-panelni-budynky/" },
-  { label: "Санітарні модулі", href: "/sanitarni-moduli/" },
+  { label: "Ферми з металозубчатими пластинами", href: "/derevyani-fermy-mzp/" },
+  { label: "Каркасно-модульні будинки", href: "/karkasno-panelni-budynky/" },
+  { label: "Санітарно-технічні модулі", href: "/sanitarni-moduli/" },
   { label: "Фахверкові будинки", href: "/fakhverkovi-budynky/" },
 ];
 const footerSolutionPages = [
@@ -142,19 +142,19 @@ const products = [
   },
   {
     imageSrc: "/images/products/icon-fermy-mzp.png",
-    title: "Ферми МЗП",
+    title: "Ферми з металозубчатими пластинами",
     description: "Дахові системи з економією матеріалів до 20–30% і швидким монтажем",
     href: "/derevyani-fermy-mzp/",
   },
   {
     imageSrc: "/images/products/icon-karkasno-panelni.png",
-    title: "Каркасно-панельні будинки",
+    title: "Каркасно-модульні будинки",
     description: "Енергоефективні будинки для швидкого серійного будівництва",
     href: "/karkasno-panelni-budynky/",
   },
   {
     imageSrc: "/images/products/icon-sanitarni-moduli.png",
-    title: "Санітарні модулі",
+    title: "Санітарно-технічні модулі",
     description: "Готові санітарні блоки для житлових, соціальних і комерційних проєктів",
     href: "/sanitarni-moduli/",
   },
@@ -196,6 +196,12 @@ const processSteps: Array<{ icon: IconName; title: string; description: string }
     title: "Прорахунок",
     description:
       "Готуємо попередню пропозицію зі строками, бюджетом і технічними параметрами.",
+  },
+  {
+    icon: "contractor",
+    title: "Підписання договору",
+    description:
+      "Фіксуємо чітку вартість, порядок оплат і терміни реалізації проєкту.",
   },
   {
     icon: "factory",
@@ -378,7 +384,7 @@ export default function Home() {
           <div className="w-full px-4 pb-14 pt-10 md:px-6 md:pb-20 md:pt-14 lg:px-6 lg:pb-24 lg:pt-16">
             <div className="mx-auto max-w-[88rem]">
               <p className="mb-5 inline-flex max-w-full items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
-                Виробництво модульних будинків, клеєних конструкцій та ферм МЗП
+                Виробництво модульних будинків, клеєних конструкцій та ферм з металозубчатими пластинами
               </p>
               <h1
                 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}
@@ -452,7 +458,7 @@ export default function Home() {
               <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#F2994A]">
                 Системний підхід
               </p>
-              <SectionHeading title="Інженерні конструкції та модульні будинки замість “ручного будівництва”" />
+              <SectionHeading title="Інженерні конструкції та каркасно-модульні будинки замість традиційного будівництва" />
               <p className="mt-6 text-lg leading-8 text-white/80">
                 Ми переводимо будівництво у системний процес: від інженерного
                 розрахунку до заводського виробництва та швидкого монтажу.
@@ -649,7 +655,7 @@ export default function Home() {
                 <div className="relative min-h-[32rem] lg:h-full">
                   <Image
                     src="/images/production/truss-production1.png"
-                    alt="Виробництво дерев'яних ферм МЗП та конструкцій TimberX"
+                    alt="Виробництво дерев'яних ферм з металозубчатими пластинами та конструкцій TimberX"
                     fill
                     className="object-cover object-center"
                     sizes="(min-width: 1024px) 760px, 100vw"
@@ -704,10 +710,10 @@ export default function Home() {
                       Технології
                     </h3>
                     <p className="mt-4 text-base leading-7 text-white/78">
-                      Інженерія TimberX дозволяє проєктувати складні дерев’яні системи без перевитрат матеріалів і монтажних помилок.
+                      Інженерія TimberX дозволяє проектувати складні дерев&apos;яні системи без надлишкових витрат та технологічних помилок.
                     </p>
                     <p className="mt-3 text-base leading-7 text-white/78">
-                      Працюємо в MiTek / Pamir, застосовуємо ЧПУ, МЗП і точну геометрію для швидкого виробництва та передбачуваного монтажу.
+                      Працюємо в професійних програмах: MiTek PAMIR, Cadwork, застосовуємо ЧПУ для отримання чіткої геометрії, що дозволяє здійснювати швидке виробництво та монтаж.
                     </p>
                     <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white/78 transition group-hover:text-[#F2994A]">
                       Детальніше
@@ -853,7 +859,7 @@ export default function Home() {
                     Гарантії TimberX
                   </p>
                   <h3 className={`${headingClass} mt-4 text-[2.35rem] leading-[1.12] text-white`}>
-                    ГАРАНТІЯ 10–15 РОКІВ НА КОНСТРУКЦІЇ
+                    ГАРАНТІЯ 10 РОКІВ НА КОНСТРУКЦІЇ
                   </h3>
                 </div>
               </Card>
@@ -869,7 +875,7 @@ export default function Home() {
           <div className="relative">
             <div className="absolute left-6 top-0 bottom-0 w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.45),rgba(242,153,74,0.08))] md:hidden" />
             <div className="absolute left-0 right-0 top-6 hidden h-px bg-[linear-gradient(90deg,rgba(242,153,74,0.08),rgba(242,153,74,0.5),rgba(242,153,74,0.08))] lg:block" />
-            <div className="grid gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-6">
+            <div className="grid gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-5 lg:gap-6">
               {processSteps.map((step, index) => (
                 <div key={step.title} className="relative pl-16 md:pl-0">
                   <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#F2994A]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#F2994A] shadow-[0_18px_36px_rgba(242,153,74,0.12)] md:relative md:mx-0 lg:mx-auto">
@@ -909,7 +915,8 @@ export default function Home() {
                 />
               </Link>
               <p className="max-w-[17.5rem] text-[1.03rem] leading-8 text-white/80">
-                TimberX — інженерні дерев’яні конструкції, модульні будинки та заводське виробництво для B2B і B2G проєктів.
+                TimberX - інженерно-дерев&apos;яні конструкції, панельно-модульні
+                будинки заводського виготовлення для B2B і B2G
               </p>
             </div>
 
