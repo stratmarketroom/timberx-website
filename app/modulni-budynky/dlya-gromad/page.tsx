@@ -179,16 +179,38 @@ const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: "Модульні будинки для громад | TimberX B2G рішення для відбудови та ВПО",
-  description:
-    "Модульні будинки TimberX для громад: серійне B2G будівництво для ВПО, амбулаторій і соціальних об'єктів. Фіксований кошторис, прозорість для донорів, монтаж 1-3 дні.",
-  alternates: {
-    canonical: "/modulni-budynky/dlya-gromad/",
-  },
+export type SolutionSegmentPageCopy = {
+  breadcrumbLabel: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  metadataTitle: string;
+  metadataDescription: string;
+  canonical: string;
 };
 
-export default function ModularHomesForCommunitiesPage() {
+export const communitySolutionPageCopy: SolutionSegmentPageCopy = {
+  breadcrumbLabel: "Для громад",
+  heroEyebrow: "Модульні будинки для громад",
+  heroTitle: "Швидке відновлення житлової та соціальної інфраструктури до 2-х місяців",
+  metadataTitle: "Модульні будинки для громад | TimberX B2G рішення для відбудови та ВПО",
+  metadataDescription:
+    "Модульні будинки TimberX для громад: серійне B2G будівництво для ВПО, амбулаторій і соціальних об'єктів. Фіксований кошторис, прозорість для донорів, монтаж 1-3 дні.",
+  canonical: "/modulni-budynky/dlya-gromad/",
+};
+
+export function buildSolutionSegmentMetadata(copy: SolutionSegmentPageCopy): Metadata {
+  return {
+    title: copy.metadataTitle,
+    description: copy.metadataDescription,
+    alternates: {
+      canonical: copy.canonical,
+    },
+  };
+}
+
+export const metadata: Metadata = buildSolutionSegmentMetadata(communitySolutionPageCopy);
+
+export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.08),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f8f9fa_100%)] text-[#1B1D1F]">
       <main className="w-full pb-14 md:pb-16 lg:pb-20">
@@ -223,15 +245,14 @@ export default function ModularHomesForCommunitiesPage() {
                 Рішення
               </Link>
               <span>/</span>
-              <span className="text-white">Для громад</span>
+              <span className="text-white">{copy.breadcrumbLabel}</span>
             </nav>
 
             <p className="mb-4 inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-              Модульні будинки для громад
+              {copy.heroEyebrow}
             </p>
             <h1 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:text-[4.35rem] xl:text-[4.7rem]`}>
-              Швидке відновлення житлової та соціальної інфраструктури до 2-х
-              місяців
+              {copy.heroTitle}
             </h1>
             <p className={`${bodyClass} mt-5 max-w-3xl text-base leading-8 text-white/92 md:text-lg`}>
               Серійні заводські рішення з готовністю до експлуатації за 30-60 днів.
@@ -741,4 +762,8 @@ export default function ModularHomesForCommunitiesPage() {
       </div>
     </div>
   );
+}
+
+export default function ModularHomesForCommunitiesPage() {
+  return <SolutionSegmentPage copy={communitySolutionPageCopy} />;
 }
