@@ -141,7 +141,7 @@ function HeroSection({ page }: { page: ProductPageData }) {
       <div className="relative z-10 flex items-start lg:min-h-[100vh] lg:items-center">
         <div className="w-full px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-8 lg:px-6 lg:pb-24 lg:pt-16">
           <div className="mx-auto max-w-[88rem]">
-            <div className="max-w-[56rem]">
+            <div className="max-w-none">
               <nav
                 aria-label="Breadcrumb"
                 className={`${bodyClass} mb-6 flex flex-wrap items-center gap-2 text-sm text-white/58`}
@@ -161,11 +161,9 @@ function HeroSection({ page }: { page: ProductPageData }) {
                 <span>{eyebrowSuffix}</span>
               </p>
               <h1
-                className={`${headingClass} text-[2.1rem] leading-[1.02] text-white sm:text-[3rem] md:text-[3.55rem] lg:text-[3.9rem] xl:text-[4.2rem]`}
+                className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:text-[4.35rem] xl:text-[4.7rem]`}
               >
-                <span className="block">Дерев&apos;яні ферми з металозубчатими пластинами</span>
-                <span className="block">для дахів ЖК, складів,</span>
-                <span className="block">бізнес-об&apos;єктів та будинків</span>
+                {page.hero.title}
               </h1>
               <div className="mt-7 max-w-[43rem] space-y-4 text-base leading-8 text-white/72 md:text-[1.15rem]">
                 <p>{page.hero.description}</p>

@@ -72,7 +72,8 @@ export function SiteHeader() {
                     {item.label}
                   </Link>
                   {item.label === "Продукти" || item.label === "Рішення" ? (
-                    <div className="pointer-events-none absolute left-0 top-[calc(100%+0.6rem)] z-30 min-w-[18rem] translate-y-1 rounded-[14px] border border-white/12 bg-[rgba(18,19,21,0.96)] p-2 opacity-0 shadow-[0_24px_64px_rgba(0,0,0,0.38)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                    <div className="pointer-events-none absolute left-0 top-full z-30 min-w-[18rem] translate-y-1 pt-3 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                      <div className="rounded-[14px] border border-white/12 bg-[rgba(18,19,21,0.96)] p-2 shadow-[0_24px_64px_rgba(0,0,0,0.38)] backdrop-blur-xl">
                       <div className="flex flex-col gap-1">
                         {(item.label === "Продукти" ? productMenuItems : solutionMenuItems).map(
                           (subItem) => (
@@ -85,6 +86,7 @@ export function SiteHeader() {
                             </Link>
                           ),
                         )}
+                      </div>
                       </div>
                     </div>
                   ) : null}

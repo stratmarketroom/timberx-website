@@ -69,10 +69,10 @@ const solutionCards = [
   },
 ];
 const economics = [
-  "Фіксована вартість у ПКД: ціна, затверджена в договорі, є остаточною.",
-  "Антикорупційний запобіжник: заводська точність унеможливлює завищення обсягів матеріалів.",
-  "Експлуатаційна економія: енергоефективність класу А/B знижує витрати на опалення та кондиціювання.",
-  "Відсутність відходів: замовник не оплачує обрізки деревини чи логістику зайвого сміття.",
+  "Громада бачить остаточну вартість до старту робіт: ціна фіксується в договорі та ПКД.",
+  "Заводська специфікація зменшує ризик завищення обсягів матеріалів і спрощує донорський аудит.",
+  "Енергоефективний контур знижує майбутні витрати бюджету на опалення та кондиціювання.",
+  "Замовник не оплачує обрізки, зайву логістику та будівельне сміття на майданчику.",
 ];
 
 const specs = [
@@ -82,8 +82,13 @@ const specs = [
   ["Точність виготовлення", "Допуск розміщення кріплення та геометрії 1-2 мм"],
   ["Утеплення", "Базальтова вата / ековата (150-250 мм), енергоефективний контур"],
   ["Термін експлуатації", "50+ років для несучих конструкцій"],
-  ["Гарантія на конструктив", "10 років офіційної гарантії"],
 ] as const;
+
+const specProofs = [
+  { value: "10 років", label: "офіційної гарантії" },
+  { value: "50+ років", label: "експлуатації конструкцій" },
+  { value: "1-2 мм", label: "точність виготовлення" },
+];
 
 const processSteps = [
   "Запит та інженерний прорахунок",
@@ -164,13 +169,12 @@ export default function ModularHomesForCommunitiesPage() {
               <span className="text-white">Для громад</span>
             </nav>
 
-            <p className="mb-4 inline-flex max-w-[56rem] items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[9px] font-semibold uppercase leading-5 tracking-[0.18em] text-white/85 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[10px] sm:tracking-[0.22em] md:text-[11px] md:tracking-[0.26em]">
-              Виробництво каркасно-модульних будинків, конструкцій з клеєної
-              деревини та дерев&apos;яних ферм з металозубчатими пластинами.
+            <p className="mb-4 inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
+              Модульні будинки для громад
             </p>
-            <h1 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}>
-              Інженерні дерев&apos;яні конструкції та каркасно-модульні будинки
-              для девелоперів і громад
+            <h1 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:text-[4.35rem] xl:text-[4.7rem]`}>
+              Швидке відновлення житлової та соціальної інфраструктури до 2-х
+              місяців
             </h1>
             <p className={`${bodyClass} mt-5 max-w-3xl text-base leading-8 text-white/92 md:text-lg`}>
               Серійні заводські рішення з готовністю до експлуатації за 30-60 днів.
@@ -229,27 +233,34 @@ export default function ModularHomesForCommunitiesPage() {
         </section>
 
         <div className="mx-auto w-full max-w-[88rem] px-4 pt-8 md:px-6 md:pt-10 lg:px-6 lg:pt-12">
-        <section className="mt-10 space-y-10 lg:mt-12">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Задача</p>
-              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-[#1B1D1F] sm:text-4xl`}>
-                Виклики відбудови громад
-              </h2>
+        <section className="mt-10 space-y-8 lg:mt-12">
+          <div className="relative overflow-hidden rounded-[1.6rem] border border-[#F2994A]/22 bg-[linear-gradient(135deg,#ffffff_0%,#fff7ef_48%,#f8f9fa_100%)] p-7 shadow-[0_22px_58px_rgba(27,29,31,0.08)] sm:p-8 lg:p-10">
+            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.5),rgba(242,153,74,0))]" />
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-end">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Задача</p>
+                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-[#1B1D1F] sm:text-4xl lg:text-[3.25rem]`}>
+                  Виклики відбудови громад
+                </h2>
+              </div>
+              <p className={`${bodyClass} max-w-3xl text-lg leading-8 text-[#4f4f4f] lg:justify-self-end lg:text-xl lg:leading-9`}>
+                Традиційне будівництво часто не відповідає вимогам воєнного часу та стандартам міжнародного
+                фінансування. Ми вирішуємо ключові болі B2G-замовників.
+              </p>
             </div>
-            <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#828282] lg:justify-self-end`}>
-              Традиційне будівництво часто не відповідає вимогам воєнного часу та стандартам міжнародного
-              фінансування. Ми вирішуємо ключові болі B2G-замовників.
-            </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="grid gap-5 md:grid-cols-2 lg:gap-6">
             {challengeItems.map((item, itemIndex) => (
-              <article key={item.title} className="relative">
-                {itemIndex % 2 === 1 ? (
-                  <div className="absolute -left-5 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] lg:block" />
-                ) : null}
-                <h3 className={`${headingClass} text-[2rem] leading-[1.08] text-[#1B1D1F]`}>{item.title}</h3>
+              <article
+                key={item.title}
+                className="group relative min-h-[15rem] overflow-hidden rounded-[1.45rem] border border-[#E5E7EB] bg-white p-6 shadow-[0_16px_40px_rgba(27,29,31,0.055)] transition duration-200 hover:-translate-y-1 hover:border-[#F2994A]/34 hover:shadow-[0_24px_58px_rgba(27,29,31,0.09)] sm:p-7"
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#F2994A]/34 bg-[linear-gradient(180deg,rgba(242,153,74,0.16),rgba(242,153,74,0.06))] text-sm font-semibold text-[#F2994A] shadow-[0_14px_28px_rgba(242,153,74,0.1)]">
+                  {String(itemIndex + 1).padStart(2, "0")}
+                </div>
+                <h3 className={`${headingClass} text-[1.8rem] leading-[1.08] text-[#1B1D1F] sm:text-[2rem]`}>{item.title}</h3>
                 <p className={`${bodyClass} mt-4 text-base leading-8 text-[#828282]`}>{item.text}</p>
               </article>
             ))}
@@ -260,11 +271,12 @@ export default function ModularHomesForCommunitiesPage() {
           <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
           <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
           <div className="relative">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Рішення</p>
               <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                Серійне виробництво для муніципальних об&apos;єктів
+                <span className="block">Серійне виробництво</span>
+                <span className="block lg:whitespace-nowrap">житлових та громадських об&apos;єктів</span>
               </h2>
             </div>
             <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
@@ -352,80 +364,111 @@ export default function ModularHomesForCommunitiesPage() {
           </div>
         </section>
 
-        <section className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-2">
-          <article className="relative overflow-hidden rounded-[1.6rem] border border-[#F2994A]/22 bg-[linear-gradient(180deg,#FFFFFF_0%,#F8F9FA_100%)] p-6 shadow-[0_20px_52px_rgba(27,29,31,0.06)]">
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.45),rgba(242,153,74,0))]" />
-            <h2 className={`${headingClass} text-3xl text-[#1B1D1F]`}>Економіка та прозорість</h2>
-            <ul className={`${bodyClass} mt-5 space-y-3 text-base leading-7 text-[#828282]`}>
-              {economics.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="relative overflow-hidden rounded-[1.6rem] border border-[#F2994A]/22 bg-[linear-gradient(180deg,#FFFFFF_0%,#F8F9FA_100%)] p-6 shadow-[0_20px_52px_rgba(27,29,31,0.06)]">
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.45),rgba(242,153,74,0))]" />
-            <h2 className={`${headingClass} text-3xl text-[#1B1D1F]`}>Безпека та довговічність</h2>
-            <ul className={`${bodyClass} mt-5 space-y-3 text-base leading-7 text-[#828282]`}>
-              <li>
-                <span className="font-semibold text-[#1B1D1F]">Метод занурення:</span> Усі елементи проходять обов&apos;язкову
-                глибоку обробку сертифікованими біопіренами (вогне- та біозахист).
-              </li>
-              <li>
-                <span className="font-semibold text-[#1B1D1F]">Стійкість:</span> Конструкції розраховані на специфічні
-                снігові (до 1370 N/m2) та вітрові навантаження згідно з кліматичним зонуванням України.
-              </li>
-              <li>
-                <span className="font-semibold text-[#1B1D1F]">Технологія металозубчатих пластин:</span> З&apos;єднання вузлів металевими зубчастими
-                пластинами під тиском 30-50 тонн створює монолітну конструкцію, стійку до деформацій.
-              </li>
-            </ul>
-          </article>
-        </section>
-
-        <section className="relative mt-10 overflow-hidden rounded-[1.6rem] border border-[#F2994A]/22 bg-white shadow-[0_20px_52px_rgba(27,29,31,0.06)] lg:mt-12">
+        <section className="relative mt-10 overflow-hidden rounded-[2rem] border border-[#F2994A]/20 bg-[linear-gradient(180deg,#ffffff_0%,#fbfbfb_100%)] p-7 shadow-[0_28px_74px_rgba(27,29,31,0.08)] sm:p-9 lg:mt-12 lg:p-10">
           <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.45),rgba(242,153,74,0))]" />
-          <div className="overflow-x-auto">
-            <table className={`${bodyClass} w-full min-w-[720px] text-left`}>
-              <thead className="bg-[#F8F9FA] text-sm uppercase tracking-[0.12em] text-[#828282]">
-                <tr>
-                  <th className="px-6 py-4 font-semibold">Параметр</th>
-                  <th className="px-6 py-4 font-semibold">Значення</th>
-                </tr>
-              </thead>
-              <tbody className="text-base text-[#828282]">
-                {specs.map(([key, value]) => (
-                  <tr key={key} className="border-t border-[#E5E7EB]">
-                    <td className="px-6 py-4 font-semibold text-[#1B1D1F]">{key}</td>
-                    <td className="px-6 py-4">{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#F2994A]/10 blur-3xl" />
+          <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.82fr)] lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Обґрунтування для громади</p>
+              <h2 className={`${headingClass} mt-3 max-w-4xl text-3xl leading-tight text-[#1B1D1F] sm:text-4xl lg:text-[3.2rem]`}>
+                Бюджет, безпека та документація в одному контрольованому процесі
+              </h2>
+              <p className={`${bodyClass} mt-5 max-w-3xl text-base leading-8 text-[#626262] lg:text-lg`}>
+                Блок показує, як рішення TimberX допомагає громаді зафіксувати
+                бюджет, пройти погодження, пояснити витрати перед донорами та
+                отримати безпечний об&apos;єкт для експлуатації.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {specProofs.map((item) => (
+                <div key={item.label} className="rounded-[1rem] border border-[#F2994A]/20 bg-white px-4 py-4 shadow-[0_14px_30px_rgba(27,29,31,0.055)]">
+                  <p className={`${headingClass} text-2xl leading-none text-[#F2994A]`}>{item.value}</p>
+                  <p className={`${bodyClass} mt-2 text-sm leading-5 text-[#828282]`}>{item.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
+          <div className="relative mt-9 grid gap-5 lg:grid-cols-2">
+            <article className="rounded-[1.4rem] border border-[#E5E7EB] bg-white p-6 shadow-[0_18px_44px_rgba(27,29,31,0.06)]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#F2994A]/28 bg-[#F2994A]/10 text-[#F2994A]">
+                <LineIcon name="calculator" className="h-6 w-6" />
+              </div>
+              <h3 className={`${headingClass} mt-5 text-2xl text-[#1B1D1F]`}>Прозорий бюджет для громади та донорів</h3>
+              <ul className={`${bodyClass} mt-5 space-y-3 text-base leading-7 text-[#828282]`}>
+                {economics.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
 
-        <section className="mt-10 lg:mt-12">
-          <article className="rounded-[1.6rem] border border-[#E5E7EB] bg-white p-6 shadow-[0_16px_40px_rgba(27,29,31,0.06)]">
-            <h2 className={`${headingClass} text-3xl text-[#1B1D1F]`}>Масштаб виробництва та логістика</h2>
-            <p className={`${bodyClass} mt-4 text-base leading-7 text-[#828282]`}>
-              {brandifyTimberX("TimberX оперує потужностями, здатними забезпечити відновлення в масштабах регіону.")}
-            </p>
-            <ul className={`${bodyClass} mt-4 space-y-3 text-base leading-7 text-[#828282]`}>
-              <li>
-                <span className="font-semibold text-[#1B1D1F]">Технології:</span> Використання ЧПУ-обладнання для ідеальної
-                нарізки та складання каркасно-модульних, CLT-панельних або комбінованих металево-дерев&apos;яних модулів.
-              </li>
-              <li>
-                <span className="font-semibold text-[#1B1D1F]">Логістична оптимізація:</span> Доставка здійснюється у форматі
-                «розбірних великогабаритних конструкторів» або готових модулів. Це мінімізує транспортні витрати громади
-                та дозволяє доставляти об&apos;єкти у важкодоступні райони.
-              </li>
-            </ul>
-          </article>
+            <article className="rounded-[1.4rem] border border-[#E5E7EB] bg-white p-6 shadow-[0_18px_44px_rgba(27,29,31,0.06)]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#F2994A]/28 bg-[#F2994A]/10 text-[#F2994A]">
+                <LineIcon name="shield" className="h-6 w-6" />
+              </div>
+              <h3 className={`${headingClass} mt-5 text-2xl text-[#1B1D1F]`}>Технічна надійність для експлуатації</h3>
+              <ul className={`${bodyClass} mt-5 space-y-3 text-base leading-7 text-[#828282]`}>
+                <li>
+                  <span className="font-semibold text-[#1B1D1F]">Захист деревини:</span> усі елементи проходять глибоку обробку біопіренами для вогне- та біозахисту.
+                </li>
+                <li>
+                  <span className="font-semibold text-[#1B1D1F]">Розрахунок під локацію:</span> конструкції перевіряються на снігові та вітрові навантаження згідно з кліматичним зонуванням України.
+                </li>
+                <li>
+                  <span className="font-semibold text-[#1B1D1F]">Заводські вузли:</span> металозубчаті пластини під тиском 30-50 тонн формують стабільні з&apos;єднання та зменшують ризик деформацій.
+                </li>
+              </ul>
+            </article>
+          </div>
+
+          <div className="relative mt-6 grid gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)]">
+            <article className="overflow-hidden rounded-[1.35rem] border border-[#E5E7EB] bg-white shadow-[0_16px_36px_rgba(27,29,31,0.045)]">
+              <div className="border-b border-[#E5E7EB] bg-[#F8F9FA] p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Технічне підтвердження</p>
+                <h3 className={`${headingClass} mt-2 text-2xl text-[#1B1D1F]`}>Параметри для експертизи та погодження</h3>
+                <p className={`${bodyClass} mt-3 max-w-4xl text-base leading-7 text-[#828282]`}>
+                  Дані для проєктантів, донорів і технагляду: щоб швидше оцінити відповідність рішення вимогам безпеки, кошторису та експлуатації.
+                </p>
+              </div>
+              <div className="grid gap-px bg-[#E5E7EB] sm:grid-cols-2">
+                {specs.map(([key, value]) => (
+                  <div key={key} className="bg-white p-5">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#F2994A]">{key}</p>
+                    <p className={`${bodyClass} mt-2 text-base leading-7 text-[#4f4f4f]`}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+
+            <article className="relative overflow-hidden rounded-[1.35rem] border border-[#F2994A]/22 bg-[linear-gradient(180deg,#fffaf5_0%,#ffffff_58%,#f8f9fa_100%)] p-6 shadow-[0_16px_36px_rgba(27,29,31,0.05)]">
+              <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.54),rgba(242,153,74,0))]" />
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">Масштаб та логістика</p>
+              <h3 className={`${headingClass} mt-3 text-2xl text-[#1B1D1F]`}>Виробнича спроможність для регіональних проєктів</h3>
+              <p className={`${bodyClass} mt-4 text-base leading-7 text-[#828282]`}>
+                {brandifyTimberX("TimberX оперує потужностями, здатними забезпечити відновлення в масштабах регіону.")}
+              </p>
+              <div className="mt-6 rounded-[1rem] border border-[#F2994A]/22 bg-[#F2994A]/8 p-5">
+                <p className={`${headingClass} text-2xl leading-none text-[#F2994A]`}>300-1000 м2</p>
+                <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#6f6f6f]`}>орієнтовний місячний виробничий обсяг для планування партій</p>
+              </div>
+              <div className="mt-6 grid gap-4">
+                <div className="rounded-[1rem] border border-[#E5E7EB] bg-white p-5">
+                  <p className={`${headingClass} text-xl text-[#1B1D1F]`}>Заводська підготовка</p>
+                  <p className={`${bodyClass} mt-2 text-base leading-7 text-[#828282]`}>
+                    ЧПУ-обладнання забезпечує точну нарізку та складання каркасно-модульних, CLT-панельних або комбінованих металево-дерев&apos;яних модулів.
+                  </p>
+                </div>
+                <div className="rounded-[1rem] border border-[#E5E7EB] bg-white p-5">
+                  <p className={`${headingClass} text-xl text-[#1B1D1F]`}>Логістика під умови громади</p>
+                  <p className={`${bodyClass} mt-2 text-base leading-7 text-[#828282]`}>
+                    Доставка у форматі розбірних великогабаритних конструкторів або готових модулів зменшує транспортні витрати та спрощує роботу у важкодоступних районах.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
         </section>
 
         <section className="mt-10 space-y-10 lg:mt-12">

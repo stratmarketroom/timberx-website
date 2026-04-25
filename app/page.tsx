@@ -315,7 +315,8 @@ export default function Home() {
                         {item.label}
                       </Link>
                       {item.label === "Продукти" || item.label === "Рішення" ? (
-                        <div className="pointer-events-none absolute left-0 top-[calc(100%+0.6rem)] z-30 min-w-[18rem] translate-y-1 rounded-[14px] border border-white/12 bg-[rgba(18,19,21,0.96)] p-2 opacity-0 shadow-[0_24px_64px_rgba(0,0,0,0.38)] backdrop-blur-xl transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                        <div className="pointer-events-none absolute left-0 top-full z-30 min-w-[18rem] translate-y-1 pt-3 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                          <div className="rounded-[14px] border border-white/12 bg-[rgba(18,19,21,0.96)] p-2 shadow-[0_24px_64px_rgba(0,0,0,0.38)] backdrop-blur-xl">
                           <div className="flex flex-col gap-1">
                             {(item.label === "Продукти" ? productMenuItems : solutionMenuItems).map(
                               (subItem) => (
@@ -328,6 +329,7 @@ export default function Home() {
                                 </Link>
                               ),
                             )}
+                          </div>
                           </div>
                         </div>
                       ) : null}
@@ -383,15 +385,15 @@ export default function Home() {
         <section className="relative z-10 flex min-h-[100svh] items-center md:min-h-[100vh]">
           <div className="w-full px-4 pb-14 pt-10 md:px-6 md:pb-20 md:pt-14 lg:px-6 lg:pb-24 lg:pt-16">
             <div className="mx-auto max-w-[88rem]">
-              <p className="mb-5 inline-flex max-w-full items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
-                Виробництво модульних будинків, клеєних конструкцій та ферм з металозубчатими пластинами
+              <p className="mb-5 inline-flex max-w-[56rem] items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[9px] font-semibold uppercase leading-5 tracking-[0.18em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[10px] sm:tracking-[0.22em] md:text-[11px] md:tracking-[0.26em]">
+                Виробництво каркасно-модульних будинків, конструкцій з клеєної
+                деревини та дерев&apos;яних ферм з металозубчатими пластинами.
               </p>
               <h1
                 className={`${headingClass} max-w-[20ch] text-[2.25rem] leading-[1.03] text-white sm:text-5xl md:max-w-none md:text-[3.9rem] lg:max-w-none lg:text-[4.35rem] xl:text-[4.7rem]`}
               >
-                Інженерні дерев’яні конструкції та модульні будинки{" "}
-                <span className="whitespace-nowrap">для девелоперів,</span>{" "}
-                забудовників і громад
+                Інженерні дерев&apos;яні конструкції та каркасно-модульні будинки
+                для девелоперів і громад
               </h1>
               <div className="mt-6 max-w-[44rem] space-y-4 text-base leading-7 text-white/78 md:text-lg">
                 <p>
