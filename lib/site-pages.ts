@@ -209,6 +209,27 @@ export const sitePages: SitePage[] = [
     cluster: "Ферми з металозубчатими пластинами / FAQ",
   },
   {
+    slug: ["karkasno-panelni-budynky", "faq"],
+    title: "FAQ про каркасно-модульні будинки",
+    description: "Часті запитання про каркасно-модульні будинки TimberX.",
+    section: "faq",
+    cluster: "Каркасно-модульні будинки / FAQ",
+  },
+  {
+    slug: ["sanitarni-moduli", "faq"],
+    title: "FAQ про санітарно-технічні модулі",
+    description: "Часті запитання про санітарно-технічні модулі TimberX.",
+    section: "faq",
+    cluster: "Санітарно-технічні модулі / FAQ",
+  },
+  {
+    slug: ["fakhverkovi-budynky", "faq"],
+    title: "FAQ про фахверкові будинки",
+    description: "Часті запитання про фахверкові будинки TimberX.",
+    section: "faq",
+    cluster: "Фахверкові будинки / FAQ",
+  },
+  {
     slug: ["modulni-budynky", "dlya-vpo"],
     title: "Модульні будинки для ВПО",
     description:

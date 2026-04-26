@@ -239,7 +239,7 @@ export const communitySolutionPageCopy: SolutionSegmentPageCopy = {
   metadataTitle: "Модульні будинки для громад | TimberX B2G рішення для відбудови та ВПО",
   metadataDescription:
     "Модульні будинки TimberX для громад: серійне B2G будівництво для ВПО, амбулаторій і соціальних об'єктів. Фіксований кошторис, прозорість для донорів, монтаж 1-3 дні.",
-  canonical: "/modulni-budynky/dlya-gromad/",
+  canonical: "/modulni-budynky/dlya-gromad",
 };
 
 export function buildSolutionSegmentMetadata(copy: SolutionSegmentPageCopy): Metadata {
@@ -494,11 +494,9 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
             <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(28rem,0.72fr)] lg:items-stretch lg:gap-16">
               <div className="flex min-h-[12.2rem] items-center py-6 lg:py-6">
                 <p className={`${bodyClass} max-w-3xl text-lg leading-9 text-[#5F5F5F] lg:text-[1.35rem] lg:leading-[2.05]`}>
-                  Рішення TimberX допомагає громаді зафіксувати бюджет, пройти
-                  погодження, пояснити витрати перед донорами та отримати безпечний
-                  об&apos;єкт для експлуатації. Для погоджень готуємо технічні
-                  специфікації, кошторисні дані та пакет матеріалів для технагляду
-                  й донорського аудиту.
+                  {brandifyTimberX(
+                    "Рішення TimberX допомагає громаді зафіксувати бюджет, пройти погодження, пояснити витрати перед донорами та отримати безпечний об'єкт для експлуатації. Для погоджень готуємо технічні специфікації, кошторисні дані та пакет матеріалів для технагляду й донорського аудиту.",
+                  )}
                 </p>
               </div>
               <Link
@@ -582,20 +580,19 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
 
         <section className="mt-0">
           <div className="rounded-[2rem] border border-[#1B1D1F]/10 bg-[#1B1D1F] px-7 pb-10 pt-7 shadow-[0_34px_90px_rgba(0,0,0,0.18)] sm:px-9 sm:pb-12 sm:pt-9 lg:px-12 lg:pb-16 lg:pt-12">
-            <div className="grid gap-10 border-b border-white/10 pb-11 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
-                  Доказ практикою
-                </p>
-                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl lg:text-[3.2rem]`}>
-                  Реалізовані проєкти TimberX
+            <div className="border-b border-white/10 pb-11">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                Доказ практикою
+              </p>
+              <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+                <div>
+                <h2 className={`${headingClass} text-3xl leading-tight text-white sm:text-4xl lg:text-[3.2rem]`}>
+                  Реалізовані проєкти <TimberXWord />
                 </h2>
               </div>
               <div className="lg:justify-self-end">
                 <p className={`${bodyClass} max-w-3xl text-base leading-8 text-[#d0d0d0] lg:text-lg`}>
-                  Показуємо не концепти, а реалізовані модульні будинки та житлові рішення,
-                  які можна адаптувати під потреби громади. Це допомагає громаді й донорам
-                  оцінити досвід TimberX до старту переговорів.
+                  Реалізовані модульні будинки та житлові рішення, які можна адаптувати під потреби громади.
                 </p>
                 <Link
                   href="/cases/"
@@ -603,6 +600,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                 >
                   Переглянути всі кейси
                 </Link>
+              </div>
               </div>
             </div>
 
@@ -658,7 +656,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                     <LineIcon name="shield" className="relative h-11 w-11" />
                   </div>
                   <p className="mt-8 text-sm font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
-                    Гарантії TimberX
+                    Гарантії <TimberXWord />
                   </p>
                   <h3 className={`${headingClass} mt-4 text-[2.1rem] leading-[1.12] text-white`}>
                     ГАРАНТІЯ 10 РОКІВ НА КОНСТРУКЦІЇ
@@ -675,7 +673,9 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
             <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
               <h2 className={`${headingClass} text-3xl leading-tight text-[#1B1D1F] sm:text-4xl`}>Процес співпраці</h2>
               <p className={`${bodyClass} max-w-3xl text-lg leading-8 text-[#626262] lg:justify-self-end`}>
-              Від першого запиту до здачі об&apos;єкта TimberX веде проєкт через чіткий, прогнозований і контрольований процес.
+              {brandifyTimberX(
+                "Від першого запиту до здачі об'єкта TimberX веде проєкт через чіткий, прогнозований і контрольований процес.",
+              )}
               </p>
             </div>
           </div>
@@ -726,7 +726,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                 <details key={item.question} className="group">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-left marker:hidden">
                     <span className={`${headingClass} text-xl leading-snug text-[#1B1D1F]`}>
-                      {item.question}
+                      {brandifyTimberX(item.question)}
                     </span>
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#F2994A]/24 text-xl leading-none text-[#F2994A] transition duration-200 group-open:rotate-45 group-hover:border-[#F2994A]/55">
                       +
