@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
+import { RealizedProjectsCarousel } from "@/components/realized-projects-carousel";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StandardQuizCta } from "@/components/standard-quiz-cta";
 
@@ -179,6 +180,49 @@ const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
   },
 ];
 
+const realizedProjects = [
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-terrace.jpg",
+    imageAlt: "Реалізовані модульні будинки TimberX",
+    imageClassName: "object-[50%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-facade-closeup.jpg",
+    imageAlt: "Готові житлові модулі TimberX",
+    imageClassName: "object-[52%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-wood-facade.jpg",
+    imageAlt: "Модульний контур TimberX",
+    imageClassName: "object-[52%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-transport.jpg",
+    imageAlt: "Модульне житло TimberX для громад",
+    imageClassName: "object-[48%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-interior-living.jpg",
+    imageAlt: "Серійні модульні будинки TimberX",
+    imageClassName: "object-[50%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-front-porch.jpg",
+    imageAlt: "Модульний будинок TimberX з терасою",
+    imageClassName: "object-[50%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-side-facade.jpg",
+    imageAlt: "Бічний фасад модульного будинку TimberX",
+    imageClassName: "object-[48%_50%]",
+  },
+  {
+    imageSrc: "/images/projects/modular-homes-community/modular-home-interior-dining.jpg",
+    imageAlt: "Інтер'єр модульного будинку TimberX",
+    imageClassName: "object-[50%_50%]",
+  },
+];
+
 export type SolutionSegmentPageCopy = {
   breadcrumbLabel: string;
   heroEyebrow: string;
@@ -260,7 +304,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
             <p className={`${bodyClass} mt-3 max-w-3xl text-base leading-8 text-white/76`}>
               <span className="block md:whitespace-nowrap">
                 {brandifyTimberX(
-                  "TimberX забезпечує пропонуємо готові рішення для швидкого відновлення житла, розміщення ВПО, будівництва амбулаторій,",
+                  "TimberX пропонує готові рішення для швидкого відновлення житла, розміщення ВПО, будівництва амбулаторій,",
                 )}
               </span>
               <span className="block md:whitespace-nowrap">
@@ -344,7 +388,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
           </div>
         </section>
 
-        <section className="relative mt-14 overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[#1B1D1F] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:mt-20 lg:p-10">
+        <section className="relative mt-16 overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[#1B1D1F] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:mt-24 lg:p-10">
           <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
           <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
           <div className="relative">
@@ -536,87 +580,33 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
           </div>
         </section>
 
-        <section className="mt-16 space-y-10 lg:mt-24">
-          <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 overflow-hidden shadow-[0_34px_90px_rgba(0,0,0,0.22)]">
-            <div className="absolute inset-0">
-              <Image
-                src="/images/cases/sosnovel-case.jpg"
-                alt="Реалізований кейс TimberX Сосновель для девелоперського проєкту"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 1200px, 100vw"
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,19,21,0.92)_0%,rgba(18,19,21,0.8)_28%,rgba(18,19,21,0.34)_58%,rgba(18,19,21,0.08)_100%)]" />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.14)_36%,rgba(17,18,20,0.62)_100%)]" />
-            </div>
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.4),rgba(242,153,74,0))]" />
-
-            <div className="relative flex min-h-[36rem] items-center md:min-h-[42rem]">
-              <div className="w-full px-6 md:px-6 lg:px-6">
-                <div className="mx-auto max-w-[88rem]">
-                  <div className="max-w-[36rem] py-10 md:py-14 lg:py-16">
-                    <p className="mb-5 inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-                      Девелоперський кейс TimberX
-                    </p>
-                    <h3 className={`${headingClass} text-[2.5rem] leading-[1.02] text-white md:text-[3rem]`}>
-                      Заміський комплекс “Сосновель”
-                    </h3>
-
-                    <div className="mt-8 grid gap-5 text-base leading-8 text-white/84">
-                      <div>
-                        <p className="font-semibold text-white">Задача:</p>
-                        <p>Будівництво котеджей під здачу в оренду</p>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">Рішення:</p>
-                        <p>Модульні будинки заводського виробництва</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-8">
-                      <p className="font-semibold text-white">Результат:</p>
-                      <ul className="mt-4 space-y-3 text-base leading-7 text-white/82 sm:leading-8">
-                        <li className="flex gap-3">
-                          <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                          <span>
-                            зменшення витрат на матеріали на{" "}
-                            <strong className="font-semibold text-[#F2994A]">30%</strong>
-                          </span>
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                          <span>
-                            збільшення швидкості реалізації проєкту на{" "}
-                            <strong className="font-semibold text-[#F2994A]">28 днів</strong>
-                          </span>
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                          <span>
-                            власна логістика та економія на збірці на ділянці до{" "}
-                            <strong className="font-semibold text-[#F2994A]">10–15%</strong>
-                          </span>
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                          <span>
-                            <strong className="font-semibold text-[#F2994A]">100%</strong>{" "}
-                            можливість масштабування
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <Link
-                      href="/cases/"
-                      className="mt-8 inline-flex items-center justify-center rounded bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] transition hover:bg-[#de8232]"
-                    >
-                      Дивитися більше кейсів
-                    </Link>
-                  </div>
-                </div>
+        <section className="mt-0">
+          <div className="rounded-[2rem] border border-[#1B1D1F]/10 bg-[#1B1D1F] px-7 pb-10 pt-7 shadow-[0_34px_90px_rgba(0,0,0,0.18)] sm:px-9 sm:pb-12 sm:pt-9 lg:px-12 lg:pb-16 lg:pt-12">
+            <div className="grid gap-10 border-b border-white/10 pb-11 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                  Доказ практикою
+                </p>
+                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl lg:text-[3.2rem]`}>
+                  Реалізовані проєкти TimberX
+                </h2>
+              </div>
+              <div className="lg:justify-self-end">
+                <p className={`${bodyClass} max-w-3xl text-base leading-8 text-[#d0d0d0] lg:text-lg`}>
+                  Показуємо не концепти, а реалізовані модульні будинки та житлові рішення,
+                  які можна адаптувати під потреби громади. Це допомагає громаді й донорам
+                  оцінити досвід TimberX до старту переговорів.
+                </p>
+                <Link
+                  href="/cases/"
+                  className="mt-6 inline-flex items-center justify-center rounded-[10px] bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] shadow-[0_18px_36px_rgba(242,153,74,0.24)] transition hover:-translate-y-0.5 hover:bg-[#de8232]"
+                >
+                  Переглянути всі кейси
+                </Link>
               </div>
             </div>
+
+            <RealizedProjectsCarousel images={realizedProjects} />
           </div>
         </section>
 
@@ -719,7 +709,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
 
         <StandardQuizCta
           id="cta"
-          className="mt-14 lg:mt-20 [&>div]:!bg-[#202326] [&>div_[aria-hidden='true']]:hidden"
+          className="mt-16 lg:mt-24 [&>div]:!bg-[#202326] [&>div_[aria-hidden='true']]:hidden"
         />
 
         <section className="mt-16 border-t border-[#F0F0F0] pt-12 lg:mt-24 lg:pt-16">
