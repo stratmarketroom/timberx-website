@@ -53,24 +53,8 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
   const relatedProjects = modularTypicalProjects
     .filter((item) => item.slug !== project.slug)
     .slice(0, 3);
-  const atmosphereGallery = [
-    {
-      src: "/images/projects/scout-dacha-25/visual-entry.jpg",
-      alt: "Skaut 25: вхідна зона",
-      label: "Вхід",
-    },
-    {
-      src: "/images/projects/scout-dacha-25/visual-grey-facade.jpg",
-      alt: "Skaut 25: сірий фасад",
-      label: "Фасад",
-    },
-    {
-      src: "/images/projects/scout-dacha-25/visual-terrace.jpg",
-      alt: "Skaut 25: тераса",
-      label: "Тераса",
-    },
-  ];
-  const modelGallery = project.gallery.slice(4);
+  const atmosphereGallery = project.visualGallery ?? project.gallery.slice(0, 3);
+  const modelGallery = project.modelGallery ?? project.gallery.slice(4);
   const areaSpecs = project.areaSpecs ?? project.specs;
   const rooms = project.rooms ?? [];
   const roomRows: Array<{ number: string; name: string; area: string; note?: string }> = rooms.length
@@ -82,6 +66,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
       }));
   const technicalSpecs = project.technicalSpecs ?? project.specs;
   const adaptationOptions = project.adaptationOptions ?? project.formats;
+  const hasWidePlanHeader = project.slug === "skaut-50" || project.slug === "modulnyi-budynok-35m";
 
   return (
     <div className="min-h-screen bg-[#f4f0e8] text-[#1b1d1f]">
@@ -150,8 +135,8 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
 
             <div className="group relative aspect-[16/9] overflow-hidden rounded-[1.75rem] border border-[#d8cdbc] bg-[#1b1d1f] shadow-[0_26px_70px_rgba(41,36,30,0.16)] transition duration-300 hover:-translate-y-2 hover:border-[#f2994a]/45 hover:shadow-[0_36px_90px_rgba(41,36,30,0.22)] lg:mt-[4.45rem] lg:aspect-[1.72/1] xl:aspect-[1.62/1]">
               <Image
-                src="/images/projects/scout-dacha-25/forest-exterior-02.jpg"
-                alt="Skaut 25: будинок з критою терасою"
+                src={project.detailHeroImage ?? project.gallery[1]?.src ?? project.heroImage}
+                alt={project.detailHeroImageAlt ?? project.gallery[1]?.alt ?? project.heroImageAlt}
                 fill
                 priority
                 className="scale-[1.03] object-cover transition duration-500 group-hover:scale-[1.075]"
@@ -167,24 +152,43 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
         <ProjectVisualSlider slides={atmosphereGallery} />
 
         <section className="rounded-[2rem] border border-[#d8cdbc] bg-[#fffaf2]/62 p-5 shadow-[0_24px_70px_rgba(41,36,30,0.08)] sm:p-7 lg:p-9">
-          <div className="mb-9 grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+          <div
+            className={`mb-9 grid gap-5 ${
+              hasWidePlanHeader
+                ? "lg:grid-cols-1"
+                : "lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end"
+            }`}
+          >
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c8742b]">
                 Специфікація
               </p>
-              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-[#1b1d1f] sm:text-4xl`}>
+              <h2
+                className={`${headingClass} mt-3 text-3xl leading-tight text-[#1b1d1f] sm:text-4xl ${
+                  hasWidePlanHeader ? "max-w-5xl" : ""
+                }`}
+              >
                 {project.plan.title}
               </h2>
             </div>
-            <p className={`${bodyClass} max-w-3xl text-base leading-8 text-[#5d554d] lg:justify-self-end`}>
-              Паспорт проєкту з план-схемою, експлікацією приміщень,
-              основними площами, конструктивними параметрами та архітектурними
-              ракурсами моделі.
-            </p>
+            {!hasWidePlanHeader ? (
+              <p className={`${bodyClass} max-w-3xl text-base leading-8 text-[#5d554d] lg:justify-self-end`}>
+                Паспорт проєкту з план-схемою, експлікацією приміщень,
+                основними площами, конструктивними параметрами та архітектурними
+                ракурсами моделі.
+              </p>
+            ) : null}
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.7fr)] lg:items-start">
             <div>
+              {hasWidePlanHeader ? (
+                <p className={`${bodyClass} mb-5 max-w-4xl text-base leading-8 text-[#5d554d]`}>
+                  Паспорт проєкту з план-схемою, експлікацією приміщень,
+                  основними площами, конструктивними параметрами та
+                  архітектурними ракурсами моделі.
+                </p>
+              ) : null}
               <div className="overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)]">
                 {project.plan.imageSrc ? (
                   <Image
@@ -322,9 +326,9 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
             <div className="pt-8 lg:pt-[1.9rem]">
               <div className={`${bodyClass} text-base leading-8 text-[#5d554d]`}>
                 <p>
-                  Проєкт зібраний навколо простої логіки: компактна внутрішня площа,
-                  зрозумілий вхід, повноцінний санвузол і тераса, яка розширює сценарій
-                  використання будинку в теплий сезон.
+                  Проєкт зібраний навколо простої логіки: зрозуміле зонування,
+                  повноцінні житлові приміщення, терасові зони та можливість
+                  адаптувати готовий формат під конкретний сценарій експлуатації.
                 </p>
               </div>
 
