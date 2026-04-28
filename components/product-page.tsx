@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
@@ -150,9 +150,9 @@ function HeroSection({ page }: { page: ProductPageData }) {
                   Головна
                 </Link>
                 <span>/</span>
-                <span className="text-white">Дерев&apos;яні ферми з металозубчатими пластинами</span>
+                <span className="text-white">{page.hero.title}</span>
               </nav>
-              <p className="mb-5 inline-flex max-w-full flex-wrap items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
+              <p className="mb-5 inline-flex max-w-full flex-wrap items-center gap-x-1.5 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_16px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:text-[11px] sm:tracking-[0.28em]">
                 <span>{eyebrowPrefix}</span>
                 <span className="whitespace-nowrap">
                   <span>Timber</span>
@@ -308,12 +308,11 @@ function GallerySection({
 
             <div className="absolute bottom-4 left-4 right-4 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,rgba(27,29,31,0.88),rgba(27,29,31,0.78))] p-4 shadow-[0_24px_46px_rgba(0,0,0,0.35)] backdrop-blur-[2px] sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-[36rem] sm:p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                Від цеху до об&apos;єкта
+                Від виробництва до об&apos;єкта
               </p>
               <div className={`${bodyClass} mt-4 space-y-4 text-sm leading-7 text-[#d0d0d0]`}>
                 <p>
-                  Індивідуальний розрахунок та повний контроль вузлів: від нарізки в цеху до
-                  фінального монтажу
+                  Реальні фото виробництва, доставки та готових об&apos;єктів TimberX.
                 </p>
               </div>
             </div>
@@ -437,6 +436,227 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [activeSectionHref, setActiveSectionHref] = useState("#problem");
   const topLevelSectionGapClass = "gap-10 lg:gap-12";
+  const isModularHomesPage = page.slug === "modulni-budynky";
+  const productSectionNav = useMemo(
+    () =>
+      isModularHomesPage
+        ? [
+            ...sectionNav.slice(0, 2),
+            { label: "Типові проєкти", href: "#typical-projects" },
+            ...sectionNav.slice(2),
+          ]
+        : sectionNav,
+    [isModularHomesPage],
+  );
+  const problemIntro = isModularHomesPage
+    ? {
+        title: "Скоротити цикл будівництва без втрати контролю бюджету",
+        description:
+          "Модульні будинки TimberX допомагають девелоперам, забудовникам і громадам отримати прогнозований результат: заводське виробництво, фіксована комплектація та швидкий монтаж на підготовленій ділянці.",
+      }
+    : {
+        title: "Швидко закрити дахову систему без перевитрат і затримок на майданчику",
+        description:
+          "Кожен, хто інтегрує крокв'яні системи у свої проєкти, стикається з власним колом викликів. Залежно від вашої ролі, неефективні рішення б'ють по різних показниках: від фінансових збитків до репутаційних втрат.",
+      };
+  const solutionIntro = isModularHomesPage
+    ? {
+        description:
+          "Модульний будинок TimberX - це заводський продукт із готовою логікою проєктування, виробництва, доставки та монтажу. Більшість робіт виконується в цеху, тому строки, бюджет і якість легше контролювати.",
+        imageSrc: "/images/projects/modular-homes-community/modular-home-front-porch.jpg",
+        imageAlt: "Готовий модульний будинок TimberX з дерев'яним фасадом",
+        cardEyebrow: "Заводський підхід",
+        cardDescription:
+          "Проєктування, комплектація та контроль якості виконуються до монтажу, щоб на ділянці залишився короткий і прогнозований етап.",
+      }
+    : {
+        description:
+          "Дерев'яні ферми з металозубчатими пластинами подаються як інженерний продукт для швидкого й прогнозованого будівництва, а не як ручна збірка на об'єкті.",
+        imageSrc: "/images/fermy-mzp/object-roof-joint-detail-1.jpg",
+        imageAlt: "Інженерний вузол дерев'яної ферми з металозубчатими пластинами на об'єкті",
+        cardEyebrow: "Інженерний підхід",
+        cardDescription:
+          "Розрахунок, контроль геометрії та готовність до монтажу замінюють ручну \"підгонку\" конструкції на майданчику.",
+      };
+  const applicationIntro = isModularHomesPage
+    ? "Модульні будинки працюють у сценаріях, де важливі швидкий запуск об'єкта, повторювана якість і можливість масштабувати рішення партіями."
+    : "Ферми з металозубчатими пластинами працюють там, де важливі повторюваність конструкцій, швидкий монтаж і прогнозована логіка перекриття великих площ.";
+  const modularApplicationImages = [
+    {
+      src: "/images/projects/modular-homes-community/modular-home-terrace.jpg",
+      className: "object-[50%_52%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.88)_0%,rgba(17,18,20,0.62)_38%,rgba(17,18,20,0.2)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-front-porch.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.66)_38%,rgba(17,18,20,0.22)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-interior-living.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.68)_36%,rgba(17,18,20,0.24)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-side-facade.jpg",
+      className: "object-[50%_48%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.66)_36%,rgba(17,18,20,0.22)_100%)]",
+    },
+  ] as const;
+  const activeApplicationImages = isModularHomesPage ? modularApplicationImages : applicationImages;
+  const modularEconomicsImages = [
+    {
+      src: "/images/projects/modular-homes-community/modular-home-wood-facade.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.66)_36%,rgba(17,18,20,0.22)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-transport.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.68)_36%,rgba(17,18,20,0.24)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-facade-closeup.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.68)_36%,rgba(17,18,20,0.24)_100%)]",
+    },
+    {
+      src: "/images/projects/modular-homes-community/modular-home-interior-dining.jpg",
+      className: "object-[50%_50%]",
+      overlay:
+        "bg-[linear-gradient(90deg,rgba(17,18,20,0.9)_0%,rgba(17,18,20,0.68)_36%,rgba(17,18,20,0.24)_100%)]",
+    },
+  ] as const;
+  const activeEconomicsImages = isModularHomesPage ? modularEconomicsImages : economicsImages;
+  const modularEconomicsDescriptions = [
+    "Серійність, менше ручних доробок і контроль комплектації допомагають знижувати собівартість у великих партіях.",
+    "Паралельне виробництво модулів і підготовка ділянки дають зрозумілий графік запуску продажів або експлуатації.",
+    "Короткий монтажний етап зменшує залежність від погоди, дефіциту бригад і сезонних простоїв на майданчику.",
+    "Після погодження технічного завдання замовник отримує закріплений бюджет, комплектацію та строки в договорі.",
+  ];
+  const modularProcessDescriptions = [
+    "Фіксуємо бізнес-сценарій: девелопмент, ЖК, громада, орендний фонд або серійна партія будинків.",
+    "Визначаємо комплектацію, рівень готовності, логістику та формат поставки під бюджет і строки.",
+    "Готуємо конструктив, специфікації, вузли та технічне завдання для виробництва.",
+    "Закріплюємо в договорі ціну, графік, комплектацію, гарантії та відповідальність сторін.",
+    "Виготовляємо модулі в цеху, поки на ділянці готують основу під монтаж.",
+  ];
+  const modularSpecSummaryCards = [
+    {
+      icon: "factory" as IconName,
+      value: "30-60 днів",
+      label: "Заводський цикл виробництва залежно від комплектації та обсягу партії.",
+    },
+    {
+      icon: "delivery" as IconName,
+      value: "Формати поставки",
+      label: "Під ключ, коробка, готові модулі або розбірні конструктори.",
+    },
+    {
+      icon: "settings" as IconName,
+      value: "1-2 мм точність",
+      label: "Контроль геометрії та повторюваності вузлів у заводському процесі.",
+    },
+    {
+      icon: "beam" as IconName,
+      value: "50+ років",
+      label: "Ресурс несучих конструкцій за умови правильної експлуатації.",
+    },
+  ];
+  const trussSpecSummaryCards = [
+    {
+      icon: "calculator" as IconName,
+      value: "MiTek Pamir",
+      label: "Ліцензійний софт для розрахунку кожної крокви.",
+    },
+    {
+      icon: "snow" as IconName,
+      value: "EN 1995 (Eurocode 5)",
+      label: "Розрахунок під реальні кліматичні навантаження об'єкта.",
+    },
+    {
+      icon: "settings" as IconName,
+      value: "1-2 мм точність",
+      label: "Максимальне геометричне відхилення за рахунок заводської нарізки.",
+    },
+    {
+      icon: "beam" as IconName,
+      value: "800-1000 мм",
+      label: "Оптимальний крок встановлення ферм для надійності покрівлі.",
+    },
+  ];
+  const specSummaryCards = isModularHomesPage ? modularSpecSummaryCards : trussSpecSummaryCards;
+  const specVisual = isModularHomesPage
+    ? {
+        src: "/images/projects/modular-wall.png",
+        alt: "Модульний контур TimberX на виробництві",
+        className: "h-full w-full object-contain object-left",
+      }
+    : {
+        src: "/images/fermy-mzp/grafik-elements-2.png",
+        alt: "Технічне креслення ферми з металозубчатими пластинами",
+        className: "h-full w-full object-contain object-left",
+      };
+  const specHotspots = isModularHomesPage
+    ? [
+        {
+          top: "9%",
+          title: "Каркас C24 / C22",
+          description:
+            "Деревина підбирається за розрахунком і технічним завданням конкретного проєкту.",
+        },
+        {
+          top: "30%",
+          title: "Утеплення 150-250 мм",
+          description:
+            "Базальтова вата або ековата формують енергоефективний контур будинку.",
+        },
+        {
+          top: "53%",
+          title: "Фундамент під задачу",
+          description:
+            "Геошурупи, палі або стовпчасті основи підбираються під ділянку та формат монтажу.",
+        },
+        {
+          top: "75%",
+          title: "Монтаж 1-3 дні",
+          description:
+            "Після готовності майданчика модулі швидко збираються в готовий об'єкт.",
+        },
+      ]
+    : [
+        {
+          top: "9%",
+          title: "Прольоти до 30 м без опор",
+          description:
+            "Можливість перекривати великі приміщення без внутрішніх стін та зайвих колон.",
+        },
+        {
+          top: "30%",
+          title: "5 мм: Точність вузлів",
+          description:
+            "Суворе позиціонування металозубчатих пластин забезпечує проектну міцність кожного з'єднання.",
+        },
+        {
+          top: "53%",
+          title: "Деревина C22 / C24",
+          description:
+            "Використовуємо лише калібровану сосну з підбором товщини заготовки 45-60 мм під розрахунок.",
+        },
+        {
+          top: "75%",
+          title: "7-10 мм: Розрахункові прогини",
+          description:
+            "Мінімальна деформація конструкції під навантаженням завдяки жорсткості вузлів.",
+        },
+      ];
 
   const caseSlides = [
     {
@@ -446,33 +666,47 @@ export function ProductPage({ page }: { page: ProductPageData }) {
       challenge: page.caseStudy.challenge,
       solution: page.caseStudy.solution,
       result: page.caseStudy.result,
-      metrics: [
+      metrics: page.caseStudy.metrics?.map((metric, index) => ({
+        ...metric,
+        icon: caseSlideMetricIcons[index] ?? "beam",
+      })) ?? [
         { value: "22 м", label: "проліт без внутрішніх опор" },
         { value: "469 кг", label: "вага однієї ферми" },
         { value: "1370 N/m²", label: "снігове навантаження" },
         { value: "500 N/m²", label: "вітрове навантаження" },
       ],
-      imageSrc: "/images/fermy-mzp/case-wide-span-hall.jpg",
-      imageAlt: "Великопролітна конструкція з дерев'яними фермами з металозубчатими пластинами",
-      imageClassName: "object-[50%_32%]",
+      imageSrc: isModularHomesPage
+        ? "/images/projects/modular-homes-community/modular-home-terrace.jpg"
+        : "/images/fermy-mzp/case-wide-span-hall.jpg",
+      imageAlt: isModularHomesPage
+        ? "Реалізований модульний будинок TimberX з терасою"
+        : "Великопролітна конструкція з дерев'яними фермами з металозубчатими пластинами",
+      imageClassName: isModularHomesPage ? "object-[50%_52%]" : "object-[50%_32%]",
     },
     page.secondaryCaseStudy
       ? {
           key: "case-02",
           badge: "Case 02",
-          title: "Серійна забудова ЖК",
-          challenge: "Оптимізація строків зведення ідентичних дахових систем у багатоквартирному будівництві.",
-          solution: "Заміна традиційної кроквяної системи на серійний заводський префаб з повною ідентичністю вузлів.",
-          result: "Монтаж покрівельної системи виконано у 3 рази швидше порівняно з традиційними методами.",
-          metrics: [
+          title: page.secondaryCaseStudy.title,
+          challenge: page.secondaryCaseStudy.challenge,
+          solution: page.secondaryCaseStudy.solution,
+          result: page.secondaryCaseStudy.result,
+          metrics: page.secondaryCaseStudy.metrics?.map((metric, index) => ({
+            ...metric,
+            icon: caseSlideMetricIcons[index] ?? "beam",
+          })) ?? [
             { value: "800 мм", label: "крок ферм", icon: "beam" },
             { value: "207 кг", label: "вага ферми", icon: "weight" },
             { value: "850 N/m²", label: "снігове навантаження", icon: "snow" },
             { value: "470 N/m²", label: "вітрове навантаження", icon: "wind" },
           ],
-          imageSrc: "/images/fermy-mzp/case-zhk-serial.jpg",
-          imageAlt: "Серійна забудова ЖК з дерев'яними фермами з металозубчатими пластинами",
-          imageClassName: "object-[50%_32%]",
+          imageSrc: isModularHomesPage
+            ? "/images/projects/modular-homes-community/modular-home-transport.jpg"
+            : "/images/fermy-mzp/case-zhk-serial.jpg",
+          imageAlt: isModularHomesPage
+            ? "Модульний будинок TimberX під час транспортування"
+            : "Серійна забудова ЖК з дерев'яними фермами з металозубчатими пластинами",
+          imageClassName: isModularHomesPage ? "object-[50%_50%]" : "object-[50%_32%]",
         }
       : null,
   ].filter(Boolean) as Array<{
@@ -487,71 +721,85 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     imageAlt: string;
     imageClassName: string;
   }>;
-  const economicsCards = [
-    {
-      value: "20-30%",
-      title: "Менше ризику перевитрат",
-      description: "Заводська комплектація дає керований обсяг матеріалу й менше доробок на об'єкті.",
-    },
-    {
-      value: "на 14-30 днів",
-      title: "Швидший запуск наступних етапів",
-      description: "Короткий монтажний цикл допомагає раніше переходити до покрівельних і внутрішніх робіт.",
-    },
-    {
-      value: "в 2.5 рази",
-      title: "Оптимізація людського ресурсу",
-      description:
-        "Менше персоналу на майданчику в умовах дефіциту кадрів та потреби у швидкому введенні об'єкта в експлуатацію.",
-    },
-    {
-      value: "100%",
-      title: "Прозора модель закупівлі",
-      description:
-        "Замовник отримує фіксований комплект із прорахованими параметрами, а не відкритий кошторис із невідомими.",
-    },
-  ] as const;
+  const economicsCards = isModularHomesPage
+    ? page.economics.map((metric, index) => ({
+        value: metric.value,
+        title: metric.label,
+        description: modularEconomicsDescriptions[index] ?? metric.label,
+      }))
+    : [
+        {
+          value: "20-30%",
+          title: "Менше ризику перевитрат",
+          description:
+            "Заводська комплектація дає керований обсяг матеріалу й менше доробок на об'єкті.",
+        },
+        {
+          value: "на 14-30 днів",
+          title: "Швидший запуск наступних етапів",
+          description:
+            "Короткий монтажний цикл допомагає раніше переходити до покрівельних і внутрішніх робіт.",
+        },
+        {
+          value: "в 2.5 рази",
+          title: "Оптимізація людського ресурсу",
+          description:
+            "Менше персоналу на майданчику в умовах дефіциту кадрів та потреби у швидкому введенні об'єкта в експлуатацію.",
+        },
+        {
+          value: "100%",
+          title: "Прозора модель закупівлі",
+          description:
+            "Замовник отримує фіксований комплект із прорахованими параметрами, а не відкритий кошторис із невідомими.",
+        },
+      ];
   const economicsIcons = [
     applicationIcons[0],
     applicationIcons[1],
     applicationIcons[3],
     applicationIcons[2],
   ] as const;
-  const processCards = [
-    {
-      step: "01",
-      title: "Запит та аналіз",
-      description:
-        "Аналізуємо ваші креслення, архітектуру та специфіку об'єкта для вибору оптимальної конфігурації ферм.",
-    },
-    {
-      step: "02",
-      title: "Прорахунок за 48 год та КП",
-      description:
-        "Виконуємо точне інженерне моделювання. Ви отримуєте фіксовану вартість та технічне рішення протягом двох діб.",
-    },
-    {
-      step: "03",
-      title: "Підписання договору",
-      description:
-        "Фіксуємо чітку вартість, порядок оплат і терміни реалізації проєкту.",
-    },
-    {
-      step: "04",
-      title: "Заводське виробництво",
-      description:
-        "Автоматизована нарізка та пресування на лінії MiTek. Виготовлення комплекту займає від 3 до 14 робочих днів.",
-    },
-    {
-      step: "05",
-      title: "Логістика та шеф-монтаж",
-      description:
-        "Доставка маркованого комплекту на об'єкт. Надаємо схеми збірки або виїзд інженера для контролю монтажу.",
-    },
-  ] as const;
+  const processCards = isModularHomesPage
+    ? page.process.slice(0, 5).map((title, index) => ({
+        step: String(index + 1).padStart(2, "0"),
+        title,
+        description: modularProcessDescriptions[index] ?? title,
+      }))
+    : [
+        {
+          step: "01",
+          title: "Запит та аналіз",
+          description:
+            "Аналізуємо ваші креслення, архітектуру та специфіку об'єкта для вибору оптимальної конфігурації ферм.",
+        },
+        {
+          step: "02",
+          title: "Прорахунок за 48 год та КП",
+          description:
+            "Виконуємо точне інженерне моделювання. Ви отримуєте фіксовану вартість та технічне рішення протягом двох діб.",
+        },
+        {
+          step: "03",
+          title: "Підписання договору",
+          description:
+            "Фіксуємо чітку вартість, порядок оплат і терміни реалізації проєкту.",
+        },
+        {
+          step: "04",
+          title: "Заводське виробництво",
+          description:
+            "Автоматизована нарізка та пресування на лінії MiTek. Виготовлення комплекту займає від 3 до 14 робочих днів.",
+        },
+        {
+          step: "05",
+          title: "Логістика та шеф-монтаж",
+          description:
+            "Доставка маркованого комплекту на об'єкт. Надаємо схеми збірки або виїзд інженера для контролю монтажу.",
+        },
+      ];
 
   useEffect(() => {
-    const trackedSections = sectionNav
+    const trackedSections = productSectionNav
       .map((item) => item.href.replace("#", ""))
       .filter((id) => id !== "applications")
       .map((id) => document.getElementById(id))
@@ -580,7 +828,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [productSectionNav]);
 
   const handleCaseSwipe = (touchEndX: number) => {
     if (touchStartX === null) return;
@@ -629,7 +877,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
       <main className="mx-auto w-full max-w-[88rem] px-4 pb-12 md:px-6 md:pb-16 lg:px-6 lg:pb-20">
         <nav className="sticky top-3 z-20 overflow-x-auto rounded-full border border-white/10 bg-[#17191b]/90 pl-2.5 pr-8 py-3 backdrop-blur lg:hidden">
           <ul className="flex min-w-max items-center gap-1.5">
-            {sectionNav.map((item) => (
+            {productSectionNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
@@ -665,7 +913,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               </p>
               <nav className="mt-4">
                 <ul className="space-y-1.5">
-                  {sectionNav.map((item) => (
+                  {productSectionNav.map((item) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
@@ -698,14 +946,11 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                 Задача
               </p>
               <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                Швидко закрити дахову систему без перевитрат і затримок на майданчику
+                {problemIntro.title}
               </h2>
             </div>
             <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
-              Кожен, хто інтегрує крокв&apos;яні системи у свої проєкти, стикається
-              з власним колом викликів. Залежно від вашої ролі, неефективні
-              рішення б&apos;ють по різних показниках: від фінансових збитків до
-              репутаційних втрат.
+              {problemIntro.description}
             </p>
           </div>
 
@@ -749,15 +994,14 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                   Що дає рішення від Timber<span className="text-[#f2994a]">X</span>
                 </h2>
                 <p className={`${bodyClass} mt-4 max-w-2xl text-base leading-8 text-[#d0d0d0]`}>
-                  Дерев&apos;яні ферми з металозубчатими пластинами подаються як інженерний продукт для швидкого
-                  й прогнозованого будівництва, а не як ручна збірка на об&apos;єкті.
+                  {solutionIntro.description}
                 </p>
               </div>
 
               <div className="relative min-h-[26rem] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202326] shadow-[0_26px_70px_rgba(0,0,0,0.28)]">
                 <Image
-                  src="/images/fermy-mzp/object-roof-joint-detail-1.jpg"
-                  alt="Інженерний вузол дерев'яної ферми з металозубчатими пластинами на об'єкті"
+                  src={solutionIntro.imageSrc}
+                  alt={solutionIntro.imageAlt}
                   fill
                   className="object-cover"
                   sizes="(min-width: 1024px) 36vw, 100vw"
@@ -765,11 +1009,10 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.04),rgba(17,18,20,0.68)_100%)]" />
                 <div className="absolute bottom-5 left-5 right-5 rounded-[1.25rem] border border-white/12 bg-[#17191b]/72 p-4 backdrop-blur">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                    Інженерний підхід
+                    {solutionIntro.cardEyebrow}
                   </p>
                   <p className={`${bodyClass} mt-2 text-sm leading-6 text-white/78`}>
-                    Розрахунок, контроль геометрії та готовність до монтажу замінюють
-                    ручну &quot;підгонку&quot; конструкції на майданчику.
+                    {solutionIntro.cardDescription}
                   </p>
                 </div>
               </div>
@@ -818,6 +1061,56 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         </section>
 
+        {isModularHomesPage ? (
+          <section
+            id="typical-projects"
+            className="relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:p-10"
+          >
+            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+            <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+
+            <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                  Типові проєкти
+                </p>
+                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                  Варіанти рішень для швидкого старту
+                </h2>
+              </div>
+              <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
+                Тут буде добірка типових модульних проєктів: формати будинків, планувальні
+                рішення, комплектації та сценарії адаптації під девелоперські, житлові й
+                громадські задачі.
+              </p>
+            </div>
+
+            <div className="relative mt-10 grid gap-4 md:grid-cols-3">
+              {[
+                "Житловий модуль",
+                "Серійний будинок",
+                "Громадський об'єкт",
+              ].map((title, index) => (
+                <div
+                  key={title}
+                  className="relative min-h-[11rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),#202326)] p-5 shadow-[0_14px_34px_rgba(0,0,0,0.26)]"
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.35),rgba(242,153,74,0))]" />
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
+                    Варіант {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className={`${headingClass} mt-4 text-2xl leading-tight text-white`}>
+                    {title}
+                  </h3>
+                  <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
+                    Місце для плану, площі, комплектації та короткого опису типового рішення.
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         <section
           id="applications"
           className="space-y-10"
@@ -830,8 +1123,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               Де це вже працює
             </h2>
             <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
-              Ферми з металозубчатими пластинами працюють там, де важливі повторюваність конструкцій,
-              швидкий монтаж і прогнозована логіка перекриття великих площ.
+              {applicationIntro}
             </p>
           </div>
 
@@ -844,15 +1136,15 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                 <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
                 <div className="relative h-full min-h-[21rem] overflow-hidden bg-[#202326]">
                   <Image
-                    src={applicationImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-1.png"}
+                    src={activeApplicationImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-1.png"}
                     alt={application.title}
                     fill
                     className={`object-cover transition duration-300 group-hover:scale-[1.04] ${
-                      applicationImages[index]?.className ?? "object-[50%_50%]"
+                      activeApplicationImages[index]?.className ?? "object-[50%_50%]"
                     }`}
                     sizes="(min-width: 1024px) 42vw, 100vw"
                   />
-                  <div className={`absolute inset-0 ${applicationImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
+                  <div className={`absolute inset-0 ${activeApplicationImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.18)_42%,rgba(17,18,20,0.68)_100%)]" />
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.14),transparent_34%)] opacity-60 transition duration-200 group-hover:opacity-100" />
                   <div className="relative flex h-full min-h-[21rem] flex-col justify-end px-7 pb-7 pt-28">
@@ -1066,49 +1358,21 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           <div className="h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="relative p-5">
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
-                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
-                <LineIcon name="calculator" className="relative h-7 w-7" />
+            {specSummaryCards.map((card, index) => (
+              <div key={card.value} className="relative p-5">
+                {index > 0 ? (
+                  <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
+                ) : null}
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                  <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                  <LineIcon name={card.icon} className="relative h-7 w-7" />
+                </div>
+                <p className={`${headingClass} mt-4 text-2xl text-white`}>{card.value}</p>
+                <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                  {card.label}
+                </p>
               </div>
-              <p className={`${headingClass} mt-4 text-2xl text-white`}>MiTek Pamir</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Ліцензійний софт для розрахунку кожної крокви.
-              </p>
-            </div>
-            <div className="relative p-5">
-              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
-                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
-                <LineIcon name="snow" className="relative h-7 w-7" />
-              </div>
-              <p className={`${headingClass} mt-4 text-2xl text-white`}>EN 1995 (Eurocode 5)</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Розрахунок під реальні кліматичні навантаження об&apos;єкта.
-              </p>
-            </div>
-            <div className="relative p-5">
-              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
-                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
-                <LineIcon name="settings" className="relative h-7 w-7" />
-              </div>
-              <p className={`${headingClass} mt-4 text-2xl text-white`}>1-2 мм точність</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Максимальне геометричне відхилення за рахунок заводської нарізки.
-              </p>
-            </div>
-            <div className="relative p-5">
-              <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
-                <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
-                <LineIcon name="beam" className="relative h-7 w-7" />
-              </div>
-              <p className={`${headingClass} mt-4 text-2xl text-white`}>800-1000 мм</p>
-              <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                Оптимальний крок встановлення ферм для надійності покрівлі.
-              </p>
-            </div>
+            ))}
           </div>
 
           <div className="mt-4 h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
@@ -1116,11 +1380,11 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           <div className="mt-1 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-stretch lg:gap-12">
             <div className="relative -mt-4 rounded-[1.5rem] lg:-ml-4">
               <Image
-                src="/images/fermy-mzp/grafik-elements-2.png"
-                alt="Технічне креслення ферми з металозубчатими пластинами"
+                src={specVisual.src}
+                alt={specVisual.alt}
                 width={1200}
                 height={900}
-                className="h-full w-full object-contain object-left"
+                className={specVisual.className}
               />
               {["14%", "35%", "56%", "78%"].map((top) => (
                 <div
@@ -1134,32 +1398,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
             </div>
 
             <div className="relative grid gap-2 lg:block lg:h-full lg:pl-4">
-              {[
-                {
-                  top: "9%",
-                  title: "Прольоти до 30 м без опор",
-                  description:
-                    "Можливість перекривати великі приміщення без внутрішніх стін та зайвих колон.",
-                },
-                {
-                  top: "30%",
-                  title: "5 мм: Точність вузлів",
-                  description:
-                    "Суворе позиціонування металозубчатих пластин забезпечує проектну міцність кожного з'єднання.",
-                },
-                {
-                  top: "53%",
-                  title: "Деревина C22 / C24",
-                  description:
-                    "Використовуємо лише калібровану сосну з підбором товщини заготовки 45–60 мм під розрахунок.",
-                },
-                {
-                  top: "75%",
-                  title: "7–10 мм: Розрахункові прогини",
-                  description:
-                    "Мінімальна деформація конструкції під навантаженням завдяки жорсткості вузлів.",
-                },
-              ].map((item, index) => (
+              {specHotspots.map((item, index) => (
                 <div
                   key={item.title}
                   className="p-3.5 lg:absolute lg:left-0 lg:right-0 lg:p-0"
@@ -1180,8 +1419,8 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         </section>
 
         <GallerySection
-          title="Реалізації та масштаби виробництва"
-          description="Від серійних рішень для котеджних містечок до складних індустріальних об'єктів в Україні та Європі."
+          title={page.gallery.title}
+          description={page.gallery.description}
           images={page.gallery.images}
         />
 
@@ -1194,9 +1433,9 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               Економіка рішення
             </h2>
             <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
-              Готові ферми з металозубчатими пластинами зменшують обсяг ручних робіт, скорочують час перебування бригади на
-              майданчику та прибирають частину непередбачуваних витрат, які зазвичай з&apos;являються
-              під час складання покрівельної системи на місці.
+              {isModularHomesPage
+                ? "Заводське виробництво модульних будинків скорочує непередбачувані витрати на майданчику, дає фіксовану комплектацію та допомагає планувати запуск продажів, оренди або соціального об'єкта."
+                : "Готові ферми з металозубчатими пластинами зменшують обсяг ручних робіт, скорочують час перебування бригади на майданчику та прибирають частину непередбачуваних витрат, які зазвичай з'являються під час складання покрівельної системи на місці."}
             </p>
           </div>
 
@@ -1209,15 +1448,15 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                 <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
                 <div className="relative h-full min-h-[21rem] overflow-hidden bg-[#202326]">
                   <Image
-                    src={economicsImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-2.png"}
+                    src={activeEconomicsImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-2.png"}
                     alt={card.title}
                     fill
                     className={`object-cover transition duration-300 group-hover:scale-[1.04] ${
-                      economicsImages[index]?.className ?? "object-[50%_50%]"
+                      activeEconomicsImages[index]?.className ?? "object-[50%_50%]"
                     }`}
                     sizes="(min-width: 1024px) 42vw, 100vw"
                   />
-                  <div className={`absolute inset-0 ${economicsImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
+                  <div className={`absolute inset-0 ${activeEconomicsImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.18)_42%,rgba(17,18,20,0.72)_100%)]" />
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.14),transparent_34%)] opacity-60 transition duration-200 group-hover:opacity-100" />
 
@@ -1287,47 +1526,50 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         <SectionShell
           id="trust"
           title="Гарантії та технічний супровід"
-          description="Кожна поставка TimberX супроводжується повним пакетом документів, що гарантують юридичну та конструктивну безпеку об'єкта."
+          description={
+            isModularHomesPage
+              ? "Кожен проєкт TimberX супроводжується технічною документацією, заводським контролем якості та гарантійними зобов'язаннями в договорі."
+              : "Кожна поставка TimberX супроводжується повним пакетом документів, що гарантують юридичну та конструктивну безпеку об'єкта."
+          }
           eyebrow="Чому це працює"
         >
           <div className="grid gap-8 lg:grid-cols-[1.18fr_0.82fr] lg:items-center">
             <div className="flex flex-col justify-center py-2">
               <ul className="space-y-5 text-lg leading-8 text-white/84">
-                <li className="flex items-start gap-3">
-                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>
-                    <strong className="font-semibold text-white">Ліцензійний паспорт MiTek:</strong>{" "}
-                    офіційний розрахунок навантажень для кожної крокви.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>
-                    <strong className="font-semibold text-white">Повний монтажний комплект:</strong>{" "}
-                    деталізовані схеми збірки та специфікація вузлів.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>
-                    <strong className="font-semibold text-white">Юридична фіксація:</strong> гарантія
-                    10 років, прописана в договорі.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>
-                    <strong className="font-semibold text-white">Технічний паспорт на партію:</strong>{" "}
-                    сертифікати на деревину та металозубчаті пластини.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
-                  <span>
-                    <strong className="font-semibold text-white">Одна точка відповідальності:</strong>{" "}
-                    ми відповідаємо за проєкт від розрахунку до фінальної геометрії.
-                  </span>
-                </li>
+                {(isModularHomesPage
+                  ? page.trust
+                  : [
+                      {
+                        title: "Ліцензійний паспорт MiTek",
+                        description: "офіційний розрахунок навантажень для кожної крокви.",
+                      },
+                      {
+                        title: "Повний монтажний комплект",
+                        description: "деталізовані схеми збірки та специфікація вузлів.",
+                      },
+                      {
+                        title: "Юридична фіксація",
+                        description: "гарантія 10 років, прописана в договорі.",
+                      },
+                      {
+                        title: "Технічний паспорт на партію",
+                        description: "сертифікати на деревину та металозубчаті пластини.",
+                      },
+                      {
+                        title: "Одна точка відповідальності",
+                        description:
+                          "ми відповідаємо за проєкт від розрахунку до фінальної геометрії.",
+                      },
+                    ]
+                ).map((item) => (
+                  <li key={item.title} className="flex items-start gap-3">
+                    <span className="mt-[0.7rem] h-2 w-2 shrink-0 rounded-full bg-[#F2994A]" />
+                    <span>
+                      <strong className="font-semibold text-white">{item.title}:</strong>{" "}
+                      {item.description}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </div>
 
