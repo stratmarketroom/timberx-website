@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
+import { ProjectRealizationShowcase } from "@/components/project-realization-showcase";
 import { ProjectVisualSlider } from "@/components/project-visual-slider";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { findTypicalProject, modularTypicalProjects } from "@/lib/typical-projects";
@@ -66,7 +67,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
       }));
   const technicalSpecs = project.technicalSpecs ?? project.specs;
   const adaptationOptions = project.adaptationOptions ?? project.formats;
-  const hasWidePlanHeader = project.slug === "skaut-50" || project.slug === "modulnyi-budynok-35m";
+  const realizationGallery = project.realizationGallery ?? [];
+  const realizationVideos = project.realizationVideos ?? [];
+  const hasWidePlanHeader =
+    project.slug === "skaut-50" ||
+    project.slug === "modulnyi-budynok-35m" ||
+    project.slug === "modulnyi-budynok-70m-plus" ||
+    project.slug === "hotelnyi-modul";
 
   return (
     <div className="min-h-screen bg-[#f4f0e8] text-[#1b1d1f]">
@@ -212,6 +219,25 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                   </div>
                 )}
               </div>
+              {project.plan.additionalImages?.length ? (
+                <div className="mt-5 grid gap-5">
+                  {project.plan.additionalImages.map((image) => (
+                    <div
+                      key={image.src}
+                      className="overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)]"
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={1800}
+                        height={760}
+                        className="mx-auto h-auto w-full object-contain"
+                        sizes="(min-width: 1024px) 54vw, 100vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
 
             <div className="space-y-6">
@@ -382,6 +408,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
             </div>
           </div>
         </section>
+
+        <ProjectRealizationShowcase
+          photos={realizationGallery}
+          videos={realizationVideos}
+          title={project.realizationTitle}
+          text={project.realizationText}
+        />
 
         <section id="cta">
           <div className="relative overflow-hidden rounded-[30px] border border-[#2c3031] bg-[#181b1d] p-8 shadow-[0_30px_80px_rgba(22,24,24,0.18)] md:p-10 lg:p-12">

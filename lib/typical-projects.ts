@@ -28,10 +28,26 @@ export type TypicalProject = {
     alt: string;
     label: string;
   }>;
+  realizationGallery?: Array<{
+    src: string;
+    alt: string;
+    label: string;
+  }>;
+  realizationVideos?: Array<{
+    src: string;
+    title: string;
+    poster?: string;
+  }>;
+  realizationTitle?: string;
+  realizationText?: string;
   plan: {
     title: string;
     description: string;
     imageSrc?: string;
+    additionalImages?: Array<{
+      src: string;
+      alt: string;
+    }>;
     zones: string[];
   };
   specs: Array<{
@@ -506,103 +522,364 @@ export const typicalProjects: TypicalProject[] = [
     slug: "modulnyi-budynok-70m-plus",
     category: "modular",
     productLabel: "Модульний будинок",
-    title: "Модульний будинок 70+\u00a0м²",
-    shortTitle: "70+\u00a0м²",
-    area: "70+\u00a0м²",
+    title: "Scandi 80",
+    shortTitle: "82,5\u00a0м²",
+    area: "82,5\u00a0м²",
     summary:
-      "Повноцінний житловий формат для девелоперського продажу, сімейного проживання або котеджного містечка.",
+      "Повноцінний модульний будинок із двома спальнями, кухнею-вітальнею, ванною кімнатою і широкою терасою.",
     description:
-      "Формат 70+\u00a0м² дозволяє створити будинок із кількома спальнями, просторою кухнею-вітальнею і варіантами фасаду. Його зручно масштабувати партіями для девелоперських проєктів.",
-    heroImage: "/images/projects/modular-homes-community/modular-home-wood-facade.jpg",
-    heroImageAlt: "Модульний будинок TimberX 70+\u00a0м² з дерев'яним фасадом",
+      "Scandi 80 — модульний будинок 82,5\u00a0м² для 2-4 людей. Планування поєднує дві спальні, кухню, простору вітальню, ванну кімнату і терасу; панорамні вікна дають більше природного світла, а широка тераса розширює сценарії відпочинку.",
+    heroImage: "/images/projects/scandi-4/hero-scandi.jpg",
+    heroImageAlt: "Scandi 80: модульний будинок із дерев'яною терасою",
+    detailHeroImage: "/images/projects/scandi-4/hero-scandi.jpg",
+    detailHeroImageAlt: "Scandi 80: реалізований модульний будинок з терасою",
     gallery: [
       {
-        src: "/images/projects/modular-homes-community/modular-home-wood-facade.jpg",
-        alt: "Модульний будинок 70+\u00a0м²: фасад",
+        src: "/images/projects/scandi-4/hero-scandi.jpg",
+        alt: "Scandi 80: фасад і тераса реалізованого будинку",
+        label: "Реалізація",
+      },
+    ],
+    visualGallery: [
+      {
+        src: "/images/projects/scandi-4/hero-scandi.jpg",
+        alt: "Scandi 80: реалізований будинок із широкою терасою",
+        label: "Тераса",
+      },
+      {
+        src: "/images/projects/scandi-4/interior-living-01.jpg",
+        alt: "Scandi 80: кухня-вітальня з панорамним виходом на терасу",
+        label: "Інтер'єр",
+      },
+      {
+        src: "/images/projects/scandi-4/exterior-terrace-02.jpg",
+        alt: "Scandi 80: дерев'яна тераса та темний фасад",
+        label: "Тераса",
+      },
+      {
+        src: "/images/projects/scandi-4/interior-living-02.jpg",
+        alt: "Scandi 80: світле дерев'яне оздоблення вітальні",
+        label: "Вітальня",
+      },
+      {
+        src: "/images/projects/scandi-4/exterior-facade-01.jpg",
+        alt: "Scandi 80: фасад із великим панорамним вікном",
         label: "Фасад",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-interior-living.jpg",
-        alt: "Модульний будинок 70+\u00a0м²: вітальня",
-        label: "Інтер'єр",
+        src: "/images/projects/scandi-4/exterior-side-01.jpg",
+        alt: "Scandi 80: бічний фасад із темним оздобленням",
+        label: "Фасад",
+      },
+    ],
+    realizationTitle: "Від дизайн-проєкту до реалізованого будинку",
+    realizationText:
+      "Показуємо реалізований Scandi 80: контрастний темний фасад із дерев'яними акцентами, криту терасу, панорамне скління, світле внутрішнє оздоблення та деталі, які формують відчуття заміського будинку.",
+    realizationGallery: [
+      {
+        src: "/images/projects/scandi-4/exterior-terrace-01.jpg",
+        alt: "Scandi 80: реалізований фасад з критою терасою",
+        label: "Тераса",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-interior-dining.jpg",
-        alt: "Модульний будинок 70+\u00a0м²: кухня",
-        label: "Інтер'єр",
+        src: "/images/projects/scandi-4/exterior-terrace-02.jpg",
+        alt: "Scandi 80: фасад, тераса і панорамне скління",
+        label: "Фасад",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-side-facade.jpg",
-        alt: "Модульний будинок 70+\u00a0м²: бічний фасад",
+        src: "/images/projects/scandi-4/exterior-side-01.jpg",
+        alt: "Scandi 80: бічний фасад із темним оздобленням",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/scandi-4/exterior-facade-01.jpg",
+        alt: "Scandi 80: фасад з дерев'яними акцентами",
         label: "Об'єкт",
+      },
+      {
+        src: "/images/projects/scandi-4/interior-living-01.jpg",
+        alt: "Scandi 80: кухня-вітальня з панорамними дверима",
+        label: "Інтер'єр",
+      },
+      {
+        src: "/images/projects/scandi-4/interior-living-02.jpg",
+        alt: "Scandi 80: вітальня зі світлим дерев'яним оздобленням",
+        label: "Вітальня",
       },
     ],
     plan: {
-      title: "Сімейне планування з кількома функціональними зонами",
+      title: "Сімейне планування з двома спальнями та широкою терасою",
       description:
-        "План може адаптуватися під 2-3 спальні, кухню-вітальню, санвузли, технічну зону і терасу. Це базовий формат для продажу або довгострокової оренди.",
-      zones: ["2-3 спальні", "Кухня-вітальня", "Санвузол", "Технічна зона", "Тераса"],
+        "Планування Scandi 80 поєднує дві ізольовані спальні, кухню, простору вітальню, ванну кімнату і терасу. Формат підходить для сімейного проживання, дачі, бази відпочинку або серійної забудови.",
+      imageSrc: "/images/projects/scandi-4/plan-floor-01.png",
+      zones: ["Дві спальні", "Кухня", "Вітальня", "Ванна кімната", "Тераса"],
     },
     specs: [
-      { label: "Площа", value: "70+\u00a0м²" },
-      { label: "Формат", value: "2+ модулі" },
-      { label: "Готовність", value: "коробка / під ключ" },
-      { label: "Партія", value: "10+ будинків" },
+      { label: "Площа", value: "82,5\u00a0м²" },
+      { label: "Людей", value: "2-4" },
+      { label: "Спальні", value: "2" },
+      { label: "Виробництво", value: "35 днів" },
     ],
-    scenarios: ["котеджне містечко", "девелопмент", "громада", "довгострокова оренда"],
+    areaSpecs: [
+      { label: "Загальна площа з терасою", value: "82,5\u00a0м²" },
+      { label: "Чиста площа", value: "69,19\u00a0м²" },
+      { label: "Габаритні розміри", value: "7,64 × 11,44\u00a0м" },
+      { label: "Тераса", value: "14\u00a0м²" },
+      { label: "Кількість поверхів", value: "1" },
+      { label: "Вага будинку", value: "14\u00a0т" },
+    ],
+    rooms: [
+      { number: "101", name: "Вітальня", area: "25,82\u00a0м²" },
+      { number: "102", name: "Кухня", area: "7,59\u00a0м²" },
+      { number: "103", name: "Спальня", area: "8,75\u00a0м²" },
+      { number: "104", name: "Дитяча", area: "8,75\u00a0м²" },
+      { number: "105", name: "Ванна кімната", area: "4,07\u00a0м²" },
+      { number: "106", name: "Тераса", area: "14\u00a0м²" },
+    ],
+    technicalSpecs: [
+      { label: "Тип конструкції", value: "Модульна технологія" },
+      {
+        label: "Дах",
+        value: 'Односхилий, з невеликим ухилом, прихованим парапетом (стиль "фальц" або плоска покрівля)',
+      },
+      {
+        label: "Скління",
+        value: "Енергоефективні панорамні вітражі з ламінацією профілю для природного освітлення",
+      },
+      {
+        label: "Опалення",
+        value:
+          "Комбіноване: тепла підлога та тепловий насос, додатково - дров'яна піч-камін (основний акцент вітальні)",
+      },
+    ],
+    adaptationOptions: [
+      "Комплектація: коробка / під ключ",
+      "Фасадне оздоблення",
+      "Інженерія під сценарій проживання",
+      "Внутрішнє оздоблення",
+    ],
+    scenarios: ["дача", "сімейне проживання", "котеджне містечко", "орендний бізнес"],
     formats: ["коробка", "під ключ", "серійна партія"],
-    ctaLabel: "Прорахувати 70+\u00a0м²",
+    ctaLabel: "Прорахувати Scandi 80",
   },
   {
     slug: "hotelnyi-modul",
     category: "modular",
     productLabel: "Готельний модуль",
-    title: "Готельний модуль",
+    title: "Мініготель",
     shortTitle: "Готель",
-    area: "номерний фонд",
+    area: "34,29\u00a0м²",
     summary:
-      "Типове рішення для баз відпочинку, глемпінгів, апарт-готелів і сезонного орендного бізнесу.",
+      "Модульний мініготель на 4 автономні номери для придорожнього сервісу, баз відпочинку та серійного номерного фонду.",
     description:
-      "Готельний модуль допомагає швидко збільшити номерний фонд і вийти в сезон без довгого циклу традиційного будівництва. Формат масштабується партіями.",
-    heroImage: "/images/cases/sosnovel-case.jpg",
-    heroImageAlt: "Модульні будинки TimberX для заміського комплексу",
+      "Мініготель — витягнутий модульний блок із чотирма автономними житловими номерами, окремими санвузлами та технічним приміщенням. Формат підходить для швидкого запуску номерного фонду вздовж автомагістралей, на базах відпочинку або в сезонному орендному бізнесі.",
+    heroImage: "/images/projects/mini-hotel/exterior-night.png",
+    heroImageAlt: "Мініготель: модульний готельний блок із вечірнім підсвічуванням",
+    detailHeroImage: "/images/projects/mini-hotel/exterior-day.png",
+    detailHeroImageAlt: "Мініготель: денний фасад модульного готелю",
     gallery: [
       {
-        src: "/images/cases/sosnovel-case.jpg",
-        alt: "Готельний модуль TimberX: кейс заміського комплексу",
-        label: "Кейс",
+        src: "/images/projects/mini-hotel/exterior-night.png",
+        alt: "Мініготель: вечірній фасад",
+        label: "Вечір",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-terrace.jpg",
-        alt: "Готельний модуль TimberX: тераса",
+        src: "/images/projects/mini-hotel/exterior-day.png",
+        alt: "Мініготель: денний фасад",
+        label: "День",
+      },
+      {
+        src: "/images/projects/mini-hotel/exterior-side.png",
+        alt: "Мініготель: бічний фасад",
         label: "Фасад",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-interior-living.jpg",
-        alt: "Готельний модуль TimberX: інтер'єр",
-        label: "Інтер'єр",
+        src: "/images/projects/mini-hotel/render-angle.png",
+        alt: "Мініготель: перспективний фасад із відкритим майданчиком",
+        label: "Ракурс",
       },
       {
-        src: "/images/projects/modular-homes-community/modular-home-transport.jpg",
-        alt: "Готельний модуль TimberX: транспортування",
-        label: "Логістика",
+        src: "/images/projects/mini-hotel/render-day.png",
+        alt: "Мініготель: денна візуалізація фасаду",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/mini-hotel/render-evening.png",
+        alt: "Мініготель: вечірня візуалізація фасаду",
+        label: "Підсвітка",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-exterior-01.png",
+        alt: "Мініготель: архітектурна модель фасаду",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-exterior-02.png",
+        alt: "Мініготель: архітектурна модель з протилежного ракурсу",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-frame.png",
+        alt: "Мініготель: металевий каркас модуля",
+        label: "Каркас",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-plan.png",
+        alt: "Мініготель: розріз моделі з номерами",
+        label: "Планування",
+      },
+    ],
+    visualGallery: [
+      {
+        src: "/images/projects/mini-hotel/exterior-night.png",
+        alt: "Мініготель: вечірній фасад із декоративною підсвіткою",
+        label: "Вечір",
+      },
+      {
+        src: "/images/projects/mini-hotel/exterior-day.png",
+        alt: "Мініготель: денний фасад модульного готелю",
+        label: "День",
+      },
+      {
+        src: "/images/projects/mini-hotel/exterior-side.png",
+        alt: "Мініготель: бічний фасад із декоративною підсвіткою",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-exterior-01.png",
+        alt: "Мініготель: архітектурна візуалізація фасаду",
+        label: "Візуалізація",
+      },
+    ],
+    modelGallery: [
+      {
+        src: "/images/projects/mini-hotel/render-evening.png",
+        alt: "Мініготель: вечірній рендер фасаду",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/render-day.png",
+        alt: "Мініготель: денний рендер фасаду",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/render-angle.png",
+        alt: "Мініготель: перспективний рендер фасаду",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-exterior-02.png",
+        alt: "Мініготель: архітектурна модель з іншого ракурсу",
+        label: "Модель",
+      },
+      {
+        src: "/images/projects/mini-hotel/model-frame.png",
+        alt: "Мініготель: металевий каркас",
+        label: "Каркас",
+      },
+    ],
+    realizationGallery: [
+      {
+        src: "/images/projects/mini-hotel/realization/facade-01.jpg",
+        alt: "Мініготель: реалізований фасад у виробничому цеху",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/facade-02.jpg",
+        alt: "Мініготель: фасадний модуль після виготовлення",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/engineering-01.jpg",
+        alt: "Мініготель: технічний блок з інженерними підключеннями",
+        label: "Інженерія",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/interior-01.jpg",
+        alt: "Мініготель: номерний блок з вікном і електроопаленням",
+        label: "Номер",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/interior-02.jpg",
+        alt: "Мініготель: санвузол реалізованого номера",
+        label: "Санвузол",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/interior-03.jpg",
+        alt: "Мініготель: душова зона в санвузлі",
+        label: "Душова",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/interior-04.jpg",
+        alt: "Мініготель: душова система в реалізованому санвузлі",
+        label: "Сантехніка",
+      },
+      {
+        src: "/images/projects/mini-hotel/realization/interior-05.jpg",
+        alt: "Мініготель: шафа, дзеркало і зона умивальника",
+        label: "Оздоблення",
+      },
+    ],
+    realizationVideos: [
+      {
+        src: "/images/projects/mini-hotel/realization/realization-video-01.mp4",
+        title: "Відео реалізованого мініготелю",
+        poster: "/images/projects/mini-hotel/realization/facade-01.jpg",
       },
     ],
     plan: {
-      title: "Планування під номер або апартамент",
+      title: "Чотири автономні номери в одному модульному блоці",
       description:
-        "Може включати спальну зону, санвузол, невелику кухонну зону, місце зберігання та терасу. Конфігурація залежить від класу об'єкта.",
-      zones: ["Спальна зона", "Санвузол", "Кухонна зона", "Зберігання", "Тераса"],
+        "Внутрішній простір поділений на чотири окремі гостьові номери з індивідуальними санвузлами та входами з фасаду. Окреме технічне приміщення дозволяє зручно обслуговувати інженерні системи модуля.",
+      imageSrc: "/images/projects/mini-hotel/model-plan.png",
+      additionalImages: [
+        {
+          src: "/images/projects/mini-hotel/plan-floor-01.png",
+          alt: "Мініготель: план-схема з чотирма номерами та санвузлами",
+        },
+      ],
+      zones: ["Номер 1", "Номер 2", "Номер 3", "Номер 4", "Санвузли", "Технічне приміщення"],
     },
     specs: [
-      { label: "Призначення", value: "номер / апартамент" },
-      { label: "Формат", value: "серійні модулі" },
+      { label: "Площа", value: "34,29\u00a0м²" },
+      { label: "Номери", value: "4" },
+      { label: "Габарити", value: "13,746 × 2,500\u00a0м" },
       { label: "Готовність", value: "під ключ" },
-      { label: "Запуск", value: "партіями" },
     ],
-    scenarios: ["база відпочинку", "готель", "глемпінг", "орендний бізнес"],
+    areaSpecs: [
+      { label: "Загальна площа об'єкта", value: "34,29\u00a0м²" },
+      { label: "Внутрішні приміщення", value: "26,80\u00a0м²" },
+      { label: "Площа покрівлі", value: "30,77\u00a0м²" },
+      { label: "Габаритна довжина", value: "13,746\u00a0м" },
+      { label: "Габаритна ширина", value: "2,500\u00a0м" },
+      { label: "Висота конструкції", value: "2,895\u00a0м" },
+    ],
+    rooms: [
+      { number: "101", name: "Технічне приміщення", area: "0,88\u00a0м²" },
+      { number: "102", name: "Номер 1", area: "4,39\u00a0м²" },
+      { number: "103", name: "Санвузол 1", area: "2,10\u00a0м²" },
+      { number: "104", name: "Санвузол 2", area: "2,10\u00a0м²" },
+      { number: "105", name: "Номер 2", area: "4,37\u00a0м²" },
+      { number: "106", name: "Номер 3", area: "4,37\u00a0м²" },
+      { number: "107", name: "Санвузол 3", area: "2,10\u00a0м²" },
+      { number: "108", name: "Санвузол 4", area: "2,10\u00a0м²" },
+      { number: "109", name: "Номер 4", area: "4,39\u00a0м²" },
+    ],
+    technicalSpecs: [
+      { label: "Каркас", value: "Металевий каркас з інтегрованим дерев'яним каркасом" },
+      { label: "Стіни та ізоляція", value: "PIR-панелі 50\u00a0мм, базальтова вата 120\u00a0мм, паробар'єрні плівки" },
+      { label: "Покрівля", value: "ПВХ-мембрана, базальтова вата 150\u00a0мм, XPS 50\u00a0мм" },
+      { label: "Інженерія", value: "32 розетки, LED-підсвітка 24\u00a0м.п. та індивідуальні контролери кондиціонерів" },
+    ],
+    adaptationOptions: [
+      "Кількість номерів у партії",
+      "Фасадні HPL-панелі та декоративна підсвітка",
+      "Інженерія під сценарій експлуатації",
+      "Внутрішнє оздоблення номерів",
+    ],
+    scenarios: ["мініготель", "придорожній сервіс", "база відпочинку", "орендний бізнес"],
     formats: ["під ключ", "серійна партія", "готовий модуль"],
-    ctaLabel: "Прорахувати готельний модуль",
+    ctaLabel: "Прорахувати мініготель",
   },
   {
     slug: "blok-ohorony",
