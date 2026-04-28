@@ -8,7 +8,9 @@ import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StandardQuizCta } from "@/components/standard-quiz-cta";
+import { TypicalProjectsShowcase } from "@/components/typical-projects";
 import type { ProductFaqItem, ProductGalleryImage, ProductPageData } from "@/lib/product-pages/types";
+import { modularTypicalProjects } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -78,6 +80,39 @@ const economicsImages = [
 ] as const;
 const applicationIcons = ["projects", "factory", "delivery", "beam"] as const;
 const caseSlideMetricIcons = ["beam", "weight", "snow", "wind"] as const;
+const processStepIcons: IconName[] = [
+  "request",
+  "calculator",
+  "blueprint",
+  "contractor",
+  "factory",
+  "settings",
+  "delivery",
+];
+const modularPackageOptions: Array<{
+  title: string;
+  description: string;
+  icon: IconName;
+}> = [
+  {
+    title: "Коробка",
+    description:
+      "Конструктив, зовнішній контур і базова готовність для подальших робіт на стороні замовника або генпідрядника.",
+    icon: "beam",
+  },
+  {
+    title: "Під ключ",
+    description:
+      "Вища готовність із внутрішніми роботами, інженерією та комплектацією, щоб швидше запускати продаж, оренду або експлуатацію.",
+    icon: "settings",
+  },
+  {
+    title: "Готовий модуль",
+    description:
+      "Заводська підготовка до доставки та встановлення на готовій основі, з адаптацією під логістику й сценарій використання.",
+    icon: "delivery",
+  },
+];
 function SectionShell({
   id,
   eyebrow,
@@ -440,11 +475,11 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const productSectionNav = useMemo(
     () =>
       isModularHomesPage
-        ? [
+        ? ([
             ...sectionNav.slice(0, 2),
             { label: "Типові проєкти", href: "#typical-projects" },
             ...sectionNav.slice(2),
-          ]
+          ].filter((item) => item.href !== "#specs"))
         : sectionNav,
     [isModularHomesPage],
   );
@@ -452,7 +487,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     ? {
         title: "Скоротити цикл будівництва без втрати контролю бюджету",
         description:
-          "Модульні будинки TimberX допомагають девелоперам, забудовникам і громадам отримати прогнозований результат: заводське виробництво, фіксована комплектація та швидкий монтаж на підготовленій ділянці.",
+          "Модульні будинки TimberX допомагають девелоперам, забудовникам і громадам отримати прогнозований результат: заводське виробництво, фіксована комплектація та готовність до встановлення на підготовленій ділянці.",
       }
     : {
         title: "Швидко закрити дахову систему без перевитрат і затримок на майданчику",
@@ -462,12 +497,12 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const solutionIntro = isModularHomesPage
     ? {
         description:
-          "Модульний будинок TimberX - це заводський продукт із готовою логікою проєктування, виробництва, доставки та монтажу. Більшість робіт виконується в цеху, тому строки, бюджет і якість легше контролювати.",
+          "Заводський продукт із готовою логікою проєктування, виробництва та комплектації.",
         imageSrc: "/images/projects/modular-homes-community/modular-home-front-porch.jpg",
         imageAlt: "Готовий модульний будинок TimberX з дерев'яним фасадом",
         cardEyebrow: "Заводський підхід",
         cardDescription:
-          "Проєктування, комплектація та контроль якості виконуються до монтажу, щоб на ділянці залишився короткий і прогнозований етап.",
+          "Проєктування, комплектація та контроль якості виконуються в цеху, щоб замовник отримав передбачуваний продукт для наступних робіт на ділянці.",
       }
     : {
         description:
@@ -538,15 +573,22 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const modularEconomicsDescriptions = [
     "Серійність, менше ручних доробок і контроль комплектації допомагають знижувати собівартість у великих партіях.",
     "Паралельне виробництво модулів і підготовка ділянки дають зрозумілий графік запуску продажів або експлуатації.",
-    "Короткий монтажний етап зменшує залежність від погоди, дефіциту бригад і сезонних простоїв на майданчику.",
+    "Заводська готовність зменшує залежність від погоди, дефіциту бригад і сезонних простоїв на майданчику.",
     "Після погодження технічного завдання замовник отримує закріплений бюджет, комплектацію та строки в договорі.",
   ];
   const modularProcessDescriptions = [
-    "Фіксуємо бізнес-сценарій: девелопмент, ЖК, громада, орендний фонд або серійна партія будинків.",
-    "Визначаємо комплектацію, рівень готовності, логістику та формат поставки під бюджет і строки.",
-    "Готуємо конструктив, специфікації, вузли та технічне завдання для виробництва.",
-    "Закріплюємо в договорі ціну, графік, комплектацію, гарантії та відповідальність сторін.",
-    "Виготовляємо модулі в цеху, поки на ділянці готують основу під монтаж.",
+    "Фіксуємо задачу, обсяг і сценарій.",
+    "Обираємо типовий проєкт і готовність.",
+    "Готуємо планування, комплектацію і ТЗ.",
+    "Фіксуємо ціну, строки й гарантії.",
+    "Виготовляємо модулі в цеху.",
+  ];
+  const modularProcessTitles = [
+    "Запит",
+    "Формат",
+    "ТЗ",
+    "Договір",
+    "Виробництво",
   ];
   const modularSpecSummaryCards = [
     {
@@ -614,7 +656,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         },
         {
           top: "30%",
-          title: "Утеплення 150-250 мм",
+          title: "Утеплення 250-300 мм",
           description:
             "Базальтова вата або ековата формують енергоефективний контур будинку.",
         },
@@ -626,9 +668,9 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         },
         {
           top: "75%",
-          title: "Монтаж 1-3 дні",
+          title: "50 років",
           description:
-            "Після готовності майданчика модулі швидко збираються в готовий об'єкт.",
+            "Ресурс несучих конструкцій за умови правильної експлуатації.",
         },
       ]
     : [
@@ -661,7 +703,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const caseSlides = [
     {
       key: "case-01",
-      badge: "Case 01",
+      badge: isModularHomesPage ? "НАШ ПРОЄКТ 1" : "Case 01",
       title: page.caseStudy.title,
       challenge: page.caseStudy.challenge,
       solution: page.caseStudy.solution,
@@ -672,8 +714,8 @@ export function ProductPage({ page }: { page: ProductPageData }) {
       })) ?? [
         { value: "22 м", label: "проліт без внутрішніх опор" },
         { value: "469 кг", label: "вага однієї ферми" },
-        { value: "1370 N/m²", label: "снігове навантаження" },
-        { value: "500 N/m²", label: "вітрове навантаження" },
+        { value: "1370\u00a0N/m²", label: "снігове навантаження" },
+        { value: "500\u00a0N/m²", label: "вітрове навантаження" },
       ],
       imageSrc: isModularHomesPage
         ? "/images/projects/modular-homes-community/modular-home-terrace.jpg"
@@ -686,7 +728,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
     page.secondaryCaseStudy
       ? {
           key: "case-02",
-          badge: "Case 02",
+          badge: isModularHomesPage ? "НАШ ПРОЄКТ 2" : "Case 02",
           title: page.secondaryCaseStudy.title,
           challenge: page.secondaryCaseStudy.challenge,
           solution: page.secondaryCaseStudy.solution,
@@ -697,8 +739,8 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           })) ?? [
             { value: "800 мм", label: "крок ферм", icon: "beam" },
             { value: "207 кг", label: "вага ферми", icon: "weight" },
-            { value: "850 N/m²", label: "снігове навантаження", icon: "snow" },
-            { value: "470 N/m²", label: "вітрове навантаження", icon: "wind" },
+            { value: "850\u00a0N/m²", label: "снігове навантаження", icon: "snow" },
+            { value: "470\u00a0N/m²", label: "вітрове навантаження", icon: "wind" },
           ],
           imageSrc: isModularHomesPage
             ? "/images/projects/modular-homes-community/modular-home-transport.jpg"
@@ -762,36 +804,42 @@ export function ProductPage({ page }: { page: ProductPageData }) {
   const processCards = isModularHomesPage
     ? page.process.slice(0, 5).map((title, index) => ({
         step: String(index + 1).padStart(2, "0"),
-        title,
+        icon: processStepIcons[index] ?? "request",
+        title: modularProcessTitles[index] ?? title,
         description: modularProcessDescriptions[index] ?? title,
       }))
     : [
         {
           step: "01",
+          icon: "request" as IconName,
           title: "Запит та аналіз",
           description:
             "Аналізуємо ваші креслення, архітектуру та специфіку об'єкта для вибору оптимальної конфігурації ферм.",
         },
         {
           step: "02",
+          icon: "calculator" as IconName,
           title: "Прорахунок за 48 год та КП",
           description:
             "Виконуємо точне інженерне моделювання. Ви отримуєте фіксовану вартість та технічне рішення протягом двох діб.",
         },
         {
           step: "03",
+          icon: "contractor" as IconName,
           title: "Підписання договору",
           description:
             "Фіксуємо чітку вартість, порядок оплат і терміни реалізації проєкту.",
         },
         {
           step: "04",
+          icon: "factory" as IconName,
           title: "Заводське виробництво",
           description:
             "Автоматизована нарізка та пресування на лінії MiTek. Виготовлення комплекту займає від 3 до 14 робочих днів.",
         },
         {
           step: "05",
+          icon: "delivery" as IconName,
           title: "Логістика та шеф-монтаж",
           description:
             "Доставка маркованого комплекту на об'єкт. Надаємо схеми збірки або виїзд інженера для контролю монтажу.",
@@ -984,14 +1032,26 @@ export function ProductPage({ page }: { page: ProductPageData }) {
         >
           <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
           <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
-          <div className="relative grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
+          <div
+            className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] ${
+              isModularHomesPage ? "lg:items-start" : "lg:items-center"
+            }`}
+          >
             <div className="space-y-7">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
                   Рішення
                 </p>
                 <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                  Що дає рішення від Timber<span className="text-[#f2994a]">X</span>
+                  {isModularHomesPage ? (
+                    <>
+                      Модульний будинок Timber<span className="text-[#f2994a]">X</span>
+                    </>
+                  ) : (
+                    <>
+                      Що дає рішення від Timber<span className="text-[#f2994a]">X</span>
+                    </>
+                  )}
                 </h2>
                 <p className={`${bodyClass} mt-4 max-w-2xl text-base leading-8 text-[#d0d0d0]`}>
                   {solutionIntro.description}
@@ -1047,6 +1107,30 @@ export function ProductPage({ page }: { page: ProductPageData }) {
               ))}
             </div>
           </div>
+
+          {isModularHomesPage ? (
+            <div className="relative mt-8 border-t border-white/10 pt-7">
+              <div className="grid gap-4 md:grid-cols-3">
+                {modularPackageOptions.map((option) => (
+                  <div
+                    key={option.title}
+                    className="rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-5"
+                  >
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                      <LineIcon name={option.icon} className="h-7 w-7" />
+                    </div>
+                    <h3 className={`${headingClass} mt-4 text-xl leading-tight text-white`}>
+                      {option.title}
+                    </h3>
+                    <p className={`${bodyClass} mt-3 text-sm leading-6 text-[#d0d0d0]`}>
+                      {option.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           <div className="relative mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 xl:flex-row xl:flex-nowrap">
             {page.relatedLinks.map((link) => (
               <Link
@@ -1061,123 +1145,227 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         </section>
 
-        {isModularHomesPage ? (
-          <section
-            id="typical-projects"
-            className="relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:p-10"
-          >
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
-            <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
-
-            <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
-                  Типові проєкти
-                </p>
-                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                  Варіанти рішень для швидкого старту
-                </h2>
-              </div>
-              <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
-                Тут буде добірка типових модульних проєктів: формати будинків, планувальні
-                рішення, комплектації та сценарії адаптації під девелоперські, житлові й
-                громадські задачі.
-              </p>
-            </div>
-
-            <div className="relative mt-10 grid gap-4 md:grid-cols-3">
-              {[
-                "Житловий модуль",
-                "Серійний будинок",
-                "Громадський об'єкт",
-              ].map((title, index) => (
-                <div
-                  key={title}
-                  className="relative min-h-[11rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),#202326)] p-5 shadow-[0_14px_34px_rgba(0,0,0,0.26)]"
-                >
-                  <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.35),rgba(242,153,74,0))]" />
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                    Варіант {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className={`${headingClass} mt-4 text-2xl leading-tight text-white`}>
-                    {title}
-                  </h3>
-                  <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
-                    Місце для плану, площі, комплектації та короткого опису типового рішення.
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
         <section
           id="applications"
           className="space-y-10"
         >
-          <div className="max-w-[58rem]">
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#f2994a]">
-              Сфера застосування
-            </p>
-            <h2 className={`${headingClass} text-3xl leading-tight text-white sm:text-4xl lg:text-[2.8rem]`}>
-              Де це вже працює
-            </h2>
-            <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
-              {applicationIntro}
-            </p>
-          </div>
+          {isModularHomesPage ? (
+            <>
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                    Сфери застосування
+                  </p>
+                  <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                    Де це працює
+                  </h2>
+                </div>
+                <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
+                  Модульні будинки працюють у сценаріях, де важливі швидкий запуск об&apos;єкта,
+                  повторювана якість і можливість масштабувати рішення партіями.
+                </p>
+              </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {page.applications.map((application, index) => (
-              <div
-                key={application.title}
-                className="group relative min-h-[23rem] overflow-hidden rounded border border-white/12 bg-[#25282b] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:border-[#f2994a]/42 hover:shadow-[0_32px_84px_rgba(0,0,0,0.32)]"
-              >
-                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
-                <div className="relative h-full min-h-[21rem] overflow-hidden bg-[#202326]">
-                  <Image
-                    src={activeApplicationImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-1.png"}
-                    alt={application.title}
-                    fill
-                    className={`object-cover transition duration-300 group-hover:scale-[1.04] ${
-                      activeApplicationImages[index]?.className ?? "object-[50%_50%]"
-                    }`}
-                    sizes="(min-width: 1024px) 42vw, 100vw"
-                  />
-                  <div className={`absolute inset-0 ${activeApplicationImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.18)_42%,rgba(17,18,20,0.68)_100%)]" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.14),transparent_34%)] opacity-60 transition duration-200 group-hover:opacity-100" />
-                  <div className="relative flex h-full min-h-[21rem] flex-col justify-end px-7 pb-7 pt-28">
-                    <div className="absolute left-7 top-7 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[18px] border border-[#f2994a]/45 bg-[linear-gradient(180deg,rgba(242,153,74,0.24),rgba(242,153,74,0.09))] text-[#f2994a] shadow-[0_22px_44px_rgba(242,153,74,0.14)] transition duration-200 group-hover:border-[#f2994a]/65 group-hover:bg-[linear-gradient(180deg,rgba(242,153,74,0.3),rgba(242,153,74,0.12))] group-hover:shadow-[0_28px_52px_rgba(242,153,74,0.2)]">
-                      <div className="absolute inset-[6px] rounded-[13px] border border-[#f2994a]/20" />
+              <div className="grid gap-8 border-y border-[#f2994a]/18 py-8 md:grid-cols-2 md:gap-x-10 md:gap-y-10 md:py-10">
+                {page.applications.map((application, index) => (
+                  <div
+                    key={application.title}
+                    className="relative"
+                  >
+                    {index > 0 ? (
+                      <div className="absolute -top-4 left-0 right-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0.08),rgba(242,153,74,0.34),rgba(242,153,74,0.08))] md:hidden" />
+                    ) : null}
+                    {index % 2 === 1 ? (
+                      <div className="absolute -left-5 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.34),rgba(242,153,74,0.08))] md:block" />
+                    ) : null}
+                    {index > 1 ? (
+                      <div className="absolute -top-5 left-0 right-0 hidden h-px bg-[linear-gradient(90deg,rgba(242,153,74,0.08),rgba(242,153,74,0.34),rgba(242,153,74,0.08))] md:block" />
+                    ) : null}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
                       <LineIcon
-                        name={
-                          applicationIcons[index === 2 ? 3 : index === 3 ? 2 : index] ?? "beam"
-                        }
-                        className="relative h-10 w-10"
+                        name={applicationIcons[index === 2 ? 3 : index === 3 ? 2 : index] ?? "beam"}
+                        className="relative h-7 w-7"
                       />
                     </div>
-                    <h3 className={`${headingClass} max-w-[18rem] text-[1.85rem] leading-[1.04] text-white transition group-hover:text-[#f2994a] sm:text-[2.15rem]`}>
+                    <h3 className={`${headingClass} mt-5 text-[1.85rem] leading-tight text-white`}>
                       {application.title}
                     </h3>
-                    <p className={`${bodyClass} mt-5 max-w-[30rem] text-base leading-7 text-white/78`}>
+                    <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
                       {application.description}
                     </p>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <>
+              <div className="max-w-[58rem]">
+                <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#f2994a]">
+                  Сфера застосування
+                </p>
+                <h2 className={`${headingClass} text-3xl leading-tight text-white sm:text-4xl lg:text-[2.8rem]`}>
+                  Де це вже працює
+                </h2>
+                <p className={`${bodyClass} mt-6 max-w-3xl text-lg leading-8 text-white/78`}>
+                  {applicationIntro}
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                {page.applications.map((application, index) => (
+                  <div
+                    key={application.title}
+                    className="group relative min-h-[23rem] overflow-hidden rounded border border-white/12 bg-[#25282b] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:border-[#f2994a]/42 hover:shadow-[0_32px_84px_rgba(0,0,0,0.32)]"
+                  >
+                    <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
+                    <div className="relative h-full min-h-[21rem] overflow-hidden bg-[#202326]">
+                      <Image
+                        src={activeApplicationImages[index]?.src ?? "/images/fermy-mzp/production-truss-frame-1.png"}
+                        alt={application.title}
+                        fill
+                        className={`object-cover transition duration-300 group-hover:scale-[1.04] ${
+                          activeApplicationImages[index]?.className ?? "object-[50%_50%]"
+                        }`}
+                        sizes="(min-width: 1024px) 42vw, 100vw"
+                      />
+                      <div className={`absolute inset-0 ${activeApplicationImages[index]?.overlay ?? "bg-[linear-gradient(90deg,rgba(17,18,20,0.9),rgba(17,18,20,0.24))]"}`} />
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,18,20,0.08),rgba(17,18,20,0.18)_42%,rgba(17,18,20,0.68)_100%)]" />
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.14),transparent_34%)] opacity-60 transition duration-200 group-hover:opacity-100" />
+                      <div className="relative flex h-full min-h-[21rem] flex-col justify-end px-7 pb-7 pt-28">
+                        <div className="absolute left-7 top-7 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[18px] border border-[#f2994a]/45 bg-[linear-gradient(180deg,rgba(242,153,74,0.24),rgba(242,153,74,0.09))] text-[#f2994a] shadow-[0_22px_44px_rgba(242,153,74,0.14)] transition duration-200 group-hover:border-[#f2994a]/65 group-hover:bg-[linear-gradient(180deg,rgba(242,153,74,0.3),rgba(242,153,74,0.12))] group-hover:shadow-[0_28px_52px_rgba(242,153,74,0.2)]">
+                          <div className="absolute inset-[6px] rounded-[13px] border border-[#f2994a]/20" />
+                          <LineIcon
+                            name={
+                              applicationIcons[index === 2 ? 3 : index === 3 ? 2 : index] ?? "beam"
+                            }
+                            className="relative h-10 w-10"
+                          />
+                        </div>
+                        <h3 className={`${headingClass} max-w-[18rem] text-[1.85rem] leading-[1.04] text-white transition group-hover:text-[#f2994a] sm:text-[2.15rem]`}>
+                          {application.title}
+                        </h3>
+                        <p className={`${bodyClass} mt-5 max-w-[30rem] text-base leading-7 text-white/78`}>
+                          {application.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </section>
+
+        {isModularHomesPage ? (
+          <TypicalProjectsShowcase projects={modularTypicalProjects} />
+        ) : null}
+
+          </div>
+
+        <div
+          className={`flex min-w-0 flex-col ${topLevelSectionGapClass} lg:col-start-2 ${
+            isModularHomesPage ? "" : "order-3"
+          }`}
+        >
+        {!isModularHomesPage ? (
+          <section id="specs" className="space-y-10">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                  Специфікація
+                </p>
+                <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                  Технічні стандарти та точність
+                </h2>
+              </div>
+              <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
+                Проєктування та виробництво за міжнародними стандартами: повний контроль параметрів від розрахунку до фінального монтажу.
+              </p>
+            </div>
+
+              <div className="h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {specSummaryCards.map((card, index) => (
+                  <div key={card.value} className="relative p-5">
+                    {index > 0 ? (
+                      <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
+                    ) : null}
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
+                      <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                      <LineIcon name={card.icon} className="relative h-7 w-7" />
+                    </div>
+                    <p className={`${headingClass} mt-4 text-2xl text-white`}>{card.value}</p>
+                    <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
+                      {card.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
+
+            <div className="mt-1 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-stretch lg:gap-12">
+              <div className="relative -mt-4 rounded-[1.5rem] lg:-ml-4">
+                <Image
+                  src={specVisual.src}
+                  alt={specVisual.alt}
+                  width={1200}
+                  height={900}
+                  className={specVisual.className}
+                />
+                {["14%", "35%", "56%", "78%"].map((top) => (
+                    <div
+                      key={`spec-edge-line-${top}`}
+                      className="absolute -right-3 hidden h-px w-28 bg-[linear-gradient(90deg,rgba(242,153,74,0.52)_0%,rgba(242,153,74,0.22)_68%,rgba(242,153,74,0.04)_100%)] lg:block"
+                      style={{ top }}
+                    >
+                      <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#f2994a] shadow-[0_0_0_4px_rgba(242,153,74,0.2)]" />
+                    </div>
+                ))}
+              </div>
+
+              <div className="relative grid gap-2 lg:block lg:h-full lg:pl-4">
+                {specHotspots.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="p-3.5 lg:absolute lg:left-0 lg:right-0 lg:p-0"
+                    style={{
+                      opacity: 0,
+                      animation: "specHotspotReveal 0.55s ease-out forwards",
+                      animationDelay: `${120 + index * 120}ms`,
+                      top: item.top,
+                    }}
+                  >
+                    <div className="flex gap-3">
+                      <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#f2994a] shadow-[0_0_0_4px_rgba(242,153,74,0.16)]" />
+                      <div>
+                        <p className={`${headingClass} text-[1.12rem] leading-[1.22] text-[#f2994a]`}>{item.title}</p>
+                        <p className={`${bodyClass} mt-1.5 text-sm leading-6 text-[#d0d0d0]`}>{item.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </section>
+        ) : null}
 
           </div>
         <section
           id="cases"
-          className="relative lg:col-span-2"
+          className={`relative col-span-full ${isModularHomesPage ? "" : "order-2"}`}
           onTouchStart={(event) => setTouchStartX(event.touches[0]?.clientX ?? null)}
           onTouchEnd={(event) => handleCaseSwipe(event.changedTouches[0]?.clientX ?? 0)}
         >
-          <div className="relative ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] w-screen overflow-hidden bg-[#151719]">
+          <div
+            className={
+              isModularHomesPage
+                ? "relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#151719]"
+                : "relative ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] w-screen overflow-hidden bg-[#151719]"
+            }
+          >
             <div
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentCase * 100}vw)` }}
@@ -1263,7 +1451,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                             <div className="flex items-center justify-between gap-5">
                               <div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
-                                  Case 02
+                                  {isModularHomesPage ? "НАШ ПРОЄКТ 2" : "Case 02"}
                                 </p>
                                 <h3 className={`${headingClass} mt-3 text-[2rem] leading-tight text-white`}>
                                   {page.secondaryCaseStudy.title}
@@ -1302,7 +1490,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                         <div className="flex items-center justify-between gap-5">
                           <div>
                             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
-                              Case 02
+                              {isModularHomesPage ? "НАШ ПРОЄКТ 2" : "Case 02"}
                             </p>
                             <h3 className={`${headingClass} mt-3 text-[2rem] leading-tight text-white`}>
                               {page.secondaryCaseStudy.title}
@@ -1340,84 +1528,11 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         </section>
 
-        <div className={`flex min-w-0 flex-col ${topLevelSectionGapClass} lg:col-start-2`}>
-        <section id="specs" className="space-y-10">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
-                Специфікація
-              </p>
-              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                Технічні стандарти та точність
-              </h2>
-            </div>
-            <p className={`${bodyClass} max-w-2xl text-base leading-8 text-[#d0d0d0] lg:justify-self-end`}>
-              Проєктування та виробництво за міжнародними стандартами: повний контроль параметрів від розрахунку до фінального монтажу.
-            </p>
-          </div>
-          <div className="h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {specSummaryCards.map((card, index) => (
-              <div key={card.value} className="relative p-5">
-                {index > 0 ? (
-                  <div className="absolute -left-2 top-0 hidden h-full w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.38),rgba(242,153,74,0.08))] xl:block" />
-                ) : null}
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)]">
-                  <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
-                  <LineIcon name={card.icon} className="relative h-7 w-7" />
-                </div>
-                <p className={`${headingClass} mt-4 text-2xl text-white`}>{card.value}</p>
-                <p className={`${bodyClass} mt-2 text-sm leading-6 text-[#d0d0d0]`}>
-                  {card.label}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 h-px w-full bg-[linear-gradient(90deg,rgba(242,153,74,0.0),rgba(242,153,74,0.26),rgba(242,153,74,0.0))]" />
-
-          <div className="mt-1 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-stretch lg:gap-12">
-            <div className="relative -mt-4 rounded-[1.5rem] lg:-ml-4">
-              <Image
-                src={specVisual.src}
-                alt={specVisual.alt}
-                width={1200}
-                height={900}
-                className={specVisual.className}
-              />
-              {["14%", "35%", "56%", "78%"].map((top) => (
-                <div
-                  key={`spec-edge-line-${top}`}
-                  className="absolute -right-3 hidden h-px w-28 bg-[linear-gradient(90deg,rgba(242,153,74,0.52)_0%,rgba(242,153,74,0.22)_68%,rgba(242,153,74,0.04)_100%)] lg:block"
-                  style={{ top }}
-                >
-                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#f2994a] shadow-[0_0_0_4px_rgba(242,153,74,0.2)]" />
-                </div>
-              ))}
-            </div>
-
-            <div className="relative grid gap-2 lg:block lg:h-full lg:pl-4">
-              {specHotspots.map((item, index) => (
-                <div
-                  key={item.title}
-                  className="p-3.5 lg:absolute lg:left-0 lg:right-0 lg:p-0"
-                  style={{
-                    opacity: 0,
-                    animation: "specHotspotReveal 0.55s ease-out forwards",
-                    animationDelay: `${120 + index * 120}ms`,
-                    top: item.top,
-                  }}
-                >
-                  <p className={`${headingClass} text-[1.12rem] leading-[1.22] text-[#f2994a]`}>{item.title}</p>
-                  <p className={`${bodyClass} mt-1.5 text-sm leading-6 text-[#d0d0d0]`}>{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </section>
-
+        <div
+          className={`flex min-w-0 flex-col ${topLevelSectionGapClass} lg:col-start-2 ${
+            isModularHomesPage ? "" : "order-4"
+          }`}
+        >
         <GallerySection
           title={page.gallery.title}
           description={page.gallery.description}
@@ -1486,41 +1601,92 @@ export function ProductPage({ page }: { page: ProductPageData }) {
 
         <section
           id="process"
-          className="relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:p-10"
+          className={
+            isModularHomesPage
+              ? "space-y-10"
+              : "relative overflow-hidden rounded-[2rem] border border-[#f2994a]/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(28,30,33,0.97))] p-7 shadow-[0_34px_90px_rgba(0,0,0,0.22)] sm:p-9 lg:p-10"
+          }
         >
-          <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
-          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+          {!isModularHomesPage ? (
+            <>
+              <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.42),rgba(242,153,74,0))]" />
+              <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#f2994a]/12 blur-3xl" />
+            </>
+          ) : null}
 
-          <div className="relative max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
-              Від запиту до монтажу
-            </p>
-            <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-              Алгоритм реалізації проєкту
-            </h2>
-            <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
-              Відточений процес: мінімізуємо ваше залучення в рутинні питання, забезпечуючи
-              прогнозований результат у чіткі терміни
-            </p>
-          </div>
+          {isModularHomesPage ? (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                Від запиту до поставки
+              </p>
+              <h2 className={`${headingClass} text-3xl leading-tight text-white md:text-4xl`}>
+                Як ми працюємо
+              </h2>
+              <p className={`${bodyClass} max-w-4xl text-lg leading-8 text-white/80`}>
+                Від першого запиту до готовності модулів у виробництві — TimberX веде
+                проєкт через чіткий, прогнозований і контрольований процес.
+              </p>
+            </div>
+          ) : (
+            <div className="relative max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#f2994a]">
+                Від запиту до монтажу
+              </p>
+              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                Алгоритм реалізації проєкту
+              </h2>
+              <p className={`${bodyClass} mt-4 text-base leading-7 text-[#d0d0d0]`}>
+                Відточений процес: мінімізуємо ваше залучення в рутинні питання, забезпечуючи
+                прогнозований результат у чіткі терміни
+              </p>
+            </div>
+          )}
 
-          <div className="relative mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:grid-cols-5">
-            {processCards.map((card) => (
-              <div
-                key={card.step}
-                className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),#202326)] p-5 shadow-[0_14px_34px_rgba(0,0,0,0.26)] transition duration-200 hover:-translate-y-1 hover:border-[#f2994a]/42 hover:shadow-[0_20px_44px_rgba(242,153,74,0.16)]"
-              >
-                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.35),rgba(242,153,74,0))]" />
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
-                  КРОК {card.step}
-                </p>
-                <p className={`${headingClass} mt-3 text-xl text-white`}>{card.title}</p>
-                <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
-                  {card.description}
-                </p>
+          {isModularHomesPage ? (
+            <div className="relative w-full overflow-hidden">
+              <div className="absolute bottom-0 left-6 top-0 w-px bg-[linear-gradient(180deg,rgba(242,153,74,0.08),rgba(242,153,74,0.45),rgba(242,153,74,0.08))] md:hidden" />
+              <div className="absolute left-0 right-0 top-6 hidden h-px bg-[linear-gradient(90deg,rgba(242,153,74,0.08),rgba(242,153,74,0.5),rgba(242,153,74,0.08))] lg:block" />
+              <div className="grid min-w-0 gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-5 lg:gap-5">
+                {processCards.map((card) => (
+                  <div key={card.step} className="relative min-w-0 pl-16 md:pl-0">
+                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#f2994a]/42 bg-[linear-gradient(180deg,rgba(242,153,74,0.22),rgba(242,153,74,0.08))] text-[#f2994a] shadow-[0_18px_36px_rgba(242,153,74,0.12)] md:relative md:mx-0 lg:mx-auto">
+                      <div className="absolute inset-[5px] rounded-[11px] border border-[#f2994a]/18" />
+                      <LineIcon name={card.icon} className="relative h-7 w-7" />
+                    </div>
+                    <div className="space-y-3 md:mt-6 md:text-left lg:text-center">
+                      <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#828282]">
+                        {card.step}
+                      </p>
+                      <p className={`${headingClass} text-[1.7rem] leading-[1.04] text-white sm:text-[2rem] lg:text-[1.5rem] xl:text-[1.7rem]`}>
+                        {card.title}
+                      </p>
+                      <p className={`${bodyClass} max-w-xs text-base leading-7 text-white/84 md:mx-0 lg:mx-auto lg:text-sm lg:leading-6 xl:text-base xl:leading-7`}>
+                        {card.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="relative mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:grid-cols-5">
+              {processCards.map((card) => (
+                <div
+                  key={card.step}
+                  className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),#202326)] p-5 shadow-[0_14px_34px_rgba(0,0,0,0.26)] transition duration-200 hover:-translate-y-1 hover:border-[#f2994a]/42 hover:shadow-[0_20px_44px_rgba(242,153,74,0.16)]"
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.35),rgba(242,153,74,0))]" />
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f2994a]">
+                    КРОК {card.step}
+                  </p>
+                  <p className={`${headingClass} mt-3 text-xl text-white`}>{card.title}</p>
+                  <p className={`${bodyClass} mt-3 text-sm leading-7 text-[#d0d0d0]`}>
+                    {card.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
         <SectionShell
@@ -1594,9 +1760,17 @@ export function ProductPage({ page }: { page: ProductPageData }) {
           </div>
         </SectionShell>
 
-        <FaqSection items={page.faq} />
-
-        <StandardQuizCta id="cta" />
+        {isModularHomesPage ? (
+          <>
+            <StandardQuizCta id="cta" />
+            <FaqSection items={page.faq} />
+          </>
+        ) : (
+          <>
+            <FaqSection items={page.faq} />
+            <StandardQuizCta id="cta" />
+          </>
+        )}
           </div>
         </div>
 

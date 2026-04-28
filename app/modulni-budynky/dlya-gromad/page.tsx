@@ -170,7 +170,7 @@ const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
   },
   {
     icon: "factory",
-    value: "300-1000 м2",
+    value: "300-1000\u00a0м²",
     label: "виробництво в місяць",
   },
   {

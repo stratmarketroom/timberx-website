@@ -3,6 +3,7 @@ import Link from "next/link";
 
 const navItems = [
   { label: "Продукти", href: "/#products" },
+  { label: "Проєкти", href: "/proekty/" },
   { label: "Рішення", href: "/#solutions" },
   { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
@@ -39,6 +40,7 @@ const footerSolutionPages = [
 ];
 
 const footerServicePages = [
+  { label: "Проєкти", href: "/proekty/" },
   { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
   { label: "Про компанію", href: "/about/" },
@@ -50,7 +52,7 @@ export function SiteHeader() {
     <header className="relative z-20 pt-4 md:pt-5">
       <div className="w-full px-4 md:px-6 lg:px-6">
         <div className="mx-auto max-w-[88rem]">
-          <div className="flex items-center justify-between gap-4 rounded-[20px] border border-white/12 bg-[rgba(18,19,21,0.72)] px-3 py-3.5 shadow-[0_28px_80px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:px-4 sm:py-4 lg:gap-5 lg:px-5">
+          <div className="flex items-center justify-between gap-4 rounded-[20px] border border-white/12 bg-[rgba(18,19,21,0.94)] px-3 py-3.5 shadow-[0_28px_80px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:px-4 sm:py-4 lg:gap-5 lg:px-5">
             <Link href="/" className="flex min-w-0 items-center">
               <Image
                 src="/images/logo/logo-manual-updated.png"
@@ -160,7 +162,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/8 pt-10 pb-12">
+    <footer className="border-t border-white/8 bg-[#181b1d] pt-10 pb-12 text-white">
       <div className="grid gap-10 lg:grid-cols-[minmax(220px,0.78fr)_minmax(700px,1.22fr)_minmax(420px,1.08fr)] lg:items-start">
         <div className="space-y-4 lg:-mt-4">
           <Link href="/" className="inline-flex items-center">

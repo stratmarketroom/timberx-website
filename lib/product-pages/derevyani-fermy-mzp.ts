@@ -115,7 +115,7 @@ export const derevyaniFermyMzpPage: ProductPageData = {
     metrics: [
       { value: "22 м", label: "проліт без внутрішніх опор" },
       { value: "469 кг", label: "вага однієї ферми" },
-      { value: "1370 / 500 N/m²", label: "сніг / вітер" },
+      { value: "1370 / 500\u00a0N/m²", label: "сніг / вітер" },
     ],
     href: "/cases/",
   },
@@ -213,8 +213,8 @@ export const derevyaniFermyMzpPage: ProductPageData = {
     { label: "Норми", value: "EN 1995-1-1:2004 + A2:2014" },
   ],
   loads: [
-    { value: "до 1370 N/m²", label: "снігове навантаження" },
-    { value: "до 500 N/m²", label: "вітрове навантаження" },
+    { value: "до 1370\u00a0N/m²", label: "снігове навантаження" },
+    { value: "до 500\u00a0N/m²", label: "вітрове навантаження" },
   ],
   precision: [
     { value: "1-2 мм", label: "геометричне відхилення" },

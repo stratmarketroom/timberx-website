@@ -145,7 +145,7 @@ const trustItems = [
   {
     icon: "factory" as IconName,
     title: "Виробнича потужність",
-    value: "300–1000 м² конструкцій на місяць",
+    value: "300–1000\u00a0м² конструкцій на місяць",
   },
 ] as const;
 

@@ -11,6 +11,7 @@ const groupHeadingClass = `${headingClass} text-[1.9rem] leading-[1.08] text-whi
 
 const navItems = [
   { label: "Продукти", href: "#products" },
+  { label: "Проєкти", href: "/proekty/" },
   { label: "Рішення", href: "#solutions" },
   { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
@@ -47,6 +48,7 @@ const footerSolutionPages = [
 ];
 
 const footerServicePages = [
+  { label: "Проєкти", href: "/proekty/" },
   { label: "Кейси", href: "/cases/" },
   { label: "Виробництво", href: "/technologies/" },
   { label: "Про компанію", href: "/about/" },
@@ -225,7 +227,7 @@ const heroTrust: Array<{ icon: IconName; value: string; label: string }> = [
   },
   {
     icon: "factory",
-    value: "300-1000 м²",
+    value: "300-1000\u00a0м²",
     label: "виробництво в місяць",
   },
   {
@@ -293,7 +295,7 @@ export default function Home() {
         <header className="relative z-20 pt-4 md:pt-5">
           <div className="w-full px-4 md:px-6 lg:px-6">
             <div className="mx-auto max-w-[88rem]">
-              <div className="flex items-center justify-between gap-4 rounded-[20px] border border-white/12 bg-[rgba(18,19,21,0.72)] px-3 py-3.5 shadow-[0_28px_80px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:px-4 sm:py-4 lg:gap-5 lg:px-5">
+              <div className="flex items-center justify-between gap-4 rounded-[20px] border border-white/12 bg-[rgba(18,19,21,0.94)] px-3 py-3.5 shadow-[0_28px_80px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:px-4 sm:py-4 lg:gap-5 lg:px-5">
                 <Link href="/" className="flex min-w-0 items-center">
                   <Image
                     src="/images/logo/logo-manual-updated.png"
@@ -686,7 +688,7 @@ export default function Home() {
                       Власне виробництво TimberX дає прогнозовані строки, заводську якість і контроль усіх етапів без залежності від ручного будівництва.
                     </p>
                     <p className="mt-3 text-base leading-7 text-white/78">
-                      Виготовляємо 300–1000 м² конструкцій на місяць із точністю до 1–2 мм та повним контролем якості.
+                      Виготовляємо 300–1000{"\u00a0"}м² конструкцій на місяць із точністю до 1–2 мм та повним контролем якості.
                     </p>
                     <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white/78 transition group-hover:text-[#F2994A]">
                       Детальніше
@@ -903,7 +905,7 @@ export default function Home() {
 
         <StandardQuizCta id="cta" className="pb-6" />
 
-        <footer className="border-t border-white/8 pt-10 pb-12">
+        <footer className="border-t border-white/8 bg-[#181b1d] pt-10 pb-12 text-white">
           <div className="grid gap-10 lg:grid-cols-[minmax(220px,0.78fr)_minmax(700px,1.22fr)_minmax(420px,1.08fr)] lg:items-start">
             <div className="space-y-4 lg:-mt-4">
               <Link href="/" className="inline-flex items-center">
