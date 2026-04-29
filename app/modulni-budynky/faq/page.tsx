@@ -3,6 +3,9 @@ import Link from "next/link";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StandardQuizCta } from "@/components/standard-quiz-cta";
+import { StructuredData } from "@/components/structured-data";
+import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -103,18 +106,38 @@ const faqItems: Array<{
   },
 ];
 
+const faqSchemaItems = faqItems.map((item) => ({
+  question: item.question,
+  answer:
+    typeof item.answer === "string"
+      ? item.answer
+      : "TimberX пропонує готові типові проєкти для амбулаторій, центрів надання послуг та житла. Детальніше про рішення для громад можна переглянути на відповідній сторінці.",
+}));
+
 export const metadata: Metadata = {
   title: "FAQ про модульні будинки | TimberX",
   description:
     "Часті запитання про модульні будинки TimberX: строки, вартість, комплектація, гарантії, робота з девелоперами та громадами.",
   alternates: {
-    canonical: "/modulni-budynky/faq",
+    canonical: "/modulni-budynky/faq/",
   },
+  robots: getSeoRobots("/modulni-budynky/faq/"),
 };
 
 export default function ModularHomesFaqPage() {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f8f9fa_100%)] text-[#1B1D1F]">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Модульні будинки", path: "/modulni-budynky/" },
+            { name: "FAQ", path: "/modulni-budynky/faq/" },
+          ]),
+          buildFaqSchema(faqSchemaItems),
+        ]}
+      />
+      <div className="min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f8f9fa_100%)] text-[#1B1D1F]">
       <section className="relative overflow-hidden bg-[#1B1D1F] text-white">
         <SiteHeader />
         <div className="mx-auto w-full max-w-[88rem] px-4 pb-16 pt-8 md:px-6 md:pb-20 lg:px-6 lg:pb-24 lg:pt-10">
@@ -200,6 +223,7 @@ export default function ModularHomesFaqPage() {
           <SiteFooter />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

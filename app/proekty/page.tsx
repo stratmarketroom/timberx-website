@@ -3,7 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { StructuredData } from "@/components/structured-data";
 import { TypicalProjectCard } from "@/components/typical-projects";
+import {
+  buildBreadcrumbSchema,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+} from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 import { modularTypicalProjects } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
@@ -25,11 +32,38 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/proekty/",
   },
+  robots: getSeoRobots("/proekty/"),
 };
 
 export default function ProjectsCatalogPage() {
+  const schemaProjects = modularTypicalProjects
+    .filter((project) => project.slug !== "blok-ohorony")
+    .map((project) => ({
+      name: project.title,
+      path: `/modulni-budynky/proekty/${project.slug}/`,
+      description: project.summary,
+      image: project.heroImage,
+    }));
+
   return (
-    <div className="min-h-screen bg-[#1b1d1f] text-white">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Проєкти", path: "/proekty/" },
+          ]),
+          buildCollectionPageSchema({
+            name: "Типові проєкти TimberX",
+            description:
+              "Каталог типових проєктів TimberX для будинків і модулів.",
+            path: "/proekty/",
+            items: schemaProjects,
+          }),
+          buildItemListSchema(schemaProjects, "Типові проєкти TimberX"),
+        ]}
+      />
+      <div className="min-h-screen bg-[#1b1d1f] text-white">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -137,6 +171,7 @@ export default function ProjectsCatalogPage() {
           <SiteFooter />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

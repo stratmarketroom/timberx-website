@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ProductPage } from "@/components/product-page";
 import { derevyaniFermyMzpPage } from "@/lib/product-pages/derevyani-fermy-mzp";
 import type { ProductPageData } from "@/lib/product-pages/types";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const sanitarniModuliPage: ProductPageData = {
   ...derevyaniFermyMzpPage,
@@ -24,6 +25,10 @@ const sanitarniModuliPage: ProductPageData = {
 export const metadata: Metadata = {
   title: sanitarniModuliPage.title,
   description: sanitarniModuliPage.description,
+  alternates: {
+    canonical: "/sanitarni-moduli/",
+  },
+  robots: getSeoRobots("/sanitarni-moduli/"),
 };
 
 export default function SanitaryModulesPage() {

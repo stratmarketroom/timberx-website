@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { StructuredData } from "@/components/structured-data";
+import { buildBreadcrumbSchema, buildWebPageSchema } from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -58,11 +61,27 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/contacts/",
   },
+  robots: getSeoRobots("/contacts/"),
 };
 
 export default function ContactsPage() {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.14),transparent_34%),linear-gradient(180deg,#1b1d1f_0%,#151719_100%)] text-white">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Контакти", path: "/contacts/" },
+          ]),
+          buildWebPageSchema({
+            name: "Контакти TimberX",
+            description:
+              "Контактна інформація TimberX: офіс у Житомирі, виробництво у Білій Церкві, телефон і email для прорахунку проєкту.",
+            path: "/contacts/",
+          }),
+        ]}
+      />
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.14),transparent_34%),linear-gradient(180deg,#1b1d1f_0%,#151719_100%)] text-white">
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-[88rem] px-4 pb-12 pt-8 md:px-6 md:pb-16 md:pt-10 lg:px-6 lg:pb-20 lg:pt-12">
@@ -261,6 +280,7 @@ export default function ContactsPage() {
       <div className="mx-auto w-full max-w-[88rem] px-4 md:px-6 lg:px-6">
         <SiteFooter />
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -8,6 +8,9 @@ import type { IconName } from "@/components/home-visuals";
 import { ProjectRealizationShowcase } from "@/components/project-realization-showcase";
 import { ProjectVisualSlider } from "@/components/project-visual-slider";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { StructuredData } from "@/components/structured-data";
+import { buildBreadcrumbSchema, buildProductSchema } from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 import { findTypicalProject, modularTypicalProjects } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
@@ -40,6 +43,7 @@ export async function generateMetadata({ params }: RouteProps): Promise<Metadata
     alternates: {
       canonical: `/modulni-budynky/proekty/${project.slug}/`,
     },
+    robots: getSeoRobots(`/modulni-budynky/proekty/${project.slug}/`),
   };
 }
 
@@ -76,7 +80,35 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
     project.slug === "hotelnyi-modul";
 
   return (
-    <div className="min-h-screen bg-[#f4f0e8] text-[#1b1d1f]">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Модульні будинки", path: "/modulni-budynky/" },
+            { name: "Типові проєкти", path: "/modulni-budynky/proekty/" },
+            {
+              name: project.title,
+              path: `/modulni-budynky/proekty/${project.slug}/`,
+            },
+          ]),
+          buildProductSchema({
+            name: project.title,
+            description: project.description,
+            path: `/modulni-budynky/proekty/${project.slug}/`,
+            image: {
+              src: project.heroImage,
+              alt: project.heroImageAlt,
+            },
+            category: "Типовий модульний проєкт",
+            additionalProperties: project.specs.map((spec) => ({
+              name: spec.label,
+              value: spec.value,
+            })),
+          }),
+        ]}
+      />
+      <div className="min-h-screen bg-[#f4f0e8] text-[#1b1d1f]">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -555,6 +587,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
           <SiteFooter />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

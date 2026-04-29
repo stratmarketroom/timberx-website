@@ -3,7 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { StructuredData } from "@/components/structured-data";
 import { TypicalProjectCard } from "@/components/typical-projects";
+import {
+  buildBreadcrumbSchema,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+} from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 import { modularTypicalProjects } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
@@ -27,11 +34,42 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/modulni-budynky/proekty/",
   },
+  robots: getSeoRobots("/modulni-budynky/proekty/"),
 };
 
 export default function ModularProjectsCatalogPage() {
+  const schemaProjects = modularTypicalProjects
+    .filter((project) => project.slug !== "blok-ohorony")
+    .map((project) => ({
+      name: project.title,
+      path: `/modulni-budynky/proekty/${project.slug}/`,
+      description: project.summary,
+      image: project.heroImage,
+    }));
+
   return (
-    <div className="min-h-screen bg-[#1b1d1f] text-white">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Модульні будинки", path: "/modulni-budynky/" },
+            { name: "Типові проєкти", path: "/modulni-budynky/proekty/" },
+          ]),
+          buildCollectionPageSchema({
+            name: "Типові проєкти модульних будинків TimberX",
+            description:
+              "Каталог типових модульних проєктів TimberX для девелоперів, громад, орендного бізнесу та сервісної інфраструктури.",
+            path: "/modulni-budynky/proekty/",
+            items: schemaProjects,
+          }),
+          buildItemListSchema(
+            schemaProjects,
+            "Типові проєкти модульних будинків TimberX",
+          ),
+        ]}
+      />
+      <div className="min-h-screen bg-[#1b1d1f] text-white">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -107,6 +145,14 @@ export default function ModularProjectsCatalogPage() {
           </aside>
 
           <div>
+            <div className="mb-6 border-b border-white/10 pb-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
+                Доступні формати
+              </p>
+              <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                Модульні проєкти для серійної реалізації
+              </h2>
+            </div>
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {modularTypicalProjects.map((project, index) => (
                 <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
@@ -121,6 +167,7 @@ export default function ModularProjectsCatalogPage() {
           <SiteFooter />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

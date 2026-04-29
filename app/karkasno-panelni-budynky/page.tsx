@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ProductPage } from "@/components/product-page";
 import { derevyaniFermyMzpPage } from "@/lib/product-pages/derevyani-fermy-mzp";
 import type { ProductPageData } from "@/lib/product-pages/types";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const karkasnoPanelniBudynkyPage: ProductPageData = {
   ...derevyaniFermyMzpPage,
@@ -24,6 +25,10 @@ const karkasnoPanelniBudynkyPage: ProductPageData = {
 export const metadata: Metadata = {
   title: karkasnoPanelniBudynkyPage.title,
   description: karkasnoPanelniBudynkyPage.description,
+  alternates: {
+    canonical: "/karkasno-panelni-budynky/",
+  },
+  robots: getSeoRobots("/karkasno-panelni-budynky/"),
 };
 
 export default function FramePanelHomesPage() {

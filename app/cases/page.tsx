@@ -7,6 +7,13 @@ import type { IconName } from "@/components/home-visuals";
 import { CasesListSection } from "@/components/cases-list-section";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StandardQuizCta } from "@/components/standard-quiz-cta";
+import { StructuredData } from "@/components/structured-data";
+import {
+  buildBreadcrumbSchema,
+  buildCollectionPageSchema,
+  buildItemListSchema,
+} from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -163,11 +170,36 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/cases/",
   },
+  robots: getSeoRobots("/cases/"),
 };
 
 export default function CasesPage() {
+  const schemaCases = cases.map((item, index) => ({
+    name: item.title,
+    path: `/cases/#case-${index + 1}`,
+    description: item.challenge,
+    image: item.imageSrc,
+  }));
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.14),transparent_34%),linear-gradient(180deg,#1b1d1f_0%,#151719_100%)] text-white">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Кейси", path: "/cases/" },
+          ]),
+          buildCollectionPageSchema({
+            name: "Кейси TimberX",
+            description:
+              "Єдина сторінка кейсів TimberX з досвідом B2B та B2G реалізацій.",
+            path: "/cases/",
+            items: schemaCases,
+          }),
+          buildItemListSchema(schemaCases, "Кейси TimberX"),
+        ]}
+      />
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.14),transparent_34%),linear-gradient(180deg,#1b1d1f_0%,#151719_100%)] text-white">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -333,6 +365,7 @@ export default function CasesPage() {
       <div className="mx-auto w-full max-w-[88rem] px-4 md:px-6 lg:px-6">
         <SiteFooter />
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ProductPage } from "@/components/product-page";
 import { derevyaniFermyMzpPage } from "@/lib/product-pages/derevyani-fermy-mzp";
 import type { ProductPageData } from "@/lib/product-pages/types";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const fakhverkoviBudynkyPage: ProductPageData = {
   ...derevyaniFermyMzpPage,
@@ -24,6 +25,10 @@ const fakhverkoviBudynkyPage: ProductPageData = {
 export const metadata: Metadata = {
   title: fakhverkoviBudynkyPage.title,
   description: fakhverkoviBudynkyPage.description,
+  alternates: {
+    canonical: "/fakhverkovi-budynky/",
+  },
+  robots: getSeoRobots("/fakhverkovi-budynky/"),
 };
 
 export default function FachwerkHomesPage() {

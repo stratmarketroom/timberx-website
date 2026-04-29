@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 
+import { StructuredData } from "@/components/structured-data";
 import { ProductPage } from "@/components/product-page";
 import type { ProductPageData } from "@/lib/product-pages/types";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  buildProductSchema,
+} from "@/lib/schema";
+import { getSeoRobots } from "@/lib/seo-pages";
 
 const modulniBudynkyPage: ProductPageData = {
   slug: "modulni-budynky",
@@ -291,10 +298,38 @@ export const metadata: Metadata = {
   title: modulniBudynkyPage.title,
   description: modulniBudynkyPage.description,
   alternates: {
-    canonical: "/modulni-budynky",
+    canonical: "/modulni-budynky/",
   },
+  robots: getSeoRobots("/modulni-budynky/"),
 };
 
 export default function ModularHomesPage() {
-  return <ProductPage page={modulniBudynkyPage} />;
+  return (
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Модульні будинки", path: "/modulni-budynky/" },
+          ]),
+          buildProductSchema({
+            name: modulniBudynkyPage.hero.title,
+            description: modulniBudynkyPage.hero.description,
+            path: "/modulni-budynky/",
+            image: {
+              src: modulniBudynkyPage.hero.imageSrc,
+              alt: modulniBudynkyPage.hero.imageAlt,
+            },
+            category: "Модульні будинки",
+            additionalProperties: modulniBudynkyPage.specs.map((spec) => ({
+              name: spec.label,
+              value: spec.value,
+            })),
+          }),
+          buildFaqSchema(modulniBudynkyPage.faq),
+        ]}
+      />
+      <ProductPage page={modulniBudynkyPage} />
+    </>
+  );
 }

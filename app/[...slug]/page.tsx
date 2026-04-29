@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { SitePlaceholderPage } from "../../components/site-placeholder-page";
+import { getSeoRobots } from "../../lib/seo-pages";
 import { findSitePage, sitePages } from "../../lib/site-pages";
 
 type RouteParams = {
@@ -27,9 +28,15 @@ export async function generateMetadata({
     return {};
   }
 
+  const canonicalPath = `/${slug.join("/")}/`;
+
   return {
     title: `${page.title} | TimberX`,
     description: page.description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    robots: getSeoRobots(canonicalPath),
   };
 }
 

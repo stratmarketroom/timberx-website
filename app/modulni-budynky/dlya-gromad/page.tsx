@@ -7,6 +7,13 @@ import type { IconName } from "@/components/home-visuals";
 import { RealizedProjectsCarousel } from "@/components/realized-projects-carousel";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StandardQuizCta } from "@/components/standard-quiz-cta";
+import { StructuredData } from "@/components/structured-data";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  buildServiceSchema,
+} from "@/lib/schema";
+import { getSeoRobots, normalizeSeoPath } from "@/lib/seo-pages";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -239,7 +246,7 @@ export const communitySolutionPageCopy: SolutionSegmentPageCopy = {
   metadataTitle: "Модульні будинки для громад | TimberX B2G рішення для відбудови та ВПО",
   metadataDescription:
     "Модульні будинки TimberX для громад: серійне B2G будівництво для ВПО, амбулаторій і соціальних об'єктів. Фіксований кошторис, прозорість для донорів, монтаж 1-3 дні.",
-  canonical: "/modulni-budynky/dlya-gromad",
+  canonical: "/modulni-budynky/dlya-gromad/",
 };
 
 export function buildSolutionSegmentMetadata(copy: SolutionSegmentPageCopy): Metadata {
@@ -247,8 +254,9 @@ export function buildSolutionSegmentMetadata(copy: SolutionSegmentPageCopy): Met
     title: copy.metadataTitle,
     description: copy.metadataDescription,
     alternates: {
-      canonical: copy.canonical,
+      canonical: normalizeSeoPath(copy.canonical),
     },
+    robots: getSeoRobots(copy.canonical),
   };
 }
 
@@ -256,7 +264,29 @@ export const metadata: Metadata = buildSolutionSegmentMetadata(communitySolution
 
 export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy }) {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.08),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f8f9fa_100%)] text-[#1B1D1F]">
+    <>
+      <StructuredData
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Головна", path: "/" },
+            { name: "Модульні будинки", path: "/modulni-budynky/" },
+            { name: copy.breadcrumbLabel, path: copy.canonical },
+          ]),
+          buildServiceSchema({
+            name: copy.heroTitle,
+            description: copy.metadataDescription,
+            path: copy.canonical,
+            image: {
+              src: "/images/projects/modular-homes-community/modular-home-terrace.jpg",
+              alt: copy.heroTitle,
+            },
+            serviceType: "B2G модульне будівництво",
+            audience: ["Громади", "Державні замовники", "Донорські програми"],
+          }),
+          buildFaqSchema(faqItems),
+        ]}
+      />
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(242,153,74,0.08),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f8f9fa_100%)] text-[#1B1D1F]">
       <main className="w-full pb-14 md:pb-16 lg:pb-20">
         <section className="relative w-full overflow-hidden border-y border-white/10 bg-[#1B1D1F] shadow-[0_28px_78px_rgba(0,0,0,0.28)]">
           <div className="relative z-20">
@@ -750,7 +780,8 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
           <SiteFooter />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -3,6 +3,12 @@ import Link from "next/link";
 import { LineIcon } from "../components/home-visuals";
 import type { IconName } from "../components/home-visuals";
 import { StandardQuizCta } from "../components/standard-quiz-cta";
+import { StructuredData } from "../components/structured-data";
+import {
+  buildBreadcrumbSchema,
+  buildItemListSchema,
+  buildWebPageSchema,
+} from "../lib/schema";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -278,7 +284,26 @@ function Card({
 
 export default function Home() {
   return (
-    <main className={`${bodyClass} min-h-screen bg-[#1B1D1F] text-white`}>
+    <>
+      <StructuredData
+        data={[
+          buildWebPageSchema({
+            name: "TimberX",
+            description:
+              "Інженерні дерев'яні конструкції та модульні будинки для девелоперів, забудовників і громад.",
+            path: "/",
+          }),
+          buildBreadcrumbSchema([{ name: "Головна", path: "/" }]),
+          buildItemListSchema(
+            productMenuItems.map((item) => ({
+              name: item.label,
+              path: item.href,
+            })),
+            "Продукти TimberX",
+          ),
+        ]}
+      />
+      <main className={`${bodyClass} min-h-screen bg-[#1B1D1F] text-white`}>
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -1025,6 +1050,7 @@ export default function Home() {
         </footer>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
