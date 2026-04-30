@@ -259,6 +259,16 @@ export const seoPages: SeoPage[] = [
     priority: 2,
   },
   {
+    path: "/proekty/panelno-modulnyi-budynok-93m/",
+    title: "Каркасно-панельний будинок Сімейний 93 м²",
+    description:
+      "Каркасно-панельний проєкт TimberX на 93 м² для швидкої відбудови, громад і серійного житла.",
+    section: "projects",
+    cluster: "Каркасно-панельні будинки / Типові проєкти / 93 м²",
+    status: "noindex",
+    priority: 4,
+  },
+  {
     path: "/modulni-budynky/proekty/blok-ohorony/",
     title: "Блок охорони",
     description: "Типовий модульний проєкт TimberX, який ще не готовий до SEO-індексації.",

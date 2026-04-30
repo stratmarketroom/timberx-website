@@ -5,6 +5,7 @@ export type TypicalProject = {
   category: TypicalProjectCategory;
   productLabel: string;
   title: string;
+  heroTitle?: string;
   shortTitle: string;
   area: string;
   summary: string;
@@ -33,6 +34,15 @@ export type TypicalProject = {
     alt: string;
     label: string;
   }>;
+  realizationSequence?: {
+    title: string;
+    frameDurationMs: number;
+    frames: Array<{
+      src: string;
+      alt: string;
+      title: string;
+    }>;
+  };
   realizationVideos?: Array<{
     src: string;
     title: string;
@@ -47,6 +57,11 @@ export type TypicalProject = {
     additionalImages?: Array<{
       src: string;
       alt: string;
+    }>;
+    visualizations?: Array<{
+      src: string;
+      alt: string;
+      label: string;
     }>;
     zones: string[];
   };
@@ -68,7 +83,25 @@ export type TypicalProject = {
     label: string;
     value: string;
   }>;
+  wallAssembly?: {
+    title: string;
+    description: string;
+    imageSrc: string;
+    imageAlt: string;
+    layers: Array<{
+      number: string;
+      text: string;
+    }>;
+  };
   adaptationOptions?: string[];
+  adaptationDetails?: Array<{
+    label: string;
+    value?: string;
+  }>;
+  deliverySpecs?: Array<{
+    label: string;
+    value: string;
+  }>;
   scenarios: string[];
   formats: string[];
   ctaLabel: string;
@@ -932,11 +965,341 @@ export const typicalProjects: TypicalProject[] = [
     formats: ["готовий модуль", "коробка", "під ключ"],
     ctaLabel: "Прорахувати блок охорони",
   },
+  {
+    slug: "panelno-modulnyi-budynok-93m",
+    category: "frame",
+    productLabel: "Каркасно-панельний проєкт",
+    title: "Каркасно-панельний будинок Сімейний 93 м²",
+    heroTitle: "Проєкт будинку Сімейний 93 м²",
+    shortTitle: "Сімейний 93",
+    area: "93 м²",
+    summary:
+      "Енергоефективний будинок заводського виготовлення для швидкої відбудови, громад і серійного житла.",
+    description:
+      "Каркасно-панельний будинок Сімейний 93 м² поєднує зовнішні та внутрішні стінові панелі, готові санітарні модулі, технічне приміщення і кроквяну систему з фермами на МЗП. Формат розрахований на швидку заводську підготовку, контроль якості та монтаж домокомплекту на об'єкті за 36 годин без покриття даху.",
+    heroImage: "/images/projects/panel-93/image13.jpeg",
+    heroImageAlt: "Каркасно-панельний будинок Сімейний 93 м² TimberX: фасад з двоскатним дахом",
+    detailHeroImage: "/images/projects/panel-93/image14.jpeg",
+    detailHeroImageAlt: "Каркасно-панельний будинок Сімейний 93 м² TimberX: фасад з вальмовим дахом",
+    gallery: [
+      {
+        src: "/images/projects/panel-93/image13.jpeg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: фасад з двоскатним дахом",
+        label: "Двоскатний дах",
+      },
+      {
+        src: "/images/projects/panel-93/image14.jpeg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: фасад з вальмовим дахом",
+        label: "Вальмовий дах",
+      },
+      {
+        src: "/images/projects/panel-93/image12.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: планування з трьома спальнями",
+        label: "Планування",
+      },
+      {
+        src: "/images/projects/panel-93/image1.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: схема домокомплекту",
+        label: "Домокомплект",
+      },
+    ],
+    visualGallery: [
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-gable-garden-01.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: фасад з двоскатним дахом і садом",
+        label: "Двоскатний дах",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-hip-garden-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: фасад з вальмовим дахом і садом",
+        label: "Вальмовий дах",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-forest-side-01.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: бічний фасад біля лісу",
+        label: "Бічний фасад",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-terrace-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: тераса і головний фасад",
+        label: "Тераса",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-entry-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: вхідна зона і фасад",
+        label: "Вхід",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/exterior-evening-01.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: вечірня візуалізація фасаду",
+        label: "Вечір",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/interior-kitchen-living-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: кухня-вітальня",
+        label: "Кухня-вітальня",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/interior-bedroom-double-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: спальня з двоспальним ліжком",
+        label: "Спальня",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/interior-bedroom-workplace-01.png",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: спальня з робочим місцем",
+        label: "Спальня",
+      },
+      {
+        src: "/images/projects/panel-93/visualizations/interior-bedroom-workplace-02.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: дитяча або гостьова спальня з робочим столом",
+        label: "Кімната",
+      },
+    ],
+    modelGallery: [
+      {
+        src: "/images/projects/panel-93/model/concept-01.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель фасаду з терасою",
+        label: "Фасад",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-02.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель бічного фасаду",
+        label: "Бічний фасад",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-03.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель вхідної сторони",
+        label: "Вхід",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-04.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель заднього фасаду",
+        label: "Задній фасад",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-05.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель з вальмовим дахом",
+        label: "Вальмовий дах",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-06.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель кута будинку",
+        label: "Кутовий ракурс",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-07.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель фасаду з навісом",
+        label: "Навіс",
+      },
+      {
+        src: "/images/projects/panel-93/model/concept-08.jpg",
+        alt: "Каркасно-панельний будинок Сімейний 93 м²: модель з широкою терасою",
+        label: "Тераса",
+      },
+    ],
+    realizationGallery: [
+      {
+        src: "/images/projects/panel-93/image3.jpeg",
+        alt: "Монтаж блоків БНО стрічкового фундаменту",
+        label: "Фундамент",
+      },
+      {
+        src: "/images/projects/panel-93/image4.jpeg",
+        alt: "Армування монолітної плити для каркасно-панельного будинку",
+        label: "Армування",
+      },
+      {
+        src: "/images/projects/panel-93/image6.jpeg",
+        alt: "Монтаж санітарних модулів та внутрішніх стінових панелей",
+        label: "Модулі",
+      },
+      {
+        src: "/images/projects/panel-93/image7.jpeg",
+        alt: "Монтаж зовнішніх стінових панелей та фронтонів",
+        label: "Панелі",
+      },
+      {
+        src: "/images/projects/panel-93/image8.jpeg",
+        alt: "Монтаж ферм даху з металозубчатими пластинами",
+        label: "Ферми даху",
+      },
+      {
+        src: "/images/projects/panel-93/image11.jpeg",
+        alt: "Монтаж покрівлі та утеплення каркасно-панельного будинку",
+        label: "Покрівля",
+      },
+    ],
+    realizationTitle: "Логіка реалізації домокомплекту на об'єкті",
+    realizationText:
+      "Домокомплект складається з панелей зовнішніх та внутрішніх стін, модулів санвузлів і технічного приміщення. Кроквяна система - дерев'яні ферми з використанням металозубчастих пластин (МЗП) методом пресування.",
+    realizationSequence: {
+      title: "Етапи збірки будинку",
+      frameDurationMs: 1800,
+      frames: [
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-01.jpg", alt: "Етап 1 збірки каркасно-панельного будинку", title: "Підготовка основи фундаменту" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-02.jpg", alt: "Етап 2 збірки каркасно-панельного будинку", title: "Армування монолітної плити" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-03.jpg", alt: "Етап 3 збірки каркасно-панельного будинку", title: "Заливка плити" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-04.jpg", alt: "Етап 4 збірки каркасно-панельного будинку", title: "Готова основа під монтаж" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-05.jpg", alt: "Етап 5 збірки каркасно-панельного будинку", title: "Розмітка стін і модулів" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-06.jpg", alt: "Етап 6 збірки каркасно-панельного будинку", title: "Підготовка санітарних модулів" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-07.jpg", alt: "Етап 7 збірки каркасно-панельного будинку", title: "Встановлення внутрішніх модулів" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-08.jpg", alt: "Етап 8 збірки каркасно-панельного будинку", title: "Підготовка зовнішніх панелей" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-09.jpg", alt: "Етап 9 збірки каркасно-панельного будинку", title: "Підйом кроквяної системи" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-10.jpg", alt: "Етап 10 збірки каркасно-панельного будинку", title: "Монтаж покрівельного покриття" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-11.jpg", alt: "Етап 11 збірки каркасно-панельного будинку", title: "Позиціонування даху над будинком" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-12.jpg", alt: "Етап 12 збірки каркасно-панельного будинку", title: "Монтаж технічних модулів" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-13.jpg", alt: "Етап 13 збірки каркасно-панельного будинку", title: "Фіксація санітарних блоків" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-14.jpg", alt: "Етап 14 збірки каркасно-панельного будинку", title: "Монтаж внутрішніх стін" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-15.jpg", alt: "Етап 15 збірки каркасно-панельного будинку", title: "Формування житлових кімнат" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-16.jpg", alt: "Етап 16 збірки каркасно-панельного будинку", title: "Закриття верхнього контуру" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-17.jpg", alt: "Етап 17 збірки каркасно-панельного будинку", title: "Встановлення покрівельної системи" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-18.jpg", alt: "Етап 18 збірки каркасно-панельного будинку", title: "Завершення покрівлі" },
+        { src: "/images/projects/panel-93/assembly-sequence/assembly-19.jpg", alt: "Етап 19 збірки каркасно-панельного будинку", title: "Готовий теплий контур будинку" },
+      ],
+    },
+    plan: {
+      title: "Планування для сімейного або соціального житла",
+      description:
+        "Планування включає кухню-вітальню, три спальні, два санвузли та технічне приміщення. Домокомплект поєднує панелі заводської готовності й окремі санітарні модулі з чистовим оздобленням.",
+      imageSrc: "/images/projects/panel-93/plan-floor-layout.jpg",
+      visualizations: [
+        {
+          src: "/images/projects/panel-93/plan-3d/plan-3d-01.jpg",
+          alt: "3D-візуалізація планування каркасно-панельного будинку Сімейний 93 м² з боку тераси",
+          label: "Вид з боку тераси",
+        },
+        {
+          src: "/images/projects/panel-93/plan-3d/plan-3d-02.jpg",
+          alt: "3D-візуалізація планування каркасно-панельного будинку Сімейний 93 м² з боку входу",
+          label: "Вид з боку входу",
+        },
+        {
+          src: "/images/projects/panel-93/plan-3d/plan-3d-03.jpg",
+          alt: "3D-візуалізація планування каркасно-панельного будинку Сімейний 93 м² з оглядом кімнат",
+          label: "Огляд кімнат",
+        },
+        {
+          src: "/images/projects/panel-93/plan-3d/plan-3d-04.jpg",
+          alt: "3D-візуалізація планування каркасно-панельного будинку Сімейний 93 м² з боку житлової зони",
+          label: "Житлова зона",
+        },
+      ],
+      zones: [
+        "Кухня-вітальня",
+        "Три спальні",
+        "Два санвузли",
+        "Технічне приміщення",
+        "Тераса / ганок",
+      ],
+    },
+    specs: [
+      { label: "Тепла площа", value: "93 м²" },
+      { label: "Габарити", value: "9 × 12,55 м" },
+      { label: "Спальні", value: "3" },
+      { label: "Монтаж", value: "36 годин" },
+    ],
+    areaSpecs: [
+      { label: "Площа забудови", value: "176 м²" },
+      { label: "Габарити будинку", value: "9 × 12,55 м" },
+      { label: "Тепла площа", value: "93 м²" },
+      { label: "Площа житлових приміщень", value: "61,47 м²" },
+    ],
+    rooms: [
+      { number: "101", name: "Тамбур", area: "3,87 м²" },
+      { number: "102", name: "Санвузол", area: "5,78 м²" },
+      { number: "103", name: "Гардероб / комора", area: "2,07 м²" },
+      { number: "104", name: "Санвузол", area: "1,92 м²" },
+      { number: "105", name: "Хол", area: "5,34 м²" },
+      { number: "106", name: "Кухня", area: "5,75 м²" },
+      { number: "107", name: "Вітальня-їдальня", area: "22,00 м²" },
+      { number: "108", name: "Спальня", area: "12,44 м²" },
+      { number: "109", name: "Спальня", area: "12,44 м²" },
+      { number: "110", name: "Спальня", area: "14,59 м²" },
+      { number: "111", name: "Ванна кімната", area: "5,28 м²" },
+    ],
+    technicalSpecs: [
+      {
+        label: "Зовнішні стінові панелі",
+        value:
+          "Панелі 285 мм з утепленням, OSB-3 Egger, сухою каліброваною дошкою C24, внутрішнім гіпсокартоном, підрозетниками та гофрорукавом для електромереж. Коефіцієнт теплоопору (R): 5,95.",
+      },
+      {
+        label: "Внутрішні стіни",
+        value:
+          "Внутрішні стінові панелі 145/195 мм зі звукоізоляцією, OSB-3 Egger, сухою каліброваною дошкою C24, двостороннім гіпсокартоном, підрозетниками та гофрорукавом для електромереж.",
+      },
+      {
+        label: "Санітарні та технічні модулі",
+        value:
+          "Модулі з чистовим оздобленням, сантехнікою, електрикою, розведенням води й каналізації, теплою підлогою та технічним оснащенням.",
+      },
+      {
+        label: "Кроквяна система",
+        value:
+          "Дерев'яні ферми з металозубчатими пластинами МЗП, обрешітка, контрейка, супердифузійна плівка, утеплення 300 мм і покриття даху опційно. Коефіцієнт теплоопору (R): 7,15.",
+      },
+      {
+        label: "Інженерія та монтаж",
+        value:
+          "Електропостачання до 8 кВт, водяна тепла підлога, точкові рекуператори, рекомендований стрічковий фундамент з монолітною плитою.",
+      },
+    ],
+    wallAssembly: {
+      title: "Технологія зовнішньої стінової панелі",
+      description:
+        "Стіна зібрана як заводський багатошаровий вузол: зовнішнє оздоблення, мінеральне утеплення, несучий дерев'яний каркас, OSB-плити, пароізоляція та внутрішній гіпсокартон.",
+      imageSrc: "/images/projects/panel-93/wall-assembly-visual.png",
+      imageAlt: "Пиріг зовнішньої стіни каркасно-панельного будинку Сімейний 93 м²",
+      layers: [
+        { number: "1", text: "Штукатурно-клейова суміш для плит з мінеральної вати" },
+        { number: "2", text: "Теплоізоляція на основі кам'яної вати" },
+        { number: "3", text: "OSB-3 плита Egger 15 мм" },
+        { number: "4", text: "Базальтовий утеплювач IZOVAT 40 кг/м³ 150 мм, каркас з дошки 45×145 мм C24" },
+        { number: "5", text: "Базальтовий утеплювач IZOVAT 40 кг/м³ 50 мм, рейка 45×45 мм" },
+        { number: "6", text: "OSB-3 плита Egger 15 мм" },
+        { number: "7", text: "Гіпсокартон" },
+        { number: "8", text: "Спінений поліетилен на клейкій основі" },
+        { number: "9", text: "Кутова дерев'яна накладка" },
+        { number: "10", text: "Торцева накладка з OSB-3 плити" },
+        { number: "11", text: "Нижня поздовжня накладка" },
+        { number: "12", text: "Система цокольного відливу" },
+        { number: "13", text: "Опорна дошка 45×145 мм" },
+        { number: "14", text: "Монолітна залізобетонна плита" },
+        { number: "15", text: "Стрічка з фундаментних блоків" },
+      ],
+    },
+    adaptationDetails: [
+      { label: "Кровля", value: "двоскатна / вальмова" },
+      { label: "Фасад", value: "штукатурка / панелі" },
+      { label: "Внутрішнє оздоблення", value: "під ремонт / під ключ" },
+    ],
+    deliverySpecs: [
+      { label: "Строк виробництва домокомплекта", value: "45 днів" },
+      { label: "Доставка на об'єкт автомобілями 3000 мм висотою", value: "3 авто MEGA" },
+      { label: "Стадія готовності домокомплекту при поставці", value: "60%" },
+      { label: "Строк монтажу на ділянці (без покриття даху)", value: "36 годин" },
+    ],
+    scenarios: ["відбудова", "житло для ВПО", "громади", "котеджне містечко", "серійне житло"],
+    formats: ["домокомплект", "панелі заводської готовності", "санітарні модулі", "шеф-монтаж"],
+    ctaLabel: "Прорахувати будинок 93 м²",
+  },
 ];
 
 export const modularTypicalProjects = typicalProjects.filter(
   (project) => project.category === "modular",
 );
+
+export const generalTypicalProjects = typicalProjects.filter(
+  (project) => project.category !== "modular",
+);
+
+export function getTypicalProjectHref(project: TypicalProject) {
+  if (project.category === "modular") {
+    return `/modulni-budynky/proekty/${project.slug}/`;
+  }
+
+  return `/proekty/${project.slug}/`;
+}
 
 export function findTypicalProject(slug: string) {
   return typicalProjects.find((project) => project.slug === slug);

@@ -11,7 +11,7 @@ import {
   buildItemListSchema,
 } from "@/lib/schema";
 import { getSeoRobots } from "@/lib/seo-pages";
-import { modularTypicalProjects } from "@/lib/typical-projects";
+import { getTypicalProjectHref, typicalProjects } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -36,11 +36,20 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsCatalogPage() {
-  const schemaProjects = modularTypicalProjects
+  const visibleProjects = typicalProjects.filter(
+    (project) => project.slug !== "blok-ohorony",
+  );
+  const modularProjects = visibleProjects.filter(
+    (project) => project.category === "modular",
+  );
+  const frameProjects = visibleProjects.filter(
+    (project) => project.category === "frame",
+  );
+  const schemaProjects = visibleProjects
     .filter((project) => project.slug !== "blok-ohorony")
     .map((project) => ({
       name: project.title,
-      path: `/modulni-budynky/proekty/${project.slug}/`,
+      path: getTypicalProjectHref(project),
       description: project.summary,
       image: project.heroImage,
     }));
@@ -121,7 +130,7 @@ export default function ProjectsCatalogPage() {
                   <span
                     key={category}
                     className={`rounded-full border px-3 py-2 text-sm ${
-                      index === 0
+                      index === 0 || index === 1
                         ? "border-[#f2994a]/36 bg-[#f2994a]/12 text-[#f4dfcf]"
                         : "border-white/10 bg-white/[0.04] text-white/62"
                     }`}
@@ -140,6 +149,33 @@ export default function ProjectsCatalogPage() {
           </aside>
 
           <div>
+            {frameProjects.length ? (
+              <div className="mb-12">
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
+                      Новий напрям
+                    </p>
+                    <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                      Каркасно-панельні будинки
+                    </h2>
+                  </div>
+                  <Link
+                    href="/karkasno-panelni-budynky/"
+                    className="text-sm font-semibold text-white/72 transition hover:text-[#f2994a]"
+                  >
+                    Про каркасно-панельні будинки →
+                  </Link>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {frameProjects.map((project, index) => (
+                    <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
@@ -158,7 +194,7 @@ export default function ProjectsCatalogPage() {
             </div>
 
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {modularTypicalProjects.map((project, index) => (
+              {modularProjects.map((project, index) => (
                 <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
               ))}
             </div>

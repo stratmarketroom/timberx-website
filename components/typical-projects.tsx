@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
-import type { TypicalProject } from "@/lib/typical-projects";
+import { getTypicalProjectHref, type TypicalProject } from "@/lib/typical-projects";
 
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
@@ -23,9 +23,11 @@ export function TypicalProjectCard({
   project: TypicalProject;
   priority?: boolean;
 }) {
+  const href = getTypicalProjectHref(project);
+
   return (
     <article className="group relative min-h-[30rem] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#202326] shadow-[0_22px_56px_rgba(0,0,0,0.24)] transition duration-200 hover:-translate-y-1 hover:border-[#f2994a]/45 hover:shadow-[0_30px_78px_rgba(0,0,0,0.34)]">
-      <Link href={`/modulni-budynky/proekty/${project.slug}/`} className="block h-full">
+      <Link href={href} className="block h-full">
         <div className="relative h-64 overflow-hidden bg-[#151719]">
           <Image
             src={project.heroImage}
@@ -98,9 +100,11 @@ function TypicalProjectShowcaseTile({
   project: TypicalProject;
   priority?: boolean;
 }) {
+  const href = getTypicalProjectHref(project);
+
   return (
     <Link
-      href={`/modulni-budynky/proekty/${project.slug}/`}
+      href={href}
       className="group relative min-h-[25rem] overflow-hidden rounded-[1.25rem] border border-white/10 bg-[#202326] shadow-[0_20px_54px_rgba(0,0,0,0.24)] transition duration-200 hover:-translate-y-1 hover:border-[#f2994a]/45 hover:shadow-[0_28px_74px_rgba(0,0,0,0.34)]"
     >
       <Image

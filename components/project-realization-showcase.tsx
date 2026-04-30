@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type RealizationPhoto = {
   src: string;
@@ -15,13 +15,25 @@ type RealizationVideo = {
   poster?: string;
 };
 
+type RealizationSequence = {
+  title: string;
+  frameDurationMs: number;
+  frames: Array<{
+    src: string;
+    alt: string;
+    title: string;
+  }>;
+};
+
 export function ProjectRealizationShowcase({
   photos,
+  sequence,
   videos,
   title = "Від дизайн-проєкту до готового модуля",
   text = "Показуємо не лише концепт, а й реалізований модуль: фасад, інженерні рішення, номерні блоки, фактичний вигляд після виготовлення та процес доставки.",
 }: {
   photos: RealizationPhoto[];
+  sequence?: RealizationSequence;
   videos: RealizationVideo[];
   title?: string;
   text?: string;
@@ -29,9 +41,24 @@ export function ProjectRealizationShowcase({
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activePhoto, setActivePhoto] = useState<RealizationPhoto | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const activeVideo = videos[activeVideoIndex];
+  const sequenceFrames = sequence?.frames ?? [];
+  const activeFrame = sequenceFrames[activeFrameIndex];
 
-  if (!photos.length && !videos.length) {
+  useEffect(() => {
+    if (sequenceFrames.length < 2) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveFrameIndex((index) => (index + 1) % sequenceFrames.length);
+    }, sequence?.frameDurationMs ?? 1800);
+
+    return () => window.clearInterval(interval);
+  }, [sequence?.frameDurationMs, sequenceFrames.length]);
+
+  if (!photos.length && !videos.length && !sequenceFrames.length) {
     return null;
   }
 
@@ -61,7 +88,7 @@ export function ProjectRealizationShowcase({
         <div className="mb-8 grid gap-5 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c8742b]">
-              Реалізований проєкт
+              Етапи збірки
             </p>
             <h2 className="mt-3 max-w-4xl font-['Montserrat',_Arial,_sans-serif] text-3xl font-bold leading-tight text-[#1b1d1f] sm:text-4xl">
               {title}
@@ -73,7 +100,65 @@ export function ProjectRealizationShowcase({
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(250px,0.34fr)] lg:items-stretch">
-          {photos.length ? (
+          {activeFrame ? (
+            <div className={`relative min-w-0 overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)] ${activeVideo ? "" : "lg:col-span-2"}`}>
+              <button
+                type="button"
+                className="relative block aspect-[16/9] w-full overflow-hidden rounded-[1.1rem] bg-[#f7f1e8] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f2994a]"
+                onClick={() =>
+                  setActivePhoto({
+                    src: activeFrame.src,
+                    alt: activeFrame.alt,
+                    label: activeFrame.title,
+                  })
+                }
+                aria-label={`Збільшити зображення: ${activeFrame.alt}`}
+              >
+                {sequenceFrames.map((frame, index) => (
+                  <Image
+                    key={frame.src}
+                    src={frame.src}
+                    alt={frame.alt}
+                    fill
+                    className={`object-contain transition-opacity duration-1000 ease-in-out ${
+                      index === activeFrameIndex ? "opacity-100" : "opacity-0"
+                    }`}
+                    sizes="(min-width: 1024px) 62vw, 100vw"
+                    priority={index < 2}
+                  />
+                ))}
+                <div className="absolute left-2 top-2 z-10 rounded-xl border border-white/46 bg-white/88 px-2 py-1.5 shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur sm:left-4 sm:top-4 sm:rounded-2xl sm:px-3 sm:py-2">
+                  <Image
+                    src="/images/logo/timberx-factory-logo-cropped.png"
+                    alt="TimberX Factory"
+                    width={1026}
+                    height={855}
+                    className="h-10 w-12 object-contain sm:h-16 sm:w-20"
+                    priority
+                  />
+                </div>
+                <span className="absolute right-2 top-2 z-10 max-w-[10.5rem] rounded-full border border-white/42 bg-white/88 px-2.5 py-1.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#5f5144] shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur sm:right-4 sm:top-4 sm:max-w-none sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+                  {sequence?.title}
+                </span>
+                <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(27,29,31,0),rgba(27,29,31,0.46)_100%)] p-4">
+                  <div className="flex justify-end">
+                    <span className="rounded-full bg-[#1b1d1f]/78 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                      {activeFrameIndex + 1} / {sequenceFrames.length}
+                    </span>
+                  </div>
+                  <p className="mt-3 max-w-3xl font-['Montserrat',_Arial,_sans-serif] text-xl font-semibold leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.36)] sm:text-2xl">
+                    {activeFrame.title}
+                  </p>
+                  <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/32">
+                    <div
+                      className="h-full rounded-full bg-[#f2994a] transition-[width] duration-300"
+                      style={{ width: `${((activeFrameIndex + 1) / sequenceFrames.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              </button>
+            </div>
+          ) : photos.length ? (
             <div className="relative min-w-0 overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)]">
               <div ref={sliderRef} className="overflow-x-auto">
                 <div className="flex snap-x snap-mandatory gap-4">

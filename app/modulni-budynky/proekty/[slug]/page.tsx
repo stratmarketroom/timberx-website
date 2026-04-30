@@ -9,6 +9,7 @@ import { ProjectRealizationShowcase } from "@/components/project-realization-sho
 import { ProjectVisualSlider } from "@/components/project-visual-slider";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StructuredData } from "@/components/structured-data";
+import { ZoomableImage } from "@/components/zoomable-image";
 import { buildBreadcrumbSchema, buildProductSchema } from "@/lib/schema";
 import { getSeoRobots } from "@/lib/seo-pages";
 import { findTypicalProject, modularTypicalProjects } from "@/lib/typical-projects";
@@ -173,12 +174,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
             </div>
 
             <div className="group relative aspect-[16/9] overflow-hidden rounded-[1.75rem] border border-[#d8cdbc] bg-[#1b1d1f] shadow-[0_26px_70px_rgba(41,36,30,0.16)] transition duration-300 hover:-translate-y-2 hover:border-[#f2994a]/45 hover:shadow-[0_36px_90px_rgba(41,36,30,0.22)] lg:mt-[4.45rem] lg:aspect-[1.72/1] xl:aspect-[1.62/1]">
-              <Image
+              <ZoomableImage
                 src={project.detailHeroImage ?? project.gallery[1]?.src ?? project.heroImage}
                 alt={project.detailHeroImageAlt ?? project.gallery[1]?.alt ?? project.heroImageAlt}
                 fill
                 priority
-                className="scale-[1.03] object-cover transition duration-500 group-hover:scale-[1.075]"
+                className="absolute inset-0"
+                imageClassName="scale-[1.03] object-cover transition duration-500 group-hover:scale-[1.075]"
                 sizes="(min-width: 1024px) 40vw, 100vw"
               />
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(242,153,74,0.12))] opacity-0 transition duration-300 group-hover:opacity-100" />
@@ -187,7 +189,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
         </div>
       </section>
 
-      <main className="mx-auto flex w-full max-w-[88rem] flex-col gap-12 px-4 py-12 md:px-6 md:py-16 lg:gap-16 lg:py-20">
+      <main className="mx-auto flex w-full max-w-[88rem] flex-col gap-12 px-4 pb-12 pt-6 md:px-6 md:pb-16 md:pt-8 lg:gap-16 lg:pb-20 lg:pt-10">
         <ProjectVisualSlider slides={atmosphereGallery} />
 
         <section className="rounded-[2rem] border border-[#d8cdbc] bg-[#fffaf2]/62 p-5 shadow-[0_24px_70px_rgba(41,36,30,0.08)] sm:p-7 lg:p-9">
@@ -230,12 +232,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
               ) : null}
               <div className="overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)]">
                 {project.plan.imageSrc ? (
-                  <Image
+                  <ZoomableImage
                     src={project.plan.imageSrc}
                     alt={project.plan.title}
                     width={730}
                     height={1250}
-                    className="mx-auto h-auto max-h-[46rem] w-auto max-w-full object-contain"
+                    className="mx-auto block w-fit max-w-full"
+                    imageClassName="h-auto max-h-[46rem] w-auto max-w-full object-contain"
                     sizes="(min-width: 1024px) 54vw, 100vw"
                   />
                 ) : (
@@ -258,12 +261,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                       key={image.src}
                       className="overflow-hidden rounded-[1.5rem] border border-[#d8cdbc] bg-white p-3 shadow-[0_18px_48px_rgba(41,36,30,0.08)]"
                     >
-                      <Image
+                      <ZoomableImage
                         src={image.src}
                         alt={image.alt}
                         width={1800}
                         height={760}
-                        className="mx-auto h-auto w-full object-contain"
+                        className="mx-auto block w-full"
+                        imageClassName="h-auto w-full object-contain"
                         sizes="(min-width: 1024px) 54vw, 100vw"
                       />
                     </div>
@@ -351,11 +355,12 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
                   {modelGallery.slice(0, 4).map((image) => (
                     <div key={image.src} className="relative aspect-[16/10] overflow-hidden rounded-[1rem] border border-[#d8cdbc] bg-white shadow-[0_12px_28px_rgba(41,36,30,0.07)]">
-                      <Image
+                      <ZoomableImage
                         src={image.src}
                         alt={image.alt}
                         fill
-                        className="object-cover"
+                        className="absolute inset-0"
+                        imageClassName="object-cover"
                         sizes="(min-width: 1024px) 22vw, 50vw"
                       />
                     </div>
