@@ -69,7 +69,8 @@ export default async function GeneralProjectPage({ params }: RouteProps) {
   const roomRows = project.rooms ?? [];
   const technicalSpecs = project.technicalSpecs ?? project.specs;
   const adaptationOptions = project.adaptationOptions ?? project.formats;
-  const adaptationDetails = project.adaptationDetails ?? adaptationOptions.map((option) => ({ label: option }));
+  const adaptationDetails: Array<{ label: string; value?: string }> =
+    project.adaptationDetails ?? adaptationOptions.map((option) => ({ label: option }));
   const deliverySpecs = project.deliverySpecs ?? [];
   const realizationGallery = project.realizationGallery ?? [];
   const realizationVideos = project.realizationVideos ?? [];
