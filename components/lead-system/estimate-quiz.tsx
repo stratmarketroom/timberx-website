@@ -271,3 +271,62 @@ export function EstimateQuiz() {
     </form>
   );
 }
+
+export function EstimateQuizModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
+      >
+        Почати прорахунок
+      </button>
+
+      {isOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#111315]/82 px-4 py-6 backdrop-blur-sm sm:py-10"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="estimate-quiz-title"
+        >
+          <button
+            type="button"
+            aria-label="Закрити квіз"
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 cursor-default"
+          />
+          <div className="relative w-full max-w-[46rem] overflow-hidden rounded-[22px] border border-white/12 bg-[#1B1D1F] p-5 shadow-[0_34px_100px_rgba(0,0,0,0.5)] sm:p-7">
+            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.55),rgba(242,153,74,0))]" />
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Закрити"
+              className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/12 bg-white/[0.055] text-xl leading-none text-white/72 transition hover:border-[#F2994A]/48 hover:text-[#F2994A]"
+            >
+              ×
+            </button>
+            <div className="mb-6 pr-12">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
+                Розрахунок вартості
+              </p>
+              <h3
+                id="estimate-quiz-title"
+                className="mt-3 font-['Montserrat',_Arial,_sans-serif] text-2xl font-bold leading-tight text-white sm:text-3xl"
+              >
+                Короткий квіз для попередньої заявки
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/68">
+                Після відправки з&apos;явиться код заявки, з яким можна перейти в
+                Telegram до менеджера.
+              </p>
+            </div>
+            <EstimateQuiz />
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
+}
