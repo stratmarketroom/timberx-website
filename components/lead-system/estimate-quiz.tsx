@@ -12,14 +12,6 @@ const productOptions = [
   "Фахверк",
 ];
 
-const audienceOptions = [
-  "Девелопер",
-  "Генпідрядник",
-  "Громада",
-  "Бізнес",
-  "Приватний замовник",
-];
-
 const scaleOptions = [
   "до 100 м²",
   "100–300 м²",
@@ -84,7 +76,6 @@ function OptionGroup({
 
 export function EstimateQuiz() {
   const [productInterest, setProductInterest] = useState(productOptions[0]);
-  const [audienceType, setAudienceType] = useState(audienceOptions[0]);
   const [scale, setScale] = useState(scaleOptions[0]);
   const [timeline, setTimeline] = useState(timelineOptions[1]);
   const [location, setLocation] = useState("");
@@ -116,7 +107,6 @@ export function EstimateQuiz() {
           email,
           hasConsent,
           productInterest,
-          audienceType,
           scale,
           location,
           timeline,
@@ -178,12 +168,6 @@ export function EstimateQuiz() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <OptionGroup
-        label="Хто ви?"
-        value={audienceType}
-        options={audienceOptions}
-        onChange={setAudienceType}
-      />
       <OptionGroup
         label="Що цікавить?"
         value={productInterest}
@@ -330,11 +314,11 @@ export function EstimateQuizModal() {
                 id="estimate-quiz-title"
                 className="mt-3 font-['Montserrat',_Arial,_sans-serif] text-2xl font-bold leading-tight text-white sm:text-3xl"
               >
-                Короткий квіз для попередньої заявки
+                Розкажіть коротко про ваш проєкт
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-white/68">
-                Після відправки з&apos;явиться код заявки, з яким можна перейти в
-                Telegram до менеджера.
+                Відповіді допоможуть менеджеру швидше зорієнтуватися в задачі
+                та повернутися до вас із предметною консультацією.
               </p>
             </div>
             <EstimateQuiz />

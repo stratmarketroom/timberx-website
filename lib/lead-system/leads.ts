@@ -226,7 +226,7 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
   const rawEmail = cleanString(input.email, 160);
   const audienceType = cleanString(input.audienceType, 220);
   const productInterest = cleanString(input.productInterest, 220);
-  const projectType = audienceType ?? cleanString(input.projectType, 220);
+  const projectType = cleanString(input.projectType, 220);
   const hasConsent = input.hasConsent === true;
 
   if (!rawPhone) {
@@ -245,11 +245,11 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
     };
   }
 
-  if (!productInterest || !projectType) {
+  if (!productInterest) {
     return {
       ok: false as const,
       status: 400,
-      error: "productInterest and projectType are required",
+      error: "productInterest is required",
     };
   }
 
