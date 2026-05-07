@@ -1,4 +1,5 @@
 import { insertSupabaseRow, selectSupabaseRows } from "./supabase-rest";
+import { findLeadByPublicId } from "./leads";
 
 type TelegramChat = {
   id?: number;
@@ -166,6 +167,36 @@ async function createTelegramClient(chatId: number, user?: TelegramUser) {
   };
 }
 
+async function addTelegramContactToClient({
+  clientId,
+  chatId,
+  user,
+}: {
+  clientId: string;
+  chatId: number;
+  user?: TelegramUser;
+}) {
+  try {
+    await insertSupabaseRow({
+      table: "client_contacts",
+      payload: {
+        client_id: clientId,
+        contact_type: "telegram",
+        contact_value: String(chatId),
+        label: getTelegramLabel(user),
+        is_primary: false,
+        verified_at: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+
+    if (!message.includes("duplicate key")) {
+      throw error;
+    }
+  }
+}
+
 async function registerTelegramStart({
   chatId,
   user,
@@ -176,12 +207,28 @@ async function registerTelegramStart({
   startPayload: string;
 }) {
   const existingClient = await findClientByTelegramChatId(chatId);
-  const client = existingClient ?? (await createTelegramClient(chatId, user));
+  const lead = startPayload.startsWith("TX-")
+    ? await findLeadByPublicId(startPayload)
+    : null;
+  const client = existingClient ?? (
+    lead
+      ? { id: lead.clientId, publicId: null }
+      : await createTelegramClient(chatId, user)
+  );
+
+  if (!existingClient && lead) {
+    await addTelegramContactToClient({
+      clientId: lead.clientId,
+      chatId,
+      user,
+    });
+  }
 
   await insertSupabaseRow({
     table: "lead_events",
     payload: {
       client_id: client.id,
+      lead_id: lead?.id ?? null,
       event_type: "messenger_opened",
       channel: "telegram",
       source_cta: startPayload,
@@ -193,6 +240,7 @@ async function registerTelegramStart({
         telegram_last_name: user?.last_name ?? null,
         start_payload: startPayload,
         client_was_created: !existingClient,
+        linked_lead_public_id: lead?.publicId ?? null,
       },
     },
   });

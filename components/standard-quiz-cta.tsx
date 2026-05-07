@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { EstimateQuiz } from "./lead-system/estimate-quiz";
 
 type StandardQuizCtaProps = {
   id?: string;
@@ -51,7 +52,7 @@ export function StandardQuizCta({ id = "cta", className = "" }: StandardQuizCtaP
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
               <Link
-                href="#"
+                href="#estimate-quiz"
                 className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
               >
                 Почати прорахунок
@@ -69,12 +70,12 @@ export function StandardQuizCta({ id = "cta", className = "" }: StandardQuizCtaP
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[34rem] lg:justify-self-end">
+          <div id="estimate-quiz" className="relative mx-auto w-full max-w-[38rem] scroll-mt-28 lg:justify-self-end">
             <div className="absolute inset-0 rounded-[28px] bg-[radial-gradient(circle,rgba(242,153,74,0.14)_0%,rgba(242,153,74,0.06)_28%,transparent_68%)] blur-[24px]" />
-            <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-3 shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
+            <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 shadow-[0_32px_80px_rgba(0,0,0,0.28)] md:p-6">
               <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,rgba(242,153,74,0),rgba(242,153,74,0.46),rgba(242,153,74,0))]" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,153,74,0.1),transparent_28%)]" />
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-[#ECE6DA]">
+              <div className="relative mb-6 aspect-[16/9] overflow-hidden rounded-[18px] bg-[#ECE6DA]">
                 <Image
                   src="/images/cta/timberx-estimate-preview.png"
                   alt="Приклад попереднього прорахунку TimberX для девелоперського або модульного проєкту"
@@ -82,6 +83,9 @@ export function StandardQuizCta({ id = "cta", className = "" }: StandardQuizCtaP
                   className="object-cover"
                   sizes="(min-width: 1024px) 420px, 100vw"
                 />
+              </div>
+              <div className="relative">
+                <EstimateQuiz />
               </div>
             </div>
           </div>
