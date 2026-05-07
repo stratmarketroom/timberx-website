@@ -5,34 +5,35 @@ import type { FormEvent } from "react";
 
 const productOptions = [
   "Модульні будинки",
-  "Клеєні конструкції",
   "Ферми МЗП",
+  "Клеєні конструкції",
   "Каркасно-панельні будинки",
   "Санітарні модулі",
-  "Ще не визначено",
+  "Фахверк",
 ];
 
-const projectTypeOptions = [
-  "Девелоперський проєкт",
-  "ЖК або котеджне містечко",
-  "Громада / B2G",
-  "Комерційний об'єкт",
-  "Приватний будинок",
-  "Інше",
+const audienceOptions = [
+  "Девелопер",
+  "Генпідрядник",
+  "Громада",
+  "Бізнес",
+  "Приватний замовник",
 ];
 
 const scaleOptions = [
-  "1 об'єкт",
-  "2-5 об'єктів",
-  "Серія / партія",
-  "Потрібна консультація",
+  "до 100 м²",
+  "100–300 м²",
+  "300–1000 м²",
+  "1000+ м²",
+  "ще не знаю",
 ];
 
 const timelineOptions = [
-  "Терміново",
-  "1-3 місяці",
-  "3-6 місяців",
-  "Плануємо заздалегідь",
+  "терміново",
+  "1–3 місяці",
+  "3–6 місяців",
+  "пізніше",
+  "поки збираю інформацію",
 ];
 
 type LeadResponse = {
@@ -83,13 +84,14 @@ function OptionGroup({
 
 export function EstimateQuiz() {
   const [productInterest, setProductInterest] = useState(productOptions[0]);
-  const [projectType, setProjectType] = useState(projectTypeOptions[0]);
+  const [audienceType, setAudienceType] = useState(audienceOptions[0]);
   const [scale, setScale] = useState(scaleOptions[0]);
   const [timeline, setTimeline] = useState(timelineOptions[1]);
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
-  const [contactType, setContactType] = useState("phone");
-  const [contactValue, setContactValue] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [hasConsent, setHasConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [leadPublicId, setLeadPublicId] = useState("");
@@ -110,10 +112,11 @@ export function EstimateQuiz() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           name,
-          contactType,
-          contactValue,
+          phone,
+          email,
+          hasConsent,
           productInterest,
-          projectType,
+          audienceType,
           scale,
           location,
           timeline,
@@ -176,25 +179,25 @@ export function EstimateQuiz() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <OptionGroup
-        label="Що потрібно"
+        label="Хто ви?"
+        value={audienceType}
+        options={audienceOptions}
+        onChange={setAudienceType}
+      />
+      <OptionGroup
+        label="Що цікавить?"
         value={productInterest}
         options={productOptions}
         onChange={setProductInterest}
       />
       <OptionGroup
-        label="Тип проєкту"
-        value={projectType}
-        options={projectTypeOptions}
-        onChange={setProjectType}
-      />
-      <OptionGroup
-        label="Масштаб"
+        label="Орієнтовний масштаб"
         value={scale}
         options={scaleOptions}
         onChange={setScale}
       />
       <OptionGroup
-        label="Строк"
+        label="Коли плануєте реалізацію?"
         value={timeline}
         options={timelineOptions}
         onChange={setTimeline}
@@ -203,7 +206,7 @@ export function EstimateQuiz() {
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/56">
-            Локація
+            Локація проєкту
           </span>
           <input
             value={location}
@@ -225,35 +228,46 @@ export function EstimateQuiz() {
         </label>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[0.72fr_1.28fr]">
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/56">
-            Контакт
-          </span>
-          <select
-            value={contactType}
-            onChange={(event) => setContactType(event.target.value)}
-            className="mt-3 h-12 w-full rounded-[10px] border border-white/12 bg-[#26292b] px-4 text-sm font-semibold text-white outline-none transition focus:border-[#F2994A]/58"
-          >
-            <option value="phone">Телефон</option>
-            <option value="email">Email</option>
-            <option value="viber">Viber</option>
-            <option value="whatsapp">WhatsApp</option>
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/56">
-            Значення контакту
+            Телефон
           </span>
           <input
-            value={contactValue}
-            onChange={(event) => setContactValue(event.target.value)}
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
             required
             placeholder="+380..."
             className="mt-3 h-12 w-full rounded-[10px] border border-white/12 bg-white/[0.055] px-4 text-sm font-semibold text-white outline-none transition placeholder:text-white/34 focus:border-[#F2994A]/58"
           />
         </label>
+        <label className="block">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/56">
+            Email (необов&apos;язково)
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="office@example.com"
+            className="mt-3 h-12 w-full rounded-[10px] border border-white/12 bg-white/[0.055] px-4 text-sm font-semibold text-white outline-none transition placeholder:text-white/34 focus:border-[#F2994A]/58"
+          />
+        </label>
       </div>
+
+      <label className="flex items-start gap-3 rounded-[10px] border border-white/12 bg-white/[0.04] p-4 text-sm leading-6 text-white/72">
+        <input
+          type="checkbox"
+          checked={hasConsent}
+          onChange={(event) => setHasConsent(event.target.checked)}
+          required
+          className="mt-1 h-4 w-4 shrink-0 accent-[#F2994A]"
+        />
+        <span>
+          Даю згоду на обробку персональних даних для підготовки відповіді на
+          заявку та комунікації щодо проєкту.
+        </span>
+      </label>
 
       {status === "error" ? (
         <p className="rounded-[10px] border border-red-300/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-100">

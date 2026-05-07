@@ -1,11 +1,13 @@
 import { insertSupabaseRow, selectSupabaseRows } from "./supabase-rest";
 
-const contactTypes = new Set(["phone", "email", "telegram", "viber", "whatsapp"]);
-
 export type LeadRequestInput = {
   name?: unknown;
   contactType?: unknown;
   contactValue?: unknown;
+  phone?: unknown;
+  email?: unknown;
+  audienceType?: unknown;
+  hasConsent?: unknown;
   productInterest?: unknown;
   projectType?: unknown;
   scale?: unknown;
@@ -48,6 +50,23 @@ function createPublicId(prefix: "TX" | "TXC") {
   return `${prefix}-${timestamp}${suffix}`;
 }
 
+function mapAudienceToClientType(audienceType: string | null) {
+  switch (audienceType) {
+    case "Девелопер":
+      return "developer";
+    case "Генпідрядник":
+      return "general_contractor";
+    case "Громада":
+      return "community";
+    case "Бізнес":
+      return "business";
+    case "Приватний замовник":
+      return "private_client";
+    default:
+      return "unknown";
+  }
+}
+
 async function findClientByContact(contactType: string, contactValue: string) {
   const rows = await selectSupabaseRows({
     table: "client_contacts",
@@ -78,21 +97,56 @@ async function findClientByContact(contactType: string, contactValue: string) {
   };
 }
 
-async function createClient({
-  name,
+async function insertClientContact({
+  clientId,
   contactType,
   contactValue,
+  label,
+  isPrimary,
 }: {
-  name: string | null;
+  clientId: string;
   contactType: string;
   contactValue: string;
+  label: string;
+  isPrimary: boolean;
+}) {
+  try {
+    await insertSupabaseRow({
+      table: "client_contacts",
+      payload: {
+        client_id: clientId,
+        contact_type: contactType,
+        contact_value: contactValue,
+        label,
+        is_primary: isPrimary,
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+
+    if (!message.includes("duplicate key")) {
+      throw error;
+    }
+  }
+}
+
+async function createClient({
+  name,
+  phone,
+  email,
+  clientType,
+}: {
+  name: string | null;
+  phone: string;
+  email: string | null;
+  clientType: string;
 }) {
   const clientRows = await insertSupabaseRow({
     table: "clients",
     payload: {
       public_id: createPublicId("TXC"),
       name,
-      client_type: "unknown",
+      client_type: clientType,
     },
   });
 
@@ -104,16 +158,23 @@ async function createClient({
     throw new Error("Supabase did not return created client id");
   }
 
-  await insertSupabaseRow({
-    table: "client_contacts",
-    payload: {
-      client_id: clientId,
-      contact_type: contactType,
-      contact_value: contactValue,
-      label: name ? `Основний контакт: ${name}` : "Основний контакт",
-      is_primary: true,
-    },
+  await insertClientContact({
+    clientId,
+    contactType: "phone",
+    contactValue: phone,
+    label: name ? `Телефон: ${name}` : "Телефон",
+    isPrimary: true,
   });
+
+  if (email) {
+    await insertClientContact({
+      clientId,
+      contactType: "email",
+      contactValue: email,
+      label: name ? `Email: ${name}` : "Email",
+      isPrimary: false,
+    });
+  }
 
   return {
     id: clientId,
@@ -123,16 +184,30 @@ async function createClient({
 
 async function getOrCreateClient({
   name,
-  contactType,
-  contactValue,
+  phone,
+  email,
+  clientType,
 }: {
   name: string | null;
-  contactType: string;
-  contactValue: string;
+  phone: string;
+  email: string | null;
+  clientType: string;
 }) {
-  const existingClient = await findClientByContact(contactType, contactValue);
+  const existingClient =
+    (await findClientByContact("phone", phone)) ??
+    (email ? await findClientByContact("email", email) : null);
 
   if (existingClient) {
+    if (email) {
+      await insertClientContact({
+        clientId: existingClient.id,
+        contactType: "email",
+        contactValue: email,
+        label: name ? `Email: ${name}` : "Email",
+        isPrimary: false,
+      });
+    }
+
     return {
       client: existingClient,
       created: false,
@@ -140,24 +215,33 @@ async function getOrCreateClient({
   }
 
   return {
-    client: await createClient({ name, contactType, contactValue }),
+    client: await createClient({ name, phone, email, clientType }),
     created: true,
   };
 }
 
 export async function createLeadFromQuiz(input: LeadRequestInput) {
   const name = cleanString(input.name, 160);
-  const rawContactType = cleanString(input.contactType, 40) ?? "phone";
-  const contactType = contactTypes.has(rawContactType) ? rawContactType : "phone";
-  const rawContactValue = cleanString(input.contactValue, 160);
+  const rawPhone = cleanString(input.phone, 160) ?? cleanString(input.contactValue, 160);
+  const rawEmail = cleanString(input.email, 160);
+  const audienceType = cleanString(input.audienceType, 220);
   const productInterest = cleanString(input.productInterest, 220);
-  const projectType = cleanString(input.projectType, 220);
+  const projectType = audienceType ?? cleanString(input.projectType, 220);
+  const hasConsent = input.hasConsent === true;
 
-  if (!rawContactValue) {
+  if (!rawPhone) {
     return {
       ok: false as const,
       status: 400,
-      error: "contactValue is required",
+      error: "phone is required",
+    };
+  }
+
+  if (!hasConsent) {
+    return {
+      ok: false as const,
+      status: 400,
+      error: "personal data consent is required",
     };
   }
 
@@ -169,11 +253,14 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
     };
   }
 
-  const contactValue = normalizeContactValue(contactType, rawContactValue);
+  const phone = normalizeContactValue("phone", rawPhone);
+  const email = rawEmail ? normalizeContactValue("email", rawEmail) : null;
+  const clientType = mapAudienceToClientType(audienceType);
   const { client, created } = await getOrCreateClient({
     name,
-    contactType,
-    contactValue,
+    phone,
+    email,
+    clientType,
   });
 
   const leadRows = await insertSupabaseRow({
@@ -213,7 +300,10 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
       source_cta: cleanString(input.sourceCta, 160) ?? "estimate_quiz",
       metadata: {
         client_was_created: created,
-        contact_type: contactType,
+        contact_type: "phone",
+        has_email: Boolean(email),
+        personal_data_consent: hasConsent,
+        audience_type: audienceType,
         product_interest: productInterest,
         project_type: projectType,
       },
