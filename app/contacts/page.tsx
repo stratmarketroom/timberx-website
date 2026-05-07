@@ -137,7 +137,7 @@ export default function ContactsPage() {
                       </span>
                       <div className="flex items-center gap-2">
                         <a
-                          href="https://t.me/+380674121310"
+                          href="https://t.me/TimberXAssistantBot?start=contacts_telegram"
                           target="_blank"
                           rel="noreferrer"
                           aria-label="Telegram"

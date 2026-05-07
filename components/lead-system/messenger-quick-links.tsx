@@ -18,7 +18,7 @@ const messengerLinks: MessengerLink[] = [
   {
     channel: "telegram",
     label: "Telegram",
-    href: "https://t.me/+380674121310",
+    href: "https://t.me/TimberXAssistantBot?start=header_telegram",
   },
   {
     channel: "viber",
@@ -111,4 +111,3 @@ export function MessengerQuickLinks({
     </div>
   );
 }
-
