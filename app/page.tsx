@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LineIcon } from "../components/home-visuals";
 import type { IconName } from "../components/home-visuals";
+import { MessengerQuickLinks } from "../components/lead-system/messenger-quick-links";
 import { StandardQuizCta } from "../components/standard-quiz-cta";
 import { StructuredData } from "../components/structured-data";
 import {
@@ -364,12 +365,7 @@ export default function Home() {
                   ))}
                 </nav>
 
-                <Link
-                  href="#cta"
-                  className="hidden items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-6 py-3.5 text-base font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.28)] transition hover:-translate-y-0.5 hover:bg-[#de8232] hover:shadow-[0_20px_40px_rgba(242,153,74,0.34)] sm:inline-flex"
-                >
-                  Отримати прорахунок
-                </Link>
+                <MessengerQuickLinks className="hidden sm:flex" />
 
                 <details className="relative lg:hidden">
                   <summary className="flex h-12 w-12 cursor-pointer list-none items-center justify-center rounded-[14px] border border-white/12 bg-white/6 text-white/90 shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:border-[#F2994A]/32 hover:text-[#F2994A] [&::-webkit-details-marker]:hidden">
@@ -395,12 +391,10 @@ export default function Home() {
                     </nav>
 
                     <div className="mt-4 border-t border-white/10 pt-4">
-                      <Link
-                        href="#cta"
-                        className="inline-flex w-full items-center justify-center rounded-[12px] border border-[#F2994A]/40 bg-[#F2994A] px-5 py-3 text-sm font-semibold text-[#1B1D1F] shadow-[0_16px_32px_rgba(242,153,74,0.24)] transition hover:bg-[#de8232]"
-                      >
-                        Отримати прорахунок
-                      </Link>
+                      <p className="px-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
+                        Швидкий зв&apos;язок
+                      </p>
+                      <MessengerQuickLinks layout="mobile" className="mt-3 grid" />
                     </div>
                   </div>
                 </details>
