@@ -10,6 +10,12 @@ type SupabaseSelectOptions = {
   limit?: number;
 };
 
+type SupabaseMutationOptions = {
+  table: string;
+  payload?: Record<string, unknown>;
+  filters: Record<string, string | number | boolean>;
+};
+
 function getSupabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -84,4 +90,58 @@ export async function insertSupabaseRow({ table, payload }: SupabaseInsertOption
   }
 
   return JSON.parse(responseText) as Array<Record<string, unknown>>;
+}
+
+function buildFilteredUrl({
+  table,
+  filters,
+}: {
+  table: string;
+  filters: Record<string, string | number | boolean>;
+}) {
+  const { url } = getSupabaseConfig();
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(filters)) {
+    params.set(key, `eq.${String(value)}`);
+  }
+
+  return `${url}/rest/v1/${table}?${params.toString()}`;
+}
+
+export async function updateSupabaseRows({
+  table,
+  payload = {},
+  filters,
+}: SupabaseMutationOptions) {
+  const response = await fetch(buildFilteredUrl({ table, filters }), {
+    method: "PATCH",
+    headers: {
+      ...getSupabaseHeaders(),
+      "content-type": "application/json",
+      prefer: "return=representation",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    throw new Error(`Supabase update failed: ${response.status} ${responseText}`);
+  }
+
+  return responseText ? (JSON.parse(responseText) as Array<Record<string, unknown>>) : [];
+}
+
+export async function deleteSupabaseRows({ table, filters }: SupabaseMutationOptions) {
+  const response = await fetch(buildFilteredUrl({ table, filters }), {
+    method: "DELETE",
+    headers: getSupabaseHeaders(),
+  });
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    throw new Error(`Supabase delete failed: ${response.status} ${responseText}`);
+  }
 }

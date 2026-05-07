@@ -1,4 +1,9 @@
-import { insertSupabaseRow, selectSupabaseRows } from "./supabase-rest";
+import {
+  deleteSupabaseRows,
+  insertSupabaseRow,
+  selectSupabaseRows,
+  updateSupabaseRows,
+} from "./supabase-rest";
 import { findLeadByPublicId } from "./leads";
 
 type TelegramChat = {
@@ -197,6 +202,51 @@ async function addTelegramContactToClient({
   }
 }
 
+async function mergeLeadClientIntoTelegramClient({
+  fromClientId,
+  toClientId,
+  leadId,
+}: {
+  fromClientId: string;
+  toClientId: string;
+  leadId: string;
+}) {
+  await updateSupabaseRows({
+    table: "leads",
+    payload: { client_id: toClientId },
+    filters: { id: leadId },
+  });
+
+  await updateSupabaseRows({
+    table: "lead_events",
+    payload: { client_id: toClientId },
+    filters: { lead_id: leadId },
+  });
+
+  try {
+    await updateSupabaseRows({
+      table: "client_contacts",
+      payload: { client_id: toClientId },
+      filters: { client_id: fromClientId },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+
+    if (!message.includes("duplicate key")) {
+      throw error;
+    }
+  }
+
+  try {
+    await deleteSupabaseRows({
+      table: "clients",
+      filters: { id: fromClientId },
+    });
+  } catch {
+    // If the source client still has references, keep it for manual review.
+  }
+}
+
 async function registerTelegramStart({
   chatId,
   user,
@@ -210,10 +260,8 @@ async function registerTelegramStart({
   const lead = startPayload.startsWith("TX-")
     ? await findLeadByPublicId(startPayload)
     : null;
-  const client = existingClient ?? (
-    lead
-      ? { id: lead.clientId, publicId: null }
-      : await createTelegramClient(chatId, user)
+  let client = existingClient ?? (
+    lead ? { id: lead.clientId, publicId: null } : await createTelegramClient(chatId, user)
   );
 
   if (!existingClient && lead) {
@@ -222,6 +270,15 @@ async function registerTelegramStart({
       chatId,
       user,
     });
+  }
+
+  if (existingClient && lead && lead.clientId !== existingClient.id) {
+    await mergeLeadClientIntoTelegramClient({
+      fromClientId: lead.clientId,
+      toClientId: existingClient.id,
+      leadId: lead.id,
+    });
+    client = existingClient;
   }
 
   await insertSupabaseRow({
