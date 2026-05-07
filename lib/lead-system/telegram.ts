@@ -1,3 +1,5 @@
+import { insertSupabaseRow, selectSupabaseRows } from "./supabase-rest";
+
 type TelegramChat = {
   id?: number;
   type?: string;
@@ -54,12 +56,27 @@ function getDisplayName(user?: TelegramUser) {
   return fullName || `Telegram ID ${user.id}`;
 }
 
+function getTelegramLabel(user?: TelegramUser) {
+  const name = getDisplayName(user);
+
+  if (user?.id) {
+    return `${name} / Telegram user_id ${user.id}`;
+  }
+
+  return name;
+}
+
 function getStartPayload(text?: string) {
   if (!text?.startsWith("/start")) {
     return null;
   }
 
   return text.replace(/^\/start(@\w+)?\s*/i, "").trim() || "direct";
+}
+
+function createClientPublicId() {
+  const timestamp = new Date().toISOString().replace(/\D/g, "").slice(2, 17);
+  return `TXC-${timestamp}`;
 }
 
 async function sendTelegramMessage(chatId: string | number, text: string) {
@@ -83,6 +100,109 @@ async function sendTelegramMessage(chatId: string | number, text: string) {
   }
 }
 
+async function findClientByTelegramChatId(chatId: number) {
+  const rows = await selectSupabaseRows({
+    table: "client_contacts",
+    select: "client_id,clients(id,public_id,name,company)",
+    filters: {
+      contact_type: "telegram",
+      contact_value: chatId,
+    },
+    limit: 1,
+  });
+
+  const row = rows[0];
+
+  if (!row || typeof row.client_id !== "string") {
+    return null;
+  }
+
+  const client = row.clients;
+  const clientRecord =
+    client && typeof client === "object" && !Array.isArray(client)
+      ? (client as Record<string, unknown>)
+      : null;
+
+  return {
+    id: row.client_id,
+    publicId:
+      typeof clientRecord?.public_id === "string" ? clientRecord.public_id : null,
+  };
+}
+
+async function createTelegramClient(chatId: number, user?: TelegramUser) {
+  const clientRows = await insertSupabaseRow({
+    table: "clients",
+    payload: {
+      public_id: createClientPublicId(),
+      name: getDisplayName(user),
+      client_type: "unknown",
+    },
+  });
+
+  const client = clientRows[0];
+  const clientId = typeof client?.id === "string" ? client.id : null;
+  const publicId = typeof client?.public_id === "string" ? client.public_id : null;
+
+  if (!clientId) {
+    throw new Error("Supabase did not return created client id");
+  }
+
+  await insertSupabaseRow({
+    table: "client_contacts",
+    payload: {
+      client_id: clientId,
+      contact_type: "telegram",
+      contact_value: String(chatId),
+      label: getTelegramLabel(user),
+      is_primary: true,
+      verified_at: new Date().toISOString(),
+    },
+  });
+
+  return {
+    id: clientId,
+    publicId,
+  };
+}
+
+async function registerTelegramStart({
+  chatId,
+  user,
+  startPayload,
+}: {
+  chatId: number;
+  user?: TelegramUser;
+  startPayload: string;
+}) {
+  const existingClient = await findClientByTelegramChatId(chatId);
+  const client = existingClient ?? (await createTelegramClient(chatId, user));
+
+  await insertSupabaseRow({
+    table: "lead_events",
+    payload: {
+      client_id: client.id,
+      event_type: "messenger_opened",
+      channel: "telegram",
+      source_cta: startPayload,
+      metadata: {
+        telegram_chat_id: chatId,
+        telegram_user_id: user?.id ?? null,
+        telegram_username: user?.username ?? null,
+        telegram_first_name: user?.first_name ?? null,
+        telegram_last_name: user?.last_name ?? null,
+        start_payload: startPayload,
+        client_was_created: !existingClient,
+      },
+    },
+  });
+
+  return {
+    client,
+    created: !existingClient,
+  };
+}
+
 export async function handleTelegramUpdate(update: TelegramUpdate) {
   const message = update.message;
   const chat = message?.chat;
@@ -95,6 +215,11 @@ export async function handleTelegramUpdate(update: TelegramUpdate) {
 
   const { leadsChatId } = getTelegramConfig();
   const userLabel = getDisplayName(message.from);
+  const registration = await registerTelegramStart({
+    chatId: chat.id,
+    user: message.from,
+    startPayload,
+  });
 
   await sendTelegramMessage(
     chat.id,
@@ -107,6 +232,8 @@ export async function handleTelegramUpdate(update: TelegramUpdate) {
       "Новий Telegram контакт TimberX",
       "",
       `Користувач: ${userLabel}`,
+      `Клієнт у базі: ${registration.client.publicId ?? registration.client.id}`,
+      `Статус клієнта: ${registration.created ? "створено" : "знайдено існуючого"}`,
       `Telegram chat_id: ${chat.id}`,
       `Джерело: ${startPayload}`,
     ].join("\n"),
@@ -114,4 +241,3 @@ export async function handleTelegramUpdate(update: TelegramUpdate) {
 
   return { ok: true, ignored: false, startPayload };
 }
-
