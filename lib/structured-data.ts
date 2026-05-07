@@ -10,7 +10,7 @@ export function getRootStructuredData() {
       url: siteUrl,
       logo: absoluteUrl("/images/logo/logo-manual-updated.png"),
       image: absoluteUrl(defaultOgImage),
-      email: "eko-roof@ukr.net",
+      email: "office@timberx.com.ua",
       telephone: "+380674121310",
       address: {
         "@type": "PostalAddress",
@@ -23,7 +23,7 @@ export function getRootStructuredData() {
         {
           "@type": "ContactPoint",
           telephone: "+380674121310",
-          email: "eko-roof@ukr.net",
+          email: "office@timberx.com.ua",
           contactType: "sales",
           areaServed: ["UA", "EU"],
           availableLanguage: ["uk", "ru"],
@@ -38,7 +38,7 @@ export function getRootStructuredData() {
       url: siteUrl,
       image: absoluteUrl(defaultOgImage),
       telephone: "+380674121310",
-      email: "eko-roof@ukr.net",
+      email: "office@timberx.com.ua",
       address: {
         "@type": "PostalAddress",
         streetAddress: "вул. Павлюченка, 31",

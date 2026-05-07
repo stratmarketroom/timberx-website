@@ -1015,8 +1015,8 @@ export default function Home() {
                 </p>
                 <p>
                   <span className="font-medium text-white/88">Email:</span>{" "}
-                  <a href="mailto:eko-roof@ukr.net" className="font-medium transition hover:text-[#F2994A]">
-                    eko-roof@ukr.net
+                  <a href="mailto:office@timberx.com.ua" className="font-medium transition hover:text-[#F2994A]">
+                    office@timberx.com.ua
                   </a>
                 </p>
                 <p>

@@ -17,8 +17,8 @@ const directContacts = [
   },
   {
     label: "Email",
-    value: "eko-roof@ukr.net",
-    href: "mailto:eko-roof@ukr.net",
+    value: "office@timberx.com.ua",
+    href: "mailto:office@timberx.com.ua",
   },
 ] as const;
 
@@ -191,7 +191,7 @@ export default function ContactsPage() {
                   Зателефонувати
                 </a>
                 <a
-                  href="mailto:eko-roof@ukr.net"
+                  href="mailto:office@timberx.com.ua"
                   className="inline-flex items-center justify-center rounded-[10px] border border-white/18 bg-[rgba(255,255,255,0.04)] px-5 py-3 text-center text-base font-semibold text-white transition hover:border-white/36 hover:bg-white/8"
                 >
                   Написати на email
