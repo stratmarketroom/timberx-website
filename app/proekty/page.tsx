@@ -17,12 +17,12 @@ const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
 
 const categories = [
-  "модульні будинки",
-  "каркасні будинки",
-  "фахверкові будинки",
-  "готельні модулі",
-  "сервісні модулі",
-  "громадські об'єкти",
+  { label: "модульні будинки", href: "#modular-projects", isAvailable: true },
+  { label: "каркасні будинки", href: "#frame-projects", isAvailable: true },
+  { label: "фахверкові будинки", href: "/fakhverkovi-budynky/", isAvailable: false },
+  { label: "готельні модулі", href: "#modular-projects", isAvailable: true },
+  { label: "сервісні модулі", href: "#modular-projects", isAvailable: true },
+  { label: "громадські об'єкти", href: "#modular-projects", isAvailable: true },
 ];
 
 export const metadata: Metadata = {
@@ -126,17 +126,18 @@ export default function ProjectsCatalogPage() {
                 Розділи каталогу
               </p>
               <div className="mt-5 flex flex-wrap gap-2 lg:flex-col">
-                {categories.map((category, index) => (
-                  <span
-                    key={category}
+                {categories.map((category) => (
+                  <a
+                    key={category.label}
+                    href={category.href}
                     className={`rounded-full border px-3 py-2 text-sm ${
-                      index === 0 || index === 1
+                      category.isAvailable
                         ? "border-[#f2994a]/36 bg-[#f2994a]/12 text-[#f4dfcf]"
                         : "border-white/10 bg-white/[0.04] text-white/62"
-                    }`}
+                    } transition hover:border-[#f2994a]/50 hover:bg-[#f2994a]/16 hover:text-white`}
                   >
-                    {category}
-                  </span>
+                    {category.label}
+                  </a>
                 ))}
               </div>
               <div className="mt-6 rounded-[1.25rem] border border-[#f2994a]/24 bg-[#f2994a]/8 p-4">
@@ -149,33 +150,7 @@ export default function ProjectsCatalogPage() {
           </aside>
 
           <div>
-            {frameProjects.length ? (
-              <div className="mb-12">
-                <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
-                      Новий напрям
-                    </p>
-                    <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
-                      Каркасно-панельні будинки
-                    </h2>
-                  </div>
-                  <Link
-                    href="/karkasno-panelni-budynky/"
-                    className="text-sm font-semibold text-white/72 transition hover:text-[#f2994a]"
-                  >
-                    Про каркасно-панельні будинки →
-                  </Link>
-                </div>
-
-                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                  {frameProjects.map((project, index) => (
-                    <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
+            <section id="modular-projects" className="scroll-mt-28">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
@@ -198,6 +173,34 @@ export default function ProjectsCatalogPage() {
                 <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
               ))}
             </div>
+            </section>
+
+            {frameProjects.length ? (
+              <section id="frame-projects" className="mt-12 scroll-mt-28">
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f2994a]">
+                      Новий напрям
+                    </p>
+                    <h2 className={`${headingClass} mt-3 text-3xl leading-tight text-white sm:text-4xl`}>
+                      Каркасно-панельні будинки
+                    </h2>
+                  </div>
+                  <Link
+                    href="/karkasno-panelni-budynky/"
+                    className="text-sm font-semibold text-white/72 transition hover:text-[#f2994a]"
+                  >
+                    Про каркасно-панельні будинки →
+                  </Link>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {frameProjects.map((project, index) => (
+                    <TypicalProjectCard key={project.slug} project={project} priority={index === 0} />
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </div>
         </section>
       </main>
