@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isAdminAuthenticated, isAdminConfigured } from "@/lib/admin/auth";
 import { getAdminLeads, type AdminContact, type AdminLead } from "@/lib/admin/leads";
+import { LeadsKanbanBoard } from "./kanban-board";
 import { loginAdmin, logoutAdmin, updateLeadStatusFromList } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -80,7 +81,15 @@ function getContactHref(contact: AdminContact) {
   }
 
   if (contact.type === "phone" || contact.type === "viber" || contact.type === "whatsapp") {
-    return `tel:${contact.value}`;
+    if (contact.type === "phone") {
+      return `tel:${contact.value}`;
+    }
+
+    if (contact.type === "viber") {
+      return `viber://chat?number=${encodeURIComponent(contact.value)}`;
+    }
+
+    return `https://wa.me/${contact.value.replace(/\D/g, "")}`;
   }
 
   if (contact.type === "email") {
@@ -88,6 +97,23 @@ function getContactHref(contact: AdminContact) {
   }
 
   return null;
+}
+
+function contactActionLabel(contact: AdminContact) {
+  switch (contact.type) {
+    case "phone":
+      return "Телефон";
+    case "telegram":
+      return "Telegram";
+    case "email":
+      return "Email";
+    case "viber":
+      return "Viber";
+    case "whatsapp":
+      return "WhatsApp";
+    default:
+      return contact.type;
+  }
 }
 
 function getPrimaryContact(contacts: AdminContact[]) {
@@ -99,11 +125,13 @@ function createReturnTo({
   priority,
   channel,
   q,
+  view,
 }: {
   status?: string;
   priority?: string;
   channel?: string;
   q?: string;
+  view?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -121,6 +149,10 @@ function createReturnTo({
 
   if (q) {
     params.set("q", q);
+  }
+
+  if (view === "kanban") {
+    params.set("view", view);
   }
 
   const query = params.toString();
@@ -152,22 +184,24 @@ function ContactList({ contacts }: { contacts: AdminContact[] }) {
     <div className="flex flex-wrap gap-1.5">
       {contacts.slice(0, 4).map((contact) => {
         const href = getContactHref(contact);
-        const content = `${contact.type}: ${contact.value}`;
+        const label = contactActionLabel(contact);
 
         return href ? (
           <a
             key={contact.id}
             href={href}
-        className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45] transition hover:border-[#F2994A]/55 hover:text-[#A95815]"
+            className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45] transition hover:border-[#F2994A]/55 hover:text-[#A95815]"
+            title={contact.value}
           >
-            {content}
+            {label}
           </a>
         ) : (
           <span
             key={contact.id}
-          className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45]"
+            className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45]"
+            title={contact.value}
           >
-            {content}
+            {label}
           </span>
         );
       })}
@@ -302,14 +336,17 @@ function Filters({
   priority,
   channel,
   q,
+  view,
 }: {
   status?: string;
   priority?: string;
   channel?: string;
   q?: string;
+  view?: string;
 }) {
   return (
     <form className="grid gap-3 rounded-[10px] border border-[#E1D7C8] bg-white p-4 lg:grid-cols-[1fr_190px_190px_190px_auto]">
+      <input type="hidden" name="view" value={view ?? "list"} />
       <input
         name="q"
         defaultValue={q ?? ""}
@@ -359,6 +396,44 @@ function Filters({
         Знайти
       </button>
     </form>
+  );
+}
+
+function ViewSwitcher({ view, returnTo }: { view: string; returnTo: string }) {
+  const listParams = new URLSearchParams(returnTo.split("?")[1] ?? "");
+  const kanbanParams = new URLSearchParams(returnTo.split("?")[1] ?? "");
+
+  listParams.delete("view");
+  kanbanParams.set("view", "kanban");
+
+  const listQuery = listParams.toString();
+  const kanbanQuery = kanbanParams.toString();
+  const listHref = listQuery ? `/admin/leads?${listQuery}` : "/admin/leads";
+  const kanbanHref = kanbanQuery ? `/admin/leads?${kanbanQuery}` : "/admin/leads?view=kanban";
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Link
+        href={listHref || "/admin/leads"}
+        className={`inline-flex h-12 items-center rounded-[9px] border px-5 text-lg font-bold transition ${
+          view === "kanban"
+            ? "border-[#D8CFC2] bg-white text-[#5F5A54] hover:border-[#F2994A]/55 hover:text-[#A95815]"
+            : "border-[#F2994A]/50 bg-[#FFF0DF] text-[#A95815]"
+        }`}
+      >
+        Список
+      </Link>
+      <Link
+        href={kanbanHref}
+        className={`inline-flex h-12 items-center rounded-[9px] border px-5 text-lg font-bold transition ${
+          view === "kanban"
+            ? "border-[#F2994A]/50 bg-[#FFF0DF] text-[#A95815]"
+            : "border-[#D8CFC2] bg-white text-[#5F5A54] hover:border-[#F2994A]/55 hover:text-[#A95815]"
+        }`}
+      >
+        Канбан
+      </Link>
+    </div>
   );
 }
 
@@ -465,7 +540,8 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
   const priority = firstValue(rawSearchParams.priority);
   const channel = firstValue(rawSearchParams.channel);
   const q = firstValue(rawSearchParams.q);
-  const returnTo = createReturnTo({ status, priority, channel, q });
+  const view = firstValue(rawSearchParams.view) === "kanban" ? "kanban" : "list";
+  const returnTo = createReturnTo({ status, priority, channel, q, view });
   let leads: AdminLead[] = [];
   let errorMessage: string | null = null;
 
@@ -508,11 +584,16 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
 
         <div className="mt-5 space-y-4">
           <SummaryBar leads={leads} />
-          <Filters status={status} priority={priority} channel={channel} q={q} />
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <ViewSwitcher view={view} returnTo={returnTo} />
+          </div>
+          <Filters status={status} priority={priority} channel={channel} q={q} view={view} />
           {errorMessage ? (
             <section className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
               {errorMessage}
             </section>
+          ) : view === "kanban" ? (
+            <LeadsKanbanBoard key={returnTo} leads={leads} />
           ) : (
             <LeadsTable leads={leads} returnTo={returnTo} />
           )}

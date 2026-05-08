@@ -183,6 +183,23 @@ function getContactHref(contact: AdminContact) {
   return null;
 }
 
+function contactActionLabel(contact: AdminContact) {
+  switch (contact.type) {
+    case "phone":
+      return "Подзвонити";
+    case "telegram":
+      return "Telegram";
+    case "email":
+      return "Email";
+    case "viber":
+      return "Viber";
+    case "whatsapp":
+      return "WhatsApp";
+    default:
+      return contact.type;
+  }
+}
+
 function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "new"
@@ -352,6 +369,7 @@ function ContactPanel({ contacts }: { contacts: AdminContact[] }) {
     <div className="space-y-3">
       {contacts.map((contact) => {
         const href = getContactHref(contact);
+        const label = contactActionLabel(contact);
         const content = (
           <>
             <span>{contact.type}</span>
@@ -367,6 +385,9 @@ function ContactPanel({ contacts }: { contacts: AdminContact[] }) {
             className="grid gap-1 rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-3 text-lg font-semibold text-[#6F675E] transition hover:border-[#F2994A]/55 hover:text-[#A95815]"
           >
             {content}
+            <span className="mt-1 inline-flex w-fit rounded-[8px] border border-[#F2994A]/35 bg-white px-3 py-1 text-sm font-bold text-[#A95815]">
+              {label}
+            </span>
           </a>
         ) : (
           <div
