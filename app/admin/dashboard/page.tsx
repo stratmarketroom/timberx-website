@@ -191,15 +191,15 @@ function MoneyMetricCard({ label, totals }: { label: string; totals: DashboardMo
   return (
     <div className="rounded-[14px] border border-[#4B3828]/80 bg-[#211B16] px-5 py-5 shadow-[0_18px_55px_rgba(0,0,0,0.28)]">
       <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2.5">
         {[
-          ["UAH", "грн"],
-          ["EUR", "євро"],
-          ["USD", "долар"],
+          ["UAH", "UA"],
+          ["EUR", "€"],
+          ["USD", "$"],
         ].map(([currency, currencyLabel]) => (
-          <div key={currency} className="flex items-baseline justify-between gap-3">
-            <span className="text-sm font-bold uppercase tracking-[0.14em] text-[#B6A89A]">{currencyLabel}</span>
-            <span className="text-2xl font-bold tabular-nums text-[#F8EFE4]">
+          <div key={currency} className="grid grid-cols-[2.4rem_minmax(0,1fr)] items-baseline gap-3">
+            <span className="text-base font-bold tracking-normal text-[#B6A89A]">{currencyLabel}</span>
+            <span className="min-w-0 text-right text-[1.35rem] font-bold leading-7 tracking-normal text-[#F8EFE4] tabular-nums [overflow-wrap:anywhere]">
               {formatMoneyValue(totals[currency as keyof DashboardMoneyTotals])}
             </span>
           </div>

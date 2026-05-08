@@ -79,9 +79,15 @@ const clientTypeLabels: Record<string, string> = {
 };
 
 const currencyLabels: Record<string, string> = {
-  UAH: "Гривня",
-  EUR: "Євро",
-  USD: "Долар",
+  UAH: "UA",
+  EUR: "€",
+  USD: "$",
+};
+
+const currencyOptionLabels: Record<string, string> = {
+  UAH: "UA - грн",
+  EUR: "€ - євро",
+  USD: "$ - долар",
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -132,7 +138,7 @@ function formatMoney(amount: number | null, currency: string | null) {
 
   return new Intl.NumberFormat("uk-UA", {
     maximumFractionDigits: 2,
-  }).format(amount) + ` ${currency ?? "UAH"}`;
+  }).format(amount) + ` ${currencyLabels[currency ?? "UAH"] ?? "UA"}`;
 }
 
 function formatAdminActor(value: string | null | undefined) {
@@ -472,7 +478,7 @@ function LeadEditForm({ lead }: { lead: AdminLeadDetails }) {
                 className={inputClass}
               />
               <select name="proposalCurrency" defaultValue={lead.proposalCurrency ?? "UAH"} className={selectClass}>
-                {Object.entries(currencyLabels).map(([value, label]) => (
+                {Object.entries(currencyOptionLabels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
@@ -492,7 +498,7 @@ function LeadEditForm({ lead }: { lead: AdminLeadDetails }) {
                 className={inputClass}
               />
               <select name="wonCurrency" defaultValue={lead.wonCurrency ?? "UAH"} className={selectClass}>
-                {Object.entries(currencyLabels).map(([value, label]) => (
+                {Object.entries(currencyOptionLabels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
