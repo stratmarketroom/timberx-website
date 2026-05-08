@@ -265,8 +265,8 @@ export const seoPages: SeoPage[] = [
       "Каркасно-панельний проєкт TimberX на 93 м² для швидкої відбудови, громад і серійного житла.",
     section: "projects",
     cluster: "Каркасно-панельні будинки / Типові проєкти / 93 м²",
-    status: "noindex",
-    priority: 4,
+    status: "indexable",
+    priority: 2,
   },
   {
     path: "/modulni-budynky/proekty/blok-ohorony/",
