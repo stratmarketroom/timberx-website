@@ -561,6 +561,20 @@ async function createSignedStorageUrl(bucket: string, path: string) {
   return `${url}/storage/v1${signedPath}`;
 }
 
+async function deleteStorageObject(bucket: string, path: string) {
+  const response = await storageRequest(
+    `/object/${encodeURIComponent(bucket)}/${encodeStoragePath(path)}`,
+    {
+      method: "DELETE",
+    },
+  );
+  const responseText = await response.text();
+
+  if (!response.ok && response.status !== 404) {
+    throw new Error(`Supabase storage delete failed: ${response.status} ${responseText}`);
+  }
+}
+
 export type AdminLeadSearchParams = {
   status?: string;
   priority?: string;
@@ -1510,32 +1524,41 @@ export async function uploadAdminLeadFile({
     throw new Error(`Supabase storage upload failed: ${uploadResponse.status} ${uploadText}`);
   }
 
-  await insertRows("lead_files", {
-    client_id: lead.client.id,
-    lead_id: lead.id,
-    file_name: file.name,
-    file_type: file.type || null,
-    file_size: file.size,
-    storage_bucket: bucket,
-    storage_path: storagePath,
-    file_category: category,
-    source: "admin",
-    uploaded_by: actor,
-  });
-
-  await insertAdminEvent({
-    lead,
-    eventType: "file_uploaded",
-    metadata: {
+  try {
+    await insertRows("lead_files", {
+      client_id: lead.client.id,
+      lead_id: lead.id,
       file_name: file.name,
       file_type: file.type || null,
       file_size: file.size,
-      file_category: category,
       storage_bucket: bucket,
       storage_path: storagePath,
-      actor,
-    },
-  });
+      file_category: category,
+      source: "admin",
+      uploaded_by: "manager",
+    });
+  } catch (error) {
+    await deleteStorageObject(bucket, storagePath);
+    throw error;
+  }
+
+  try {
+    await insertAdminEvent({
+      lead,
+      eventType: "file_uploaded",
+      metadata: {
+        file_name: file.name,
+        file_type: file.type || null,
+        file_size: file.size,
+        file_category: category,
+        storage_bucket: bucket,
+        storage_path: storagePath,
+        actor,
+      },
+    });
+  } catch (error) {
+    console.error("Admin lead file event insert failed", error);
+  }
 }
 
 export async function deleteAdminLeadFile({
@@ -1565,17 +1588,7 @@ export async function deleteAdminLeadFile({
     throw new Error("File not found");
   }
 
-  const deleteStorageResponse = await storageRequest(
-    `/object/${encodeURIComponent(file.storageBucket)}/${encodeStoragePath(file.storagePath)}`,
-    {
-      method: "DELETE",
-    },
-  );
-  const deleteStorageText = await deleteStorageResponse.text();
-
-  if (!deleteStorageResponse.ok && deleteStorageResponse.status !== 404) {
-    throw new Error(`Supabase storage delete failed: ${deleteStorageResponse.status} ${deleteStorageText}`);
-  }
+  await deleteStorageObject(file.storageBucket, file.storagePath);
 
   await deleteRows("lead_files", {
     id: file.id,

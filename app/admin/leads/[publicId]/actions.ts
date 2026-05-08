@@ -40,7 +40,7 @@ function redirectWithUploadError(publicId: string, errorCode: string) {
 }
 
 function getUploadErrorCode(error: unknown) {
-  const message = error instanceof Error ? error.message : "";
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
 
   if (message.includes("too large")) {
     return "too_large";
@@ -56,6 +56,18 @@ function getUploadErrorCode(error: unknown) {
 
   if (message.includes("storage") || message.includes("bucket")) {
     return "storage";
+  }
+
+  if (message.includes("insert") || message.includes("database") || message.includes("supabase admin")) {
+    return "database";
+  }
+
+  if (message.includes("fetch failed") || message.includes("network")) {
+    return "network";
+  }
+
+  if (message.includes("lead not found")) {
+    return "lead_not_found";
   }
 
   return "unknown";

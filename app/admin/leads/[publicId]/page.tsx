@@ -209,6 +209,12 @@ function uploadErrorMessage(value: string | undefined) {
       return "Оберіть файл для завантаження.";
     case "storage":
       return "Не вдалося зберегти файл у сховище. Перевіримо налаштування Supabase Storage.";
+    case "database":
+      return "Файл завантажився у сховище, але не вдалося записати його в базу. Перевіримо таблицю lead_files.";
+    case "network":
+      return "Не вдалося з’єднатися зі сховищем. Спробуйте ще раз за хвилину.";
+    case "lead_not_found":
+      return "Не знайшла заявку для прикріплення файла. Оновіть сторінку і спробуйте ще раз.";
     case "unknown":
       return "Не вдалося завантажити файл. Спробуйте ще раз або оберіть інший файл.";
     default:
