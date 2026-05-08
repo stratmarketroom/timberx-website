@@ -73,15 +73,27 @@ function LoginPanel({ reason }: { reason?: string }) {
         : null;
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[14px] border border-white/10 bg-[#202326] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[12px] border border-[#E1D7C8] bg-white p-6 shadow-[0_20px_70px_rgba(80,62,43,0.12)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           TimberX Admin
         </p>
         <h1 className="mt-3 text-2xl font-bold">Вхід до адмінки</h1>
         <form action={loginAdmin} className="mt-6 space-y-4">
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/54">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
+              Імʼя менеджера
+            </span>
+            <input
+              name="actorName"
+              required
+              autoComplete="name"
+              placeholder="Наприклад: Ольга"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
               Пароль
             </span>
             <input
@@ -89,17 +101,17 @@ function LoginPanel({ reason }: { reason?: string }) {
               type="password"
               required
               autoComplete="current-password"
-              className="mt-2 h-12 w-full rounded-[10px] border border-white/12 bg-white/[0.055] px-4 text-sm font-semibold text-white outline-none transition placeholder:text-white/34 focus:border-[#F2994A]/58"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
             />
           </label>
           {message ? (
-            <p className="rounded-[10px] border border-[#F2994A]/20 bg-[#F2994A]/10 px-3 py-2 text-sm leading-6 text-[#ffd4ad]">
+            <p className="rounded-[9px] border border-[#F2994A]/25 bg-[#FFF0DF] px-3 py-2 text-sm leading-6 text-[#8B4B13]">
               {message}
             </p>
           ) : null}
           <button
             type="submit"
-            className="h-12 w-full rounded-[10px] bg-[#F2994A] px-4 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+            className="h-12 w-full rounded-[9px] bg-[#F2994A] px-4 text-base font-bold text-[#25170B] transition hover:bg-[#de8232]"
           >
             Увійти
           </button>
@@ -111,13 +123,13 @@ function LoginPanel({ reason }: { reason?: string }) {
 
 function AdminSetupPanel() {
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[14px] border border-[#F2994A]/24 bg-[#202326] p-6">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[12px] border border-[#F2994A]/30 bg-white p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           Потрібне налаштування
         </p>
         <h1 className="mt-3 text-2xl font-bold">Адмін-пароль не заданий</h1>
-        <p className="mt-4 text-sm leading-7 text-white/68">
+        <p className="mt-4 text-sm leading-7 text-[#6F675E]">
           Додайте `TIMBERX_ADMIN_PASSWORD` або `ADMIN_PASSWORD` у `.env.local` та у Vercel env.
         </p>
       </section>
@@ -136,28 +148,28 @@ function FormField({
 }) {
   return (
     <label className="block">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/38">
+      <span className="text-sm font-semibold uppercase tracking-[0.14em] text-[#8A8176]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
-      {note ? <span className="mt-1 block text-xs leading-5 text-white/38">{note}</span> : null}
+      {note ? <span className="mt-1 block text-sm leading-6 text-[#8A8176]">{note}</span> : null}
     </label>
   );
 }
 
 const inputClass =
-  "h-11 w-full rounded-[9px] border border-white/10 bg-white/[0.045] px-3 text-sm font-semibold text-white outline-none placeholder:text-white/34 transition focus:border-[#F2994A]/50";
+  "h-14 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none placeholder:text-[#9A9288] transition focus:border-[#F2994A]/70";
 const textareaClass =
-  "min-h-28 w-full rounded-[9px] border border-white/10 bg-white/[0.045] px-3 py-3 text-sm font-semibold leading-6 text-white outline-none placeholder:text-white/34 transition focus:border-[#F2994A]/50";
+  "min-h-32 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 py-3 text-lg font-semibold leading-7 text-[#25201A] outline-none placeholder:text-[#9A9288] transition focus:border-[#F2994A]/70";
 const selectClass =
-  "h-11 w-full rounded-[9px] border border-white/10 bg-[#24282b] px-3 text-sm font-semibold text-white outline-none transition focus:border-[#F2994A]/50";
+  "h-14 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none transition focus:border-[#F2994A]/70";
 
 function ManualLeadForm() {
   return (
     <form action={createManualLeadAction} className="grid gap-4">
-      <section className="rounded-[12px] border border-white/10 bg-[#202326]">
-        <div className="border-b border-white/8 px-4 py-3">
-          <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-white/58">
+      <section className="rounded-[10px] border border-[#E1D7C8] bg-white">
+        <div className="border-b border-[#EEE6DC] px-4 py-3">
+          <h2 className="text-base font-bold uppercase tracking-[0.14em] text-[#8A8176]">
             Клієнт і контакти
           </h2>
         </div>
@@ -180,7 +192,7 @@ function ManualLeadForm() {
           <FormField label="Телефон" note="За телефоном шукаємо існуючого клієнта.">
             <input name="phone" placeholder="+380..." className={inputClass} />
           </FormField>
-          <FormField label="Email" note="Email теж використовується для дедуплікації.">
+          <FormField label="Email">
             <input name="email" type="email" placeholder="office@example.com" className={inputClass} />
           </FormField>
           <FormField label="Telegram">
@@ -192,9 +204,9 @@ function ManualLeadForm() {
         </div>
       </section>
 
-      <section className="rounded-[12px] border border-white/10 bg-[#202326]">
-        <div className="border-b border-white/8 px-4 py-3">
-          <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-white/58">
+      <section className="rounded-[10px] border border-[#E1D7C8] bg-white">
+        <div className="border-b border-[#EEE6DC] px-4 py-3">
+          <h2 className="text-base font-bold uppercase tracking-[0.14em] text-[#8A8176]">
             Заявка
           </h2>
         </div>
@@ -241,7 +253,7 @@ function ManualLeadForm() {
         </div>
       </section>
 
-      <section className="rounded-[12px] border border-white/10 bg-[#202326] p-4">
+      <section className="rounded-[10px] border border-[#E1D7C8] bg-white p-4">
         <FormField label="Перша нотатка">
           <textarea
             name="note"
@@ -254,13 +266,13 @@ function ManualLeadForm() {
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         <Link
           href="/admin/leads"
-          className="inline-flex h-11 items-center justify-center rounded-[9px] border border-white/12 px-5 text-sm font-semibold text-white/70 transition hover:border-[#F2994A]/40 hover:text-[#F2994A]"
+          className="inline-flex h-14 items-center justify-center rounded-[9px] border border-[#D8CFC2] bg-white px-6 text-lg font-semibold text-[#5F5A54] transition hover:border-[#F2994A]/60 hover:text-[#A95815]"
         >
           Скасувати
         </Link>
         <button
           type="submit"
-          className="h-11 rounded-[9px] bg-[#F2994A] px-5 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+          className="h-14 rounded-[9px] bg-[#F2994A] px-6 text-lg font-bold text-[#25170B] transition hover:bg-[#de8232]"
         >
           Створити заявку
         </button>
@@ -282,25 +294,25 @@ export default async function NewAdminLeadPage({ searchParams }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-6 text-white md:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-6 text-[#25201A] md:px-6 lg:px-8">
       <div className="mx-auto max-w-[72rem]">
-        <header className="flex flex-col gap-4 border-b border-white/10 pb-5 lg:flex-row lg:items-end lg:justify-between">
+        <header className="flex flex-col gap-4 border-b border-[#E1D7C8] pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <Link href="/admin/leads" className="text-sm font-semibold text-white/54 transition hover:text-[#F2994A]">
+            <Link href="/admin/leads" className="text-base font-semibold text-[#6F675E] transition hover:text-[#A95815]">
               ← До списку заявок
             </Link>
             <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
               TimberX Admin
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-normal">Нова заявка</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/58">
-              Для дзвінків, зустрічей, конференцій, рекомендацій і старих клієнтів. Запис піде в ту саму Supabase-базу.
+            <h1 className="mt-2 text-4xl font-bold tracking-normal">Нова заявка</h1>
+            <p className="mt-2 max-w-3xl text-lg leading-8 text-[#6F675E]">
+              Для дзвінків, зустрічей, конференцій, рекомендацій і старих клієнтів.
             </p>
           </div>
           <form action={logoutAdmin}>
             <button
               type="submit"
-              className="h-10 rounded-[9px] border border-white/12 px-4 text-sm font-semibold text-white/70 transition hover:border-[#F2994A]/40 hover:text-[#F2994A]"
+              className="h-12 rounded-[9px] border border-[#D8CFC2] bg-white px-5 text-lg font-semibold text-[#5F5A54] transition hover:border-[#F2994A]/60 hover:text-[#A95815]"
             >
               Вийти
             </button>
@@ -314,4 +326,3 @@ export default async function NewAdminLeadPage({ searchParams }: PageProps) {
     </main>
   );
 }
-

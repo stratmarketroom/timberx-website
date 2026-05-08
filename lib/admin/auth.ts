@@ -4,6 +4,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 const adminSessionCookie = "timberx_admin_session";
+const adminActorCookie = "timberx_admin_actor";
 
 function getAdminPassword() {
   return process.env.TIMBERX_ADMIN_PASSWORD ?? process.env.ADMIN_PASSWORD ?? null;
@@ -28,6 +29,16 @@ function safeEquals(left: string, right: string) {
   return timingSafeEqual(leftBuffer, rightBuffer);
 }
 
+function cleanActorName(value: unknown) {
+  if (typeof value !== "string") {
+    return "Менеджер";
+  }
+
+  const trimmed = value.trim();
+
+  return trimmed ? trimmed.slice(0, 80) : "Менеджер";
+}
+
 export function isAdminConfigured() {
   const password = getAdminPassword();
   return Boolean(password && !password.includes("PASTE_"));
@@ -49,7 +60,17 @@ export async function isAdminAuthenticated() {
   return safeEquals(session, createSessionValue(password));
 }
 
-export async function createAdminSession(passwordAttempt: string) {
+export async function getAdminActorName() {
+  const actor = (await cookies()).get(adminActorCookie)?.value;
+
+  if (!actor) {
+    return "Менеджер";
+  }
+
+  return cleanActorName(decodeURIComponent(actor));
+}
+
+export async function createAdminSession(passwordAttempt: string, actorName?: unknown) {
   const password = getAdminPassword();
 
   if (!password || password.includes("PASTE_")) {
@@ -60,7 +81,16 @@ export async function createAdminSession(passwordAttempt: string) {
     return { ok: false as const, error: "Невірний пароль." };
   }
 
-  (await cookies()).set(adminSessionCookie, createSessionValue(password), {
+  const cookieStore = await cookies();
+
+  cookieStore.set(adminSessionCookie, createSessionValue(password), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/admin",
+    maxAge: 60 * 60 * 12,
+  });
+  cookieStore.set(adminActorCookie, encodeURIComponent(cleanActorName(actorName)), {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -72,6 +102,8 @@ export async function createAdminSession(passwordAttempt: string) {
 }
 
 export async function clearAdminSession() {
-  (await cookies()).delete(adminSessionCookie);
-}
+  const cookieStore = await cookies();
 
+  cookieStore.delete(adminSessionCookie);
+  cookieStore.delete(adminActorCookie);
+}

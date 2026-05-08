@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin/auth";
+import { getAdminActorName, isAdminAuthenticated } from "@/lib/admin/auth";
 import {
   addAdminClientContact,
   addAdminLeadNote,
+  deleteAdminLeadFile,
   updateAdminClientFields,
   updateAdminLeadWorkingFields,
   uploadAdminLeadFile,
@@ -37,6 +38,7 @@ export async function updateLeadAction(formData: FormData) {
   await requireAdmin();
 
   const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
 
   await updateAdminLeadWorkingFields({
     publicId,
@@ -48,6 +50,7 @@ export async function updateLeadAction(formData: FormData) {
     status: formData.get("status"),
     priority: formData.get("priority"),
     note: formData.get("note"),
+    actorName,
   });
 
   redirectBack(publicId, "lead");
@@ -57,6 +60,7 @@ export async function updateClientAction(formData: FormData) {
   await requireAdmin();
 
   const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
 
   await updateAdminClientFields({
     publicId,
@@ -64,6 +68,7 @@ export async function updateClientAction(formData: FormData) {
     company: formData.get("company"),
     clientType: formData.get("clientType"),
     note: formData.get("note"),
+    actorName,
   });
 
   redirectBack(publicId, "client");
@@ -73,10 +78,12 @@ export async function addNoteAction(formData: FormData) {
   await requireAdmin();
 
   const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
 
   await addAdminLeadNote({
     publicId,
     text: formData.get("text"),
+    actorName,
   });
 
   redirectBack(publicId, "note");
@@ -86,6 +93,7 @@ export async function addContactAction(formData: FormData) {
   await requireAdmin();
 
   const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
 
   await addAdminClientContact({
     publicId,
@@ -93,6 +101,7 @@ export async function addContactAction(formData: FormData) {
     contactValue: formData.get("contactValue"),
     label: formData.get("label"),
     isPrimary: formData.get("isPrimary"),
+    actorName,
   });
 
   redirectBack(publicId, "contact");
@@ -102,6 +111,7 @@ export async function uploadFileAction(formData: FormData) {
   await requireAdmin();
 
   const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
@@ -112,6 +122,22 @@ export async function uploadFileAction(formData: FormData) {
     publicId,
     file,
     fileCategory: formData.get("fileCategory"),
+    actorName,
+  });
+
+  redirectBack(publicId, "file");
+}
+
+export async function deleteFileAction(formData: FormData) {
+  await requireAdmin();
+
+  const publicId = readPublicId(formData);
+  const actorName = await getAdminActorName();
+
+  await deleteAdminLeadFile({
+    publicId,
+    fileId: formData.get("fileId"),
+    actorName,
   });
 
   redirectBack(publicId, "file");

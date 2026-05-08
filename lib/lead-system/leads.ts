@@ -53,6 +53,22 @@ function createPublicId(prefix: "TX" | "TXC") {
   return `${prefix}-${timestamp}${suffix}`;
 }
 
+async function createLeadPublicId() {
+  const rows = await selectSupabaseRows({
+    table: "leads",
+    select: "public_id",
+    limit: 1000,
+  });
+  const maxNumber = rows.reduce((max, row) => {
+    const publicId = typeof row.public_id === "string" ? row.public_id : "";
+    const match = publicId.match(/^TX-(\d+)$/);
+
+    return match ? Math.max(max, Number(match[1])) : max;
+  }, 1000);
+
+  return `TX-${maxNumber + 1}`;
+}
+
 function mapAudienceToClientType(audienceType: string | null) {
   switch (audienceType) {
     case "Девелопер":
@@ -272,7 +288,7 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
   const leadRows = await insertSupabaseRow({
     table: "leads",
     payload: {
-      public_id: createPublicId("TX"),
+      public_id: await createLeadPublicId(),
       client_id: client.id,
       source_page: cleanString(input.sourcePage, 500),
       source_cta: cleanString(input.sourceCta, 160) ?? "estimate_quiz",

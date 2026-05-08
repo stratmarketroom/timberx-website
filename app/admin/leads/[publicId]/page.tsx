@@ -12,6 +12,7 @@ import {
 import { loginAdmin, logoutAdmin } from "../actions";
 import {
   addContactAction,
+  deleteFileAction,
   addNoteAction,
   updateClientAction,
   updateLeadAction,
@@ -118,6 +119,14 @@ function formatFileSize(value: number | null) {
   return `${(value / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function formatAdminActor(value: string | null | undefined) {
+  if (!value || value === "manager" || value === "admin") {
+    return "Менеджер";
+  }
+
+  return value;
+}
+
 function labelFromMap(map: Record<string, string>, value: string | null | undefined) {
   if (!value) {
     return "Не вказано";
@@ -177,12 +186,12 @@ function getContactHref(contact: AdminContact) {
 function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "new"
-      ? "border-[#F2994A]/45 bg-[#F2994A]/12 text-[#ffd4ad]"
+      ? "border-[#F2994A]/45 bg-[#FFF0DF] text-[#A95815]"
       : status === "won"
-        ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-100"
+        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
         : status === "lost" || status === "spam"
-          ? "border-red-300/24 bg-red-300/10 text-red-100"
-          : "border-white/12 bg-white/[0.055] text-white/76";
+          ? "border-red-200 bg-red-50 text-red-700"
+          : "border-[#DDD3C5] bg-white text-[#5F5A54]";
 
   return (
     <span className={`inline-flex min-h-8 items-center rounded-[8px] border px-2.5 text-xs font-semibold ${tone}`}>
@@ -194,10 +203,10 @@ function StatusBadge({ status }: { status: string }) {
 function PriorityBadge({ priority }: { priority: string }) {
   const tone =
     priority === "hot"
-      ? "bg-[#F2994A] text-[#1B1D1F]"
+      ? "bg-[#F2994A] text-[#25170B]"
       : priority === "cold"
-        ? "border border-white/12 bg-white/[0.035] text-white/58"
-        : "border border-[#F2994A]/22 bg-[#F2994A]/8 text-[#ffd4ad]";
+        ? "border border-[#DDD3C5] bg-white text-[#817970]"
+        : "border border-[#F2994A]/35 bg-[#FFF0DF] text-[#A95815]";
 
   return (
     <span className={`inline-flex min-h-8 items-center rounded-[8px] px-2.5 text-xs font-bold ${tone}`}>
@@ -215,15 +224,27 @@ function LoginPanel({ reason }: { reason?: string }) {
         : null;
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[14px] border border-white/10 bg-[#202326] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[12px] border border-[#E1D7C8] bg-white p-6 shadow-[0_20px_70px_rgba(80,62,43,0.12)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           TimberX Admin
         </p>
         <h1 className="mt-3 text-2xl font-bold">Вхід до заявки</h1>
         <form action={loginAdmin} className="mt-6 space-y-4">
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/54">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
+              Імʼя менеджера
+            </span>
+            <input
+              name="actorName"
+              required
+              autoComplete="name"
+              placeholder="Наприклад: Ольга"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
               Пароль
             </span>
             <input
@@ -231,17 +252,17 @@ function LoginPanel({ reason }: { reason?: string }) {
               type="password"
               required
               autoComplete="current-password"
-              className="mt-2 h-12 w-full rounded-[10px] border border-white/12 bg-white/[0.055] px-4 text-sm font-semibold text-white outline-none transition placeholder:text-white/34 focus:border-[#F2994A]/58"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
             />
           </label>
           {message ? (
-            <p className="rounded-[10px] border border-[#F2994A]/20 bg-[#F2994A]/10 px-3 py-2 text-sm leading-6 text-[#ffd4ad]">
+            <p className="rounded-[9px] border border-[#F2994A]/25 bg-[#FFF0DF] px-3 py-2 text-sm leading-6 text-[#8B4B13]">
               {message}
             </p>
           ) : null}
           <button
             type="submit"
-            className="h-12 w-full rounded-[10px] bg-[#F2994A] px-4 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+            className="h-12 w-full rounded-[9px] bg-[#F2994A] px-4 text-base font-bold text-[#25170B] transition hover:bg-[#de8232]"
           >
             Увійти
           </button>
@@ -253,13 +274,13 @@ function LoginPanel({ reason }: { reason?: string }) {
 
 function AdminSetupPanel() {
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[14px] border border-[#F2994A]/24 bg-[#202326] p-6">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[12px] border border-[#F2994A]/30 bg-white p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           Потрібне налаштування
         </p>
         <h1 className="mt-3 text-2xl font-bold">Адмін-пароль не заданий</h1>
-        <p className="mt-4 text-sm leading-7 text-white/68">
+        <p className="mt-4 text-sm leading-7 text-[#6F675E]">
           Додайте `TIMBERX_ADMIN_PASSWORD` або `ADMIN_PASSWORD` у `.env.local` та у Vercel env.
         </p>
       </section>
@@ -277,12 +298,12 @@ function Panel({
   action?: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[12px] border border-white/10 bg-[#202326]">
-      <div className="flex min-h-12 items-center justify-between gap-3 border-b border-white/8 px-4 py-3">
-        <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-white/58">{title}</h2>
+    <section className="rounded-[10px] border border-[#E1D7C8] bg-white">
+      <div className="flex min-h-14 items-center justify-between gap-3 border-b border-[#EEE6DC] px-5 py-4">
+        <h2 className="text-base font-bold uppercase tracking-[0.14em] text-[#8A8176]">{title}</h2>
         {action}
       </div>
-      <div className="p-4">{children}</div>
+      <div className="p-5">{children}</div>
     </section>
   );
 }
@@ -290,8 +311,8 @@ function Panel({
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/38">{label}</p>
-      <div className="mt-1 text-sm font-semibold leading-6 text-white/82">{value}</div>
+      <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#8A8176]">{label}</p>
+      <div className="mt-1 text-lg font-semibold leading-7 text-[#25201A]">{value}</div>
     </div>
   );
 }
@@ -305,7 +326,7 @@ function FormField({
 }) {
   return (
     <label className="block">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/38">
+      <span className="text-sm font-semibold uppercase tracking-[0.14em] text-[#8A8176]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -314,17 +335,17 @@ function FormField({
 }
 
 const inputClass =
-  "h-11 w-full rounded-[9px] border border-white/10 bg-white/[0.045] px-3 text-sm font-semibold text-white outline-none placeholder:text-white/34 transition focus:border-[#F2994A]/50";
+  "h-14 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none placeholder:text-[#9A9288] transition focus:border-[#F2994A]/70";
 const textareaClass =
-  "min-h-24 w-full rounded-[9px] border border-white/10 bg-white/[0.045] px-3 py-3 text-sm font-semibold leading-6 text-white outline-none placeholder:text-white/34 transition focus:border-[#F2994A]/50";
+  "min-h-32 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 py-3 text-lg font-semibold leading-7 text-[#25201A] outline-none placeholder:text-[#9A9288] transition focus:border-[#F2994A]/70";
 const selectClass =
-  "h-11 w-full rounded-[9px] border border-white/10 bg-[#24282b] px-3 text-sm font-semibold text-white outline-none transition focus:border-[#F2994A]/50";
+  "h-14 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none transition focus:border-[#F2994A]/70";
 const submitClass =
-  "h-11 rounded-[9px] bg-[#F2994A] px-5 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]";
+  "h-14 rounded-[9px] bg-[#F2994A] px-6 text-lg font-bold text-[#25170B] transition hover:bg-[#de8232]";
 
 function ContactPanel({ contacts }: { contacts: AdminContact[] }) {
   if (!contacts.length) {
-    return <p className="text-sm text-white/54">Контактів поки немає.</p>;
+    return <p className="text-lg text-[#6F675E]">Контактів поки немає.</p>;
   }
 
   return (
@@ -334,8 +355,8 @@ function ContactPanel({ contacts }: { contacts: AdminContact[] }) {
         const content = (
           <>
             <span>{contact.type}</span>
-            <span className="text-white/82">{contact.value}</span>
-            {contact.isPrimary ? <span className="text-[#F2994A]">основний</span> : null}
+            <span className="text-[#25201A]">{contact.value}</span>
+            {contact.isPrimary ? <span className="text-[#A95815]">основний</span> : null}
           </>
         );
 
@@ -343,14 +364,14 @@ function ContactPanel({ contacts }: { contacts: AdminContact[] }) {
           <a
             key={contact.id}
             href={href}
-            className="grid gap-1 rounded-[9px] border border-white/10 bg-white/[0.035] px-3 py-2 text-sm font-semibold text-white/54 transition hover:border-[#F2994A]/36 hover:text-[#F2994A]"
+            className="grid gap-1 rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-3 text-lg font-semibold text-[#6F675E] transition hover:border-[#F2994A]/55 hover:text-[#A95815]"
           >
             {content}
           </a>
         ) : (
           <div
             key={contact.id}
-            className="grid gap-1 rounded-[9px] border border-white/10 bg-white/[0.035] px-3 py-2 text-sm font-semibold text-white/54"
+            className="grid gap-1 rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-3 text-lg font-semibold text-[#6F675E]"
           >
             {content}
           </div>
@@ -399,13 +420,6 @@ function LeadEditForm({ lead }: { lead: AdminLeadDetails }) {
           <input name="timeline" defaultValue={lead.timeline ?? ""} className={inputClass} />
         </FormField>
       </div>
-      <FormField label="Коментар до зміни">
-        <textarea
-          name="note"
-          placeholder="Наприклад: уточнено після дзвінка, клієнт просить КП до понеділка"
-          className={textareaClass}
-        />
-      </FormField>
       <div className="flex justify-end">
         <button type="submit" className={submitClass}>
           Зберегти заявку
@@ -434,9 +448,6 @@ function ClientEditForm({ lead }: { lead: AdminLeadDetails }) {
           ))}
         </select>
       </FormField>
-      <FormField label="Коментар до зміни">
-        <textarea name="note" placeholder="Що уточнили про клієнта" className={textareaClass} />
-      </FormField>
       <div className="flex justify-end">
         <button type="submit" className={submitClass}>
           Зберегти клієнта
@@ -448,7 +459,7 @@ function ClientEditForm({ lead }: { lead: AdminLeadDetails }) {
 
 function AddContactForm({ publicId }: { publicId: string }) {
   return (
-    <form action={addContactAction} className="mt-4 grid gap-3 border-t border-white/8 pt-4">
+    <form action={addContactAction} className="mt-4 grid gap-3 border-t border-[#EEE6DC] pt-4">
       <input type="hidden" name="publicId" value={publicId} />
       <div className="grid gap-3 sm:grid-cols-[130px_1fr]">
         <select name="contactType" defaultValue="phone" className={selectClass}>
@@ -466,8 +477,8 @@ function AddContactForm({ publicId }: { publicId: string }) {
         />
       </div>
       <input name="label" placeholder="Підпис контакту" className={inputClass} />
-      <label className="flex items-center gap-2 text-sm font-semibold text-white/62">
-        <input name="isPrimary" type="checkbox" className="h-4 w-4 accent-[#F2994A]" />
+      <label className="flex items-center gap-2 text-lg font-semibold text-[#5F5A54]">
+        <input name="isPrimary" type="checkbox" className="h-5 w-5 accent-[#F2994A]" />
         Основний контакт
       </label>
       <div className="flex justify-end">
@@ -521,7 +532,7 @@ function QuizPanel({ lead }: { lead: AdminLeadDetails }) {
 
 function UploadFileForm({ publicId }: { publicId: string }) {
   return (
-    <form action={uploadFileAction} className="mt-4 grid gap-3 border-t border-white/8 pt-4">
+    <form action={uploadFileAction} className="mt-4 grid gap-3 border-t border-[#EEE6DC] pt-4">
       <input type="hidden" name="publicId" value={publicId} />
       <FormField label="Категорія файлу">
         <select name="fileCategory" defaultValue="other" className={selectClass}>
@@ -537,7 +548,7 @@ function UploadFileForm({ publicId }: { publicId: string }) {
           name="file"
           type="file"
           required
-          className="block w-full rounded-[9px] border border-white/10 bg-white/[0.045] px-3 py-2 text-sm font-semibold text-white file:mr-3 file:rounded-[7px] file:border-0 file:bg-[#F2994A] file:px-3 file:py-2 file:text-sm file:font-bold file:text-[#1B1D1F]"
+          className="block w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-3 py-2 text-sm font-semibold text-[#25201A] file:mr-3 file:rounded-[7px] file:border-0 file:bg-[#F2994A] file:px-3 file:py-2 file:text-sm file:font-bold file:text-[#25170B]"
         />
       </FormField>
       <div className="flex justify-end">
@@ -553,7 +564,7 @@ function FilesPanel({ files, publicId }: { files: AdminLeadFile[]; publicId: str
   if (!files.length) {
     return (
       <>
-        <p className="text-sm text-white/54">Файлів поки немає.</p>
+        <p className="text-lg text-[#6F675E]">Файлів поки немає.</p>
         <UploadFileForm publicId={publicId} />
       </>
     );
@@ -563,33 +574,45 @@ function FilesPanel({ files, publicId }: { files: AdminLeadFile[]; publicId: str
     <>
       <div className="space-y-3">
         {files.map((file) => (
-          <div key={file.id} className="rounded-[9px] border border-white/10 bg-white/[0.035] px-3 py-3">
+          <div key={file.id} className="rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-sm font-bold text-white">{file.fileName}</p>
-                <p className="mt-1 text-xs leading-5 text-white/50">
+                <p className="text-lg font-bold text-[#25201A]">{file.fileName}</p>
+                <p className="mt-1 text-base leading-6 text-[#6F675E]">
                   {labelFromMap(fileCategoryLabels, file.fileCategory)} · {formatFileSize(file.fileSize)}
                 </p>
               </div>
-              <span className="rounded-[7px] border border-white/10 px-2 py-1 text-xs font-semibold text-white/54">
-                {file.uploadedBy}
+              <span className="rounded-[7px] border border-[#E3DBD0] bg-white px-2 py-1 text-sm font-semibold text-[#6F675E]">
+                {formatAdminActor(file.uploadedBy)}
               </span>
             </div>
-            <p className="mt-3 break-words text-xs leading-5 text-white/42">
+            <p className="mt-3 break-words text-xs leading-5 text-[#8A8176]">
               {file.storageBucket}/{file.storagePath}
             </p>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs text-white/38">{formatDate(file.createdAt)}</p>
-              {file.signedUrl ? (
-                <a
-                  href={file.signedUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-9 items-center justify-center rounded-[8px] border border-[#F2994A]/30 px-3 text-xs font-bold text-[#F2994A] transition hover:bg-[#F2994A] hover:text-[#1B1D1F]"
-                >
-                  Відкрити
-                </a>
-              ) : null}
+              <p className="text-sm text-[#8A8176]">{formatDate(file.createdAt)}</p>
+              <div className="flex flex-wrap gap-2">
+                {file.signedUrl ? (
+                  <a
+                    href={file.signedUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-10 items-center justify-center rounded-[8px] border border-[#F2994A]/40 bg-white px-4 text-sm font-bold text-[#A95815] transition hover:bg-[#F2994A] hover:text-[#25170B]"
+                  >
+                    Відкрити
+                  </a>
+                ) : null}
+                <form action={deleteFileAction}>
+                  <input type="hidden" name="publicId" value={publicId} />
+                  <input type="hidden" name="fileId" value={file.id} />
+                  <button
+                    type="submit"
+                    className="h-10 rounded-[8px] border border-red-200 bg-red-50 px-4 text-sm font-bold text-red-700 transition hover:bg-red-100"
+                  >
+                    Видалити
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         ))}
@@ -599,56 +622,120 @@ function FilesPanel({ files, publicId }: { files: AdminLeadFile[]; publicId: str
   );
 }
 
-function EventMetadata({ metadata }: { metadata: Record<string, unknown> }) {
-  const entries = Object.entries(metadata).filter(([, value]) => value !== null && value !== "");
-
-  if (!entries.length) {
-    return null;
+function getEventTitle(event: AdminLeadEvent) {
+  switch (event.type) {
+    case "manual_lead_created":
+      return "Заявку створено вручну";
+    case "quiz_submitted":
+      return "Клієнт заповнив квіз";
+    case "messenger_opened":
+      return "Клієнт відкрив Telegram";
+    case "lead_updated":
+      return "Оновлено заявку";
+    case "client_updated":
+      return "Оновлено клієнта";
+    case "contact_added":
+      return "Додано контакт";
+    case "file_uploaded":
+      return "Додано файл";
+    case "manager_note":
+      return "Додано нотатку";
+    default:
+      return "Активність по заявці";
   }
+}
+
+function getManagerNotes(events: AdminLeadEvent[]) {
+  return events
+    .filter((event) => event.type === "manager_note")
+    .map((event) => ({
+      id: event.id,
+      createdAt: event.createdAt,
+      text: typeof event.metadata.text === "string" ? event.metadata.text : "",
+      actor: typeof event.metadata.actor === "string" ? event.metadata.actor : null,
+    }))
+    .filter((note) => note.text);
+}
+
+function ManagerNotesPanel({ events, publicId }: { events: AdminLeadEvent[]; publicId: string }) {
+  const notes = getManagerNotes(events);
 
   return (
-    <dl className="mt-3 grid gap-2 sm:grid-cols-2">
-      {entries.slice(0, 10).map(([key, value]) => (
-        <div key={key} className="rounded-[8px] bg-white/[0.035] px-2.5 py-2">
-          <dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/34">{key}</dt>
-          <dd className="mt-1 break-words text-xs leading-5 text-white/66">
-            {typeof value === "object" ? JSON.stringify(value) : String(value)}
-          </dd>
+    <div className="grid gap-4">
+      <AddNoteForm publicId={publicId} />
+      {notes.length ? (
+        <div className="space-y-3 border-t border-[#EEE6DC] pt-4">
+          {notes.map((note) => (
+            <article key={note.id} className="rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-4">
+              <p className="whitespace-pre-wrap text-lg font-semibold leading-8 text-[#25201A]">{note.text}</p>
+              <p className="mt-2 text-base font-semibold text-[#8A8176]">
+                {formatAdminActor(note.actor)} · {formatDate(note.createdAt)}
+              </p>
+            </article>
+          ))}
         </div>
-      ))}
-    </dl>
+      ) : (
+        <p className="border-t border-[#EEE6DC] pt-4 text-lg text-[#6F675E]">
+          Нотаток поки немає. Тут варто фіксувати домовленості, наступний крок і важливий контекст.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function SourcePanel({ lead }: { lead: AdminLeadDetails }) {
+  return (
+    <details className="group">
+      <summary className="cursor-pointer list-none text-lg font-bold text-[#A95815] transition hover:text-[#F2994A]">
+        Показати джерело
+      </summary>
+      <div className="mt-4 grid gap-4">
+        <Field label="Канал" value={labelFromMap(channelLabels, lead.initialChannel)} />
+        <Field label="CTA" value={valueOrEmpty(lead.sourceCta)} />
+        <Field label="Сторінка" value={valueOrEmpty(lead.sourcePage)} />
+      </div>
+    </details>
   );
 }
 
 function EventsPanel({ events }: { events: AdminLeadEvent[] }) {
   if (!events.length) {
-    return <p className="text-sm text-white/54">Подій поки немає.</p>;
+    return <p className="text-lg text-[#6F675E]">Активності поки немає.</p>;
   }
 
   return (
-    <div className="space-y-3">
-      {events.map((event) => (
-        <article key={event.id} className="rounded-[9px] border border-white/10 bg-white/[0.035] px-3 py-3">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold text-white">{event.type}</p>
-              <p className="mt-1 text-xs text-white/44">
-                {labelFromMap(channelLabels, event.channel)} · {formatDate(event.createdAt)}
-              </p>
+    <details className="group">
+      <summary className="cursor-pointer list-none text-lg font-bold text-[#A95815] transition hover:text-[#F2994A]">
+        Показати активність ({events.length})
+      </summary>
+      <div className="mt-4 space-y-2">
+        {events.map((event) => (
+          <article key={event.id} className="rounded-[9px] border border-[#E3DBD0] bg-[#FBFAF7] px-4 py-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-lg font-bold text-[#25201A]">{getEventTitle(event)}</p>
+                <p className="mt-1 text-base text-[#8A8176]">
+                  {labelFromMap(channelLabels, event.channel)} · {formatDate(event.createdAt)}
+                </p>
+                {typeof event.metadata.actor === "string" ? (
+                  <p className="mt-1 text-sm font-semibold text-[#8A8176]">
+                    {formatAdminActor(event.metadata.actor)}
+                  </p>
+                ) : null}
+              </div>
+              {event.sourceCta ? (
+                <span className="rounded-[7px] border border-[#E3DBD0] bg-white px-2 py-1 text-sm font-semibold text-[#6F675E]">
+                  {event.sourceCta}
+                </span>
+              ) : null}
             </div>
-            {event.sourceCta ? (
-              <span className="rounded-[7px] border border-white/10 px-2 py-1 text-xs font-semibold text-white/54">
-                {event.sourceCta}
-              </span>
+            {event.sourcePage ? (
+              <p className="mt-2 break-words text-base leading-6 text-[#6F675E]">{event.sourcePage}</p>
             ) : null}
-          </div>
-          {event.sourcePage ? (
-            <p className="mt-2 break-words text-xs leading-5 text-white/44">{event.sourcePage}</p>
-          ) : null}
-          <EventMetadata metadata={event.metadata} />
-        </article>
-      ))}
-    </div>
+          </article>
+        ))}
+      </div>
+    </details>
   );
 }
 
@@ -656,25 +743,25 @@ function LeadHeader({ lead }: { lead: AdminLeadDetails }) {
   const clientName = lead.client.company ?? lead.client.name ?? "Клієнт без імені";
 
   return (
-    <header className="border-b border-white/10 pb-5">
+    <header className="border-b border-[#E1D7C8] pb-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <Link href="/admin/leads" className="text-sm font-semibold text-white/54 transition hover:text-[#F2994A]">
+          <Link href="/admin/leads" className="text-base font-semibold text-[#6F675E] transition hover:text-[#A95815]">
             ← До списку заявок
           </Link>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-normal text-white">{lead.publicId}</h1>
+            <h1 className="text-4xl font-bold tracking-normal text-[#25201A]">{lead.publicId}</h1>
             <StatusBadge status={lead.status} />
             <PriorityBadge priority={lead.priority} />
           </div>
-          <p className="mt-2 text-sm leading-6 text-white/58">
+          <p className="mt-2 text-lg leading-8 text-[#6F675E]">
             {clientName} · створено {formatDate(lead.createdAt)} · оновлено {formatDate(lead.updatedAt)}
           </p>
         </div>
         <form action={logoutAdmin}>
           <button
             type="submit"
-            className="h-10 rounded-[9px] border border-white/12 px-4 text-sm font-semibold text-white/70 transition hover:border-[#F2994A]/40 hover:text-[#F2994A]"
+            className="h-12 rounded-[9px] border border-[#D8CFC2] bg-white px-5 text-lg font-semibold text-[#5F5A54] transition hover:border-[#F2994A]/60 hover:text-[#A95815]"
           >
             Вийти
           </button>
@@ -688,46 +775,37 @@ function LeadDetail({ lead, saved }: { lead: AdminLeadDetails; saved?: string })
   const message = savedMessage(saved);
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-6 text-white md:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-6 text-[#25201A] md:px-6 lg:px-8">
       <div className="mx-auto max-w-[96rem]">
         <LeadHeader lead={lead} />
 
-        <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.42fr)]">
+        <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(380px,0.38fr)]">
           <div className="space-y-4">
             {message ? (
-              <section className="rounded-[12px] border border-emerald-300/24 bg-emerald-300/10 px-4 py-3 text-sm font-semibold text-emerald-100">
+              <section className="rounded-[10px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-base font-semibold text-emerald-700">
                 {message}
               </section>
             ) : null}
 
-            <Panel title="Параметри заявки">
-              <QuizPanel lead={lead} />
-            </Panel>
-
-            <Panel title="Редагування заявки">
+            <Panel title="Заявка">
               <LeadEditForm lead={lead} />
             </Panel>
 
-            <Panel title="Нотатка менеджера">
-              <AddNoteForm publicId={lead.publicId} />
+            <Panel title="Дані з квізу">
+              <QuizPanel lead={lead} />
             </Panel>
 
-            <Panel title="Історія подій">
-              <EventsPanel events={lead.events} />
+            <Panel title="Нотатки менеджера">
+              <ManagerNotesPanel events={lead.events} publicId={lead.publicId} />
+            </Panel>
+
+            <Panel title="Файли">
+              <FilesPanel files={lead.files} publicId={lead.publicId} />
             </Panel>
           </div>
 
           <aside className="space-y-4">
             <Panel title="Клієнт">
-              <div className="grid gap-4">
-                <Field label="Ім'я" value={valueOrEmpty(lead.client.name)} />
-                <Field label="Компанія" value={valueOrEmpty(lead.client.company)} />
-                <Field label="Тип клієнта" value={valueOrEmpty(lead.client.clientType)} />
-                <Field label="ID клієнта" value={valueOrEmpty(lead.client.publicId)} />
-              </div>
-            </Panel>
-
-            <Panel title="Редагування клієнта">
               <ClientEditForm lead={lead} />
             </Panel>
 
@@ -737,15 +815,11 @@ function LeadDetail({ lead, saved }: { lead: AdminLeadDetails; saved?: string })
             </Panel>
 
             <Panel title="Джерело">
-              <div className="grid gap-4">
-                <Field label="Канал" value={labelFromMap(channelLabels, lead.initialChannel)} />
-                <Field label="CTA" value={valueOrEmpty(lead.sourceCta)} />
-                <Field label="Сторінка" value={valueOrEmpty(lead.sourcePage)} />
-              </div>
+              <SourcePanel lead={lead} />
             </Panel>
 
-            <Panel title="Файли">
-              <FilesPanel files={lead.files} publicId={lead.publicId} />
+            <Panel title="Активність">
+              <EventsPanel events={lead.events} />
             </Panel>
           </aside>
         </div>

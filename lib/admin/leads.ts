@@ -164,6 +164,31 @@ async function updateRows(table: string, filters: Record<string, string>, payloa
   return responseText ? (JSON.parse(responseText) as SupabaseRow[]) : [];
 }
 
+async function deleteRows(table: string, filters: Record<string, string>) {
+  const { url, serviceRoleKey } = getSupabaseConfig();
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(filters)) {
+    params.set(key, `eq.${value}`);
+  }
+
+  const response = await fetch(`${url}/rest/v1/${table}?${params.toString()}`, {
+    method: "DELETE",
+    headers: {
+      apikey: serviceRoleKey,
+      authorization: `Bearer ${serviceRoleKey}`,
+      prefer: "return=representation",
+    },
+  });
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    throw new Error(`Supabase admin delete failed: ${response.status} ${responseText}`);
+  }
+
+  return responseText ? (JSON.parse(responseText) as SupabaseRow[]) : [];
+}
+
 async function storageRequest(path: string, init: RequestInit = {}) {
   const { url, serviceRoleKey } = getSupabaseConfig();
 
@@ -213,6 +238,10 @@ function cleanString(value: unknown, maxLength = 500) {
   return trimmed.slice(0, maxLength);
 }
 
+function cleanActorName(value: unknown) {
+  return cleanString(value, 80) ?? "Менеджер";
+}
+
 function normalizeContactValue(contactType: string, value: string) {
   if (contactType === "email") {
     return value.toLowerCase();
@@ -242,6 +271,22 @@ function createPublicId(prefix: "TX" | "TXC") {
   const timestamp = new Date().toISOString().replace(/\D/g, "").slice(2, 17);
   const suffix = Math.random().toString(36).slice(2, 5).toUpperCase();
   return `${prefix}-${timestamp}${suffix}`;
+}
+
+async function createLeadPublicId() {
+  const params = new URLSearchParams({
+    select: "public_id",
+    limit: "1000",
+  });
+  const rows = await selectRows("leads", params);
+  const maxNumber = rows.reduce((max, row) => {
+    const publicId = asString(row.public_id) ?? "";
+    const match = publicId.match(/^TX-(\d+)$/);
+
+    return match ? Math.max(max, Number(match[1])) : max;
+  }, 1000);
+
+  return `TX-${maxNumber + 1}`;
 }
 
 function createLeadParams(searchParams: AdminLeadSearchParams) {
@@ -373,8 +418,12 @@ async function ensureLeadFilesBucket() {
     return bucket;
   }
 
-  if (existingBucketResponse.status !== 404) {
-    const responseText = await existingBucketResponse.text();
+  const responseText = await existingBucketResponse.text();
+  const bucketWasNotFound =
+    existingBucketResponse.status === 404 ||
+    (existingBucketResponse.status === 400 && responseText.toLowerCase().includes("bucket not found"));
+
+  if (!bucketWasNotFound) {
     throw new Error(`Supabase storage bucket check failed: ${existingBucketResponse.status} ${responseText}`);
   }
 
@@ -748,6 +797,7 @@ export async function updateAdminLeadWorkingFields({
   status,
   priority,
   note,
+  actorName,
 }: {
   publicId: string;
   productInterest: unknown;
@@ -758,6 +808,7 @@ export async function updateAdminLeadWorkingFields({
   status: unknown;
   priority: unknown;
   note?: unknown;
+  actorName?: unknown;
 }) {
   const lead = await getAdminLeadDetails(publicId);
 
@@ -813,6 +864,54 @@ export async function updateAdminLeadWorkingFields({
       before,
       after,
       note: managerNote,
+      actor: cleanActorName(actorName),
+    },
+  });
+
+  return { updated: true };
+}
+
+export async function updateAdminLeadStatus({
+  publicId,
+  status,
+  actorName,
+}: {
+  publicId: string;
+  status: unknown;
+  actorName?: unknown;
+}) {
+  const lead = await getAdminLeadDetails(publicId);
+
+  if (!lead) {
+    throw new Error("Lead not found");
+  }
+
+  const nextStatus = cleanString(status, 80);
+
+  if (!nextStatus || !allowedLeadStatuses.has(nextStatus)) {
+    throw new Error("Invalid lead status");
+  }
+
+  if (nextStatus === lead.status) {
+    return { updated: false };
+  }
+
+  await updateRows("leads", { id: lead.id }, {
+    status: nextStatus,
+  });
+
+  await insertAdminEvent({
+    lead,
+    eventType: "lead_updated",
+    metadata: {
+      changed_fields: ["status"],
+      before: {
+        status: lead.status,
+      },
+      after: {
+        status: nextStatus,
+      },
+      actor: cleanActorName(actorName),
     },
   });
 
@@ -825,12 +924,14 @@ export async function updateAdminClientFields({
   company,
   clientType,
   note,
+  actorName,
 }: {
   publicId: string;
   name: unknown;
   company: unknown;
   clientType: unknown;
   note?: unknown;
+  actorName?: unknown;
 }) {
   const lead = await getAdminLeadDetails(publicId);
 
@@ -873,6 +974,7 @@ export async function updateAdminClientFields({
       before,
       after,
       note: managerNote,
+      actor: cleanActorName(actorName),
     },
   });
 
@@ -882,9 +984,11 @@ export async function updateAdminClientFields({
 export async function addAdminLeadNote({
   publicId,
   text,
+  actorName,
 }: {
   publicId: string;
   text: unknown;
+  actorName?: unknown;
 }) {
   const lead = await getAdminLeadDetails(publicId);
   const noteText = cleanString(text, 2400);
@@ -902,6 +1006,7 @@ export async function addAdminLeadNote({
     eventType: "manager_note",
     metadata: {
       text: noteText,
+      actor: cleanActorName(actorName),
     },
   });
 }
@@ -912,12 +1017,14 @@ export async function addAdminClientContact({
   contactValue,
   label,
   isPrimary,
+  actorName,
 }: {
   publicId: string;
   contactType: unknown;
   contactValue: unknown;
   label?: unknown;
   isPrimary?: unknown;
+  actorName?: unknown;
 }) {
   const lead = await getAdminLeadDetails(publicId);
   const nextContactType = cleanString(contactType, 40);
@@ -961,6 +1068,7 @@ export async function addAdminClientContact({
       contact_value: normalizedValue,
       label: cleanString(label, 220),
       is_primary: isPrimary === "on",
+      actor: cleanActorName(actorName),
     },
   });
 }
@@ -1180,7 +1288,7 @@ export async function createManualAdminLead({
   }
 
   const leadRows = await insertRows("leads", {
-    public_id: createPublicId("TX"),
+    public_id: await createLeadPublicId(),
     client_id: client.id,
     source_page: "manual",
     source_cta: "manual_create",
@@ -1227,13 +1335,16 @@ export async function uploadAdminLeadFile({
   publicId,
   file,
   fileCategory,
+  actorName,
 }: {
   publicId: string;
   file: File;
   fileCategory: unknown;
+  actorName?: unknown;
 }) {
   const lead = await getAdminLeadDetails(publicId);
   const category = cleanString(fileCategory, 80) ?? "other";
+  const actor = cleanActorName(actorName);
 
   if (!lead) {
     throw new Error("Lead not found");
@@ -1290,7 +1401,7 @@ export async function uploadAdminLeadFile({
     storage_path: storagePath,
     file_category: category,
     source: "admin",
-    uploaded_by: "manager",
+    uploaded_by: actor,
   });
 
   await insertAdminEvent({
@@ -1303,6 +1414,67 @@ export async function uploadAdminLeadFile({
       file_category: category,
       storage_bucket: bucket,
       storage_path: storagePath,
+      actor,
     },
   });
+}
+
+export async function deleteAdminLeadFile({
+  publicId,
+  fileId,
+  actorName,
+}: {
+  publicId: string;
+  fileId: unknown;
+  actorName?: unknown;
+}) {
+  const lead = await getAdminLeadDetails(publicId);
+  const cleanFileId = cleanString(fileId, 120);
+  const actor = cleanActorName(actorName);
+
+  if (!lead) {
+    throw new Error("Lead not found");
+  }
+
+  if (!cleanFileId) {
+    throw new Error("File id is required");
+  }
+
+  const file = lead.files.find((item) => item.id === cleanFileId);
+
+  if (!file) {
+    throw new Error("File not found");
+  }
+
+  const deleteStorageResponse = await storageRequest(
+    `/object/${encodeURIComponent(file.storageBucket)}/${encodeStoragePath(file.storagePath)}`,
+    {
+      method: "DELETE",
+    },
+  );
+  const deleteStorageText = await deleteStorageResponse.text();
+
+  if (!deleteStorageResponse.ok && deleteStorageResponse.status !== 404) {
+    throw new Error(`Supabase storage delete failed: ${deleteStorageResponse.status} ${deleteStorageText}`);
+  }
+
+  await deleteRows("lead_files", {
+    id: file.id,
+  });
+
+  await insertAdminEvent({
+    lead,
+    eventType: "file_deleted",
+    metadata: {
+      file_name: file.fileName,
+      file_type: file.fileType,
+      file_size: file.fileSize,
+      file_category: file.fileCategory,
+      storage_bucket: file.storageBucket,
+      storage_path: file.storagePath,
+      actor,
+    },
+  });
+
+  return { deleted: true };
 }

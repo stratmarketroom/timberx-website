@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isAdminAuthenticated, isAdminConfigured } from "@/lib/admin/auth";
 import { getAdminLeads, type AdminContact, type AdminLead } from "@/lib/admin/leads";
-import { loginAdmin, logoutAdmin } from "./actions";
+import { loginAdmin, logoutAdmin, updateLeadStatusFromList } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -94,33 +94,50 @@ function getPrimaryContact(contacts: AdminContact[]) {
   return contacts.find((contact) => contact.isPrimary) ?? contacts[0] ?? null;
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const tone =
-    status === "new"
-      ? "border-[#F2994A]/45 bg-[#F2994A]/12 text-[#ffd4ad]"
-      : status === "won"
-        ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-100"
-        : status === "lost" || status === "spam"
-          ? "border-red-300/24 bg-red-300/10 text-red-100"
-          : "border-white/12 bg-white/[0.055] text-white/76";
+function createReturnTo({
+  status,
+  priority,
+  channel,
+  q,
+}: {
+  status?: string;
+  priority?: string;
+  channel?: string;
+  q?: string;
+}) {
+  const params = new URLSearchParams();
 
-  return (
-    <span className={`inline-flex min-h-8 items-center rounded-[8px] border px-2.5 text-xs font-semibold ${tone}`}>
-      {labelFromMap(statusLabels, status)}
-    </span>
-  );
+  if (status) {
+    params.set("status", status);
+  }
+
+  if (priority) {
+    params.set("priority", priority);
+  }
+
+  if (channel) {
+    params.set("channel", channel);
+  }
+
+  if (q) {
+    params.set("q", q);
+  }
+
+  const query = params.toString();
+
+  return query ? `/admin/leads?${query}` : "/admin/leads";
 }
 
 function PriorityBadge({ priority }: { priority: string }) {
   const tone =
     priority === "hot"
-      ? "bg-[#F2994A] text-[#1B1D1F]"
+      ? "bg-[#F2994A] text-[#25170B]"
       : priority === "cold"
-        ? "border border-white/12 bg-white/[0.035] text-white/58"
-        : "border border-[#F2994A]/22 bg-[#F2994A]/8 text-[#ffd4ad]";
+        ? "border border-[#DDD3C5] bg-white text-[#817970]"
+        : "border border-[#F2994A]/35 bg-[#FFF0DF] text-[#A95815]";
 
   return (
-    <span className={`inline-flex min-h-7 items-center rounded-[8px] px-2.5 text-xs font-bold ${tone}`}>
+    <span className={`inline-flex min-h-9 items-center rounded-[8px] px-3 text-sm font-bold ${tone}`}>
       {labelFromMap(priorityLabels, priority)}
     </span>
   );
@@ -128,7 +145,7 @@ function PriorityBadge({ priority }: { priority: string }) {
 
 function ContactList({ contacts }: { contacts: AdminContact[] }) {
   if (!contacts.length) {
-    return <span className="text-white/42">Контактів немає</span>;
+    return <span className="text-[#8A8176]">Контактів немає</span>;
   }
 
   return (
@@ -141,20 +158,46 @@ function ContactList({ contacts }: { contacts: AdminContact[] }) {
           <a
             key={contact.id}
             href={href}
-            className="rounded-[7px] border border-white/10 bg-white/[0.04] px-2 py-1 text-[12px] font-semibold text-white/74 transition hover:border-[#F2994A]/36 hover:text-[#F2994A]"
+        className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45] transition hover:border-[#F2994A]/55 hover:text-[#A95815]"
           >
             {content}
           </a>
         ) : (
           <span
             key={contact.id}
-            className="rounded-[7px] border border-white/10 bg-white/[0.04] px-2 py-1 text-[12px] font-semibold text-white/74"
+          className="rounded-[7px] border border-[#E3DBD0] bg-[#FBFAF7] px-2.5 py-1.5 text-sm font-semibold text-[#4F4A45]"
           >
             {content}
           </span>
         );
       })}
     </div>
+  );
+}
+
+function StatusControl({ lead, returnTo }: { lead: AdminLead; returnTo: string }) {
+  return (
+    <form key={`${lead.publicId}-${lead.status}`} action={updateLeadStatusFromList} className="grid gap-2">
+      <input type="hidden" name="publicId" value={lead.publicId} />
+      <input type="hidden" name="returnTo" value={returnTo} />
+      <select
+        name="status"
+        defaultValue={lead.status}
+        className="h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-3 text-base font-semibold text-[#25201A] outline-none transition focus:border-[#F2994A]/70"
+      >
+        {Object.entries(statusLabels).map(([value, label]) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+      <button
+        type="submit"
+        className="h-10 rounded-[8px] border border-[#F2994A]/45 bg-[#FFF0DF] px-3 text-sm font-bold text-[#A95815] transition hover:bg-[#F2994A] hover:text-[#25170B]"
+      >
+        Зберегти
+      </button>
+    </form>
   );
 }
 
@@ -167,15 +210,27 @@ function LoginPanel({ reason }: { reason?: string }) {
         : null;
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[14px] border border-white/10 bg-[#202326] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[28rem] rounded-[12px] border border-[#E1D7C8] bg-white p-6 shadow-[0_20px_70px_rgba(80,62,43,0.12)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           TimberX Admin
         </p>
         <h1 className="mt-3 text-2xl font-bold">Вхід до заявок</h1>
         <form action={loginAdmin} className="mt-6 space-y-4">
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/54">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
+              Імʼя менеджера
+            </span>
+            <input
+              name="actorName"
+              required
+              autoComplete="name"
+              placeholder="Наприклад: Ольга"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8A8176]">
               Пароль
             </span>
             <input
@@ -183,17 +238,17 @@ function LoginPanel({ reason }: { reason?: string }) {
               type="password"
               required
               autoComplete="current-password"
-              className="mt-2 h-12 w-full rounded-[10px] border border-white/12 bg-white/[0.055] px-4 text-sm font-semibold text-white outline-none transition placeholder:text-white/34 focus:border-[#F2994A]/58"
+              className="mt-2 h-12 w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-base font-semibold text-[#25201A] outline-none transition placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
             />
           </label>
           {message ? (
-            <p className="rounded-[10px] border border-[#F2994A]/20 bg-[#F2994A]/10 px-3 py-2 text-sm leading-6 text-[#ffd4ad]">
+            <p className="rounded-[9px] border border-[#F2994A]/25 bg-[#FFF0DF] px-3 py-2 text-sm leading-6 text-[#8B4B13]">
               {message}
             </p>
           ) : null}
           <button
             type="submit"
-            className="h-12 w-full rounded-[10px] bg-[#F2994A] px-4 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+            className="h-12 w-full rounded-[9px] bg-[#F2994A] px-4 text-base font-bold text-[#25170B] transition hover:bg-[#de8232]"
           >
             Увійти
           </button>
@@ -205,13 +260,13 @@ function LoginPanel({ reason }: { reason?: string }) {
 
 function AdminSetupPanel() {
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-10 text-white">
-      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[14px] border border-[#F2994A]/24 bg-[#202326] p-6">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-10 text-[#25201A]">
+      <section className="mx-auto mt-16 w-full max-w-[34rem] rounded-[12px] border border-[#F2994A]/30 bg-white p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
           Потрібне налаштування
         </p>
         <h1 className="mt-3 text-2xl font-bold">Адмін-пароль не заданий</h1>
-        <p className="mt-4 text-sm leading-7 text-white/68">
+        <p className="mt-4 text-sm leading-7 text-[#6F675E]">
           Додайте `TIMBERX_ADMIN_PASSWORD` або `ADMIN_PASSWORD` у `.env.local` та у Vercel env.
           Після цього `/admin/leads` відкриється через пароль.
         </p>
@@ -233,9 +288,9 @@ function SummaryBar({ leads }: { leads: AdminLead[] }) {
         ["В роботі", inProgressCount],
         ["Гарячі", hotCount],
       ].map(([label, value]) => (
-        <div key={label} className="rounded-[12px] border border-white/10 bg-[#202326] px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/48">{label}</p>
-          <p className="mt-2 text-2xl font-bold text-white">{value}</p>
+        <div key={label} className="rounded-[10px] border border-[#E1D7C8] bg-white px-5 py-5">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8A8176]">{label}</p>
+          <p className="mt-2 text-3xl font-bold text-[#25201A]">{value}</p>
         </div>
       ))}
     </div>
@@ -254,17 +309,17 @@ function Filters({
   q?: string;
 }) {
   return (
-    <form className="grid gap-3 rounded-[12px] border border-white/10 bg-[#202326] p-4 lg:grid-cols-[1fr_180px_180px_180px_auto]">
+    <form className="grid gap-3 rounded-[10px] border border-[#E1D7C8] bg-white p-4 lg:grid-cols-[1fr_190px_190px_190px_auto]">
       <input
         name="q"
-        defaultValue={q}
+        defaultValue={q ?? ""}
         placeholder="Пошук: TX, телефон, email, клієнт"
-        className="h-11 rounded-[9px] border border-white/10 bg-white/[0.045] px-3 text-sm font-semibold text-white outline-none placeholder:text-white/34 focus:border-[#F2994A]/50"
+        className="h-14 rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none placeholder:text-[#9A9288] focus:border-[#F2994A]/70"
       />
       <select
         name="status"
         defaultValue={status ?? ""}
-        className="h-11 rounded-[9px] border border-white/10 bg-[#24282b] px-3 text-sm font-semibold text-white outline-none focus:border-[#F2994A]/50"
+        className="h-14 rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none focus:border-[#F2994A]/70"
       >
         <option value="">Усі статуси</option>
         {Object.entries(statusLabels).map(([value, label]) => (
@@ -276,7 +331,7 @@ function Filters({
       <select
         name="priority"
         defaultValue={priority ?? ""}
-        className="h-11 rounded-[9px] border border-white/10 bg-[#24282b] px-3 text-sm font-semibold text-white outline-none focus:border-[#F2994A]/50"
+        className="h-14 rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none focus:border-[#F2994A]/70"
       >
         <option value="">Усі пріоритети</option>
         {Object.entries(priorityLabels).map(([value, label]) => (
@@ -288,7 +343,7 @@ function Filters({
       <select
         name="channel"
         defaultValue={channel ?? ""}
-        className="h-11 rounded-[9px] border border-white/10 bg-[#24282b] px-3 text-sm font-semibold text-white outline-none focus:border-[#F2994A]/50"
+        className="h-14 rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-4 text-lg font-semibold text-[#25201A] outline-none focus:border-[#F2994A]/70"
       >
         <option value="">Усі канали</option>
         {Object.entries(channelLabels).map(([value, label]) => (
@@ -299,7 +354,7 @@ function Filters({
       </select>
       <button
         type="submit"
-        className="h-11 rounded-[9px] bg-[#F2994A] px-5 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+        className="h-14 rounded-[9px] bg-[#F2994A] px-6 text-lg font-bold text-[#25170B] transition hover:bg-[#de8232]"
       >
         Знайти
       </button>
@@ -307,38 +362,41 @@ function Filters({
   );
 }
 
-function LeadRow({ lead }: { lead: AdminLead }) {
+function LeadRow({ lead, returnTo }: { lead: AdminLead; returnTo: string }) {
   const primaryContact = getPrimaryContact(lead.contacts);
   const clientName = lead.client.company ?? lead.client.name ?? "Клієнт без імені";
   const project = lead.projectType ?? lead.quiz?.projectTitle ?? "Не уточнено";
 
   return (
-    <article className="grid gap-4 border-t border-white/8 px-4 py-4 transition hover:bg-white/[0.025] xl:grid-cols-[138px_minmax(190px,0.9fr)_minmax(220px,1.1fr)_minmax(190px,0.9fr)_minmax(180px,0.7fr)]">
+    <article className="grid gap-5 border-t border-[#E8DED1] px-5 py-6 transition hover:bg-[#FFF8EF] xl:grid-cols-[170px_minmax(150px,0.55fr)_minmax(230px,0.9fr)_minmax(280px,1.1fr)_minmax(230px,0.9fr)_minmax(210px,0.7fr)]">
       <div>
-        <Link href={`/admin/leads/${lead.publicId}`} className="text-base font-bold text-[#F2994A] hover:text-[#ffc28a]">
+        <Link href={`/admin/leads/${lead.publicId}`} className="break-words text-lg font-bold text-[#A95815] hover:text-[#F2994A]">
           {lead.publicId}
         </Link>
-        <p className="mt-1 text-xs font-semibold text-white/44">{formatDate(lead.createdAt)}</p>
+        <p className="mt-1 text-base font-semibold text-[#8A8176]">{formatDate(lead.createdAt)}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <StatusBadge status={lead.status} />
           <PriorityBadge priority={lead.priority} />
         </div>
       </div>
 
       <div>
-        <p className="text-sm font-bold text-white">{clientName}</p>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/38">
+        <StatusControl lead={lead} returnTo={returnTo} />
+      </div>
+
+      <div>
+        <p className="text-lg font-bold text-[#25201A]">{clientName}</p>
+        <p className="mt-1 text-sm font-semibold uppercase tracking-[0.14em] text-[#8A8176]">
           {labelFromMap(channelLabels, lead.initialChannel)}
         </p>
         {primaryContact ? (
-          <p className="mt-2 text-sm text-white/66">{primaryContact.value}</p>
+          <p className="mt-2 text-lg text-[#5F5A54]">{primaryContact.value}</p>
         ) : null}
       </div>
 
       <div>
-        <p className="text-sm font-semibold text-white/86">{lead.productInterest ?? "Напрям не вказано"}</p>
-        <p className="mt-1 text-sm leading-6 text-white/58">{project}</p>
-        <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-white/46">
+        <p className="text-lg font-semibold text-[#25201A]">{lead.productInterest ?? "Напрям не вказано"}</p>
+        <p className="mt-1 text-lg leading-7 text-[#6F675E]">{project}</p>
+        <div className="mt-2 flex flex-wrap gap-2 text-base font-semibold text-[#8A8176]">
           {lead.scale ? <span>{lead.scale}</span> : null}
           {lead.location ? <span>{lead.location}</span> : null}
           {lead.timeline ? <span>{lead.timeline}</span> : null}
@@ -350,13 +408,13 @@ function LeadRow({ lead }: { lead: AdminLead }) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/38">
+        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#8A8176]">
           {lead.sourceCta ?? "Без CTA"}
         </p>
-        <p className="mt-2 break-words text-xs leading-5 text-white/54">{lead.sourcePage ?? "manual / direct"}</p>
+        <p className="mt-2 break-words text-base leading-6 text-[#6F675E]">{lead.sourcePage ?? "manual / direct"}</p>
         {lead.latestEvent ? (
-          <p className="mt-3 text-xs leading-5 text-white/46">
-            Остання дія: {lead.latestEvent.type}, {formatDate(lead.latestEvent.createdAt)}
+          <p className="mt-3 text-sm leading-5 text-[#8A8176]">
+            Активність: {formatDate(lead.latestEvent.createdAt)}
           </p>
         ) : null}
       </div>
@@ -364,27 +422,28 @@ function LeadRow({ lead }: { lead: AdminLead }) {
   );
 }
 
-function LeadsTable({ leads }: { leads: AdminLead[] }) {
+function LeadsTable({ leads, returnTo }: { leads: AdminLead[]; returnTo: string }) {
   if (!leads.length) {
     return (
-      <div className="rounded-[12px] border border-white/10 bg-[#202326] px-5 py-10 text-center">
+      <div className="rounded-[10px] border border-[#E1D7C8] bg-white px-5 py-10 text-center text-[#25201A]">
         <p className="text-lg font-bold">Заявок не знайдено</p>
-        <p className="mt-2 text-sm text-white/56">Змініть фільтри або перевірте нові звернення пізніше.</p>
+        <p className="mt-2 text-sm text-[#6F675E]">Змініть фільтри або перевірте нові звернення пізніше.</p>
       </div>
     );
   }
 
   return (
-    <section className="overflow-hidden rounded-[12px] border border-white/10 bg-[#202326]">
-      <div className="hidden grid-cols-[138px_minmax(190px,0.9fr)_minmax(220px,1.1fr)_minmax(190px,0.9fr)_minmax(180px,0.7fr)] gap-4 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white/38 xl:grid">
+    <section className="overflow-hidden rounded-[10px] border border-[#E1D7C8] bg-white">
+      <div className="hidden grid-cols-[170px_minmax(150px,0.55fr)_minmax(230px,0.9fr)_minmax(280px,1.1fr)_minmax(230px,0.9fr)_minmax(210px,0.7fr)] gap-5 bg-[#F4EFE8] px-5 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#8A8176] xl:grid">
         <span>Заявка</span>
+        <span>Статус</span>
         <span>Клієнт</span>
         <span>Запит</span>
         <span>Контакти</span>
         <span>Джерело</span>
       </div>
       {leads.map((lead) => (
-        <LeadRow key={lead.id} lead={lead} />
+        <LeadRow key={lead.id} lead={lead} returnTo={returnTo} />
       ))}
     </section>
   );
@@ -406,6 +465,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
   const priority = firstValue(rawSearchParams.priority);
   const channel = firstValue(rawSearchParams.channel);
   const q = firstValue(rawSearchParams.q);
+  const returnTo = createReturnTo({ status, priority, channel, q });
   let leads: AdminLead[] = [];
   let errorMessage: string | null = null;
 
@@ -416,29 +476,29 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#17191b] px-4 py-6 text-white md:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#F6F1EA] px-4 py-6 text-[#25201A] md:px-6 lg:px-8">
       <div className="mx-auto max-w-[96rem]">
-        <header className="flex flex-col gap-4 border-b border-white/10 pb-5 lg:flex-row lg:items-end lg:justify-between">
+        <header className="flex flex-col gap-4 border-b border-[#E1D7C8] pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F2994A]">
               TimberX Admin
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-normal">Заявки</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/58">
-              Спільна дошка для менеджерів: нові ліди, контакти, джерела, квізи та перші робочі статуси.
+            <h1 className="mt-2 text-4xl font-bold tracking-normal">Заявки</h1>
+            <p className="mt-2 max-w-3xl text-lg leading-8 text-[#6F675E]">
+              Робочий список для менеджерів: хто звернувся, що потрібно, як звʼязатися і який наступний крок.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/admin/leads/new"
-              className="inline-flex h-10 items-center justify-center rounded-[9px] bg-[#F2994A] px-4 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
+              className="inline-flex h-12 items-center justify-center rounded-[9px] bg-[#F2994A] px-5 text-lg font-bold text-[#25170B] transition hover:bg-[#de8232]"
             >
               Нова заявка
             </Link>
             <form action={logoutAdmin}>
               <button
                 type="submit"
-                className="h-10 rounded-[9px] border border-white/12 px-4 text-sm font-semibold text-white/70 transition hover:border-[#F2994A]/40 hover:text-[#F2994A]"
+                className="h-12 rounded-[9px] border border-[#D8CFC2] bg-white px-5 text-lg font-semibold text-[#5F5A54] transition hover:border-[#F2994A]/60 hover:text-[#A95815]"
               >
                 Вийти
               </button>
@@ -450,11 +510,11 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
           <SummaryBar leads={leads} />
           <Filters status={status} priority={priority} channel={channel} q={q} />
           {errorMessage ? (
-            <section className="rounded-[12px] border border-red-300/20 bg-red-300/10 px-4 py-3 text-sm leading-6 text-red-100">
+            <section className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-700">
               {errorMessage}
             </section>
           ) : (
-            <LeadsTable leads={leads} />
+            <LeadsTable leads={leads} returnTo={returnTo} />
           )}
         </div>
       </div>
