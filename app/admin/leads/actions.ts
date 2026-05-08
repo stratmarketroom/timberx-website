@@ -8,15 +8,29 @@ import { updateAdminLeadStatus } from "@/lib/admin/leads";
 export async function loginAdmin(formData: FormData) {
   const password = formData.get("password");
   const actorName = formData.get("actorName");
+  const returnTo = formData.get("returnTo");
 
   if (typeof password !== "string") {
     redirect("/admin/leads?auth=invalid");
   }
 
   const result = await createAdminSession(password, actorName);
+  const safeReturnTo =
+    typeof returnTo === "string" && returnTo.startsWith("/admin") && !returnTo.includes("://") ? returnTo : null;
 
   if (!result.ok) {
-    redirect(`/admin/leads?auth=${result.error.includes("налаштований") ? "missing" : "invalid"}`);
+    const separator = safeReturnTo?.includes("?") ? "&" : "?";
+    const reason = result.error.includes("налаштований") ? "missing" : "invalid";
+    redirect(safeReturnTo ? `${safeReturnTo}${separator}auth=${reason}` : `/admin/leads?auth=${reason}`);
+  }
+
+  if (safeReturnTo?.startsWith("/admin/dashboard") && result.role !== "director") {
+    await clearAdminSession();
+    redirect("/admin/dashboard?auth=director");
+  }
+
+  if (safeReturnTo) {
+    redirect(safeReturnTo);
   }
 
   redirect("/admin/leads");

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { isAdminAuthenticated, isAdminConfigured } from "@/lib/admin/auth";
+import { getAdminRole, isAdminAuthenticated, isAdminConfigured } from "@/lib/admin/auth";
 import { getAdminLeads, type AdminContact, type AdminLead } from "@/lib/admin/leads";
 import { LeadsKanbanBoard } from "./kanban-board";
 import { loginAdmin, logoutAdmin, updateLeadStatusFromList } from "./actions";
@@ -536,6 +536,8 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
     return <LoginPanel reason={authReason} />;
   }
 
+  const adminRole = await getAdminRole();
+
   const status = firstValue(rawSearchParams.status);
   const priority = firstValue(rawSearchParams.priority);
   const channel = firstValue(rawSearchParams.channel);
@@ -565,6 +567,14 @@ export default async function AdminLeadsPage({ searchParams }: PageProps) {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
+            {adminRole === "director" ? (
+              <Link
+                href="/admin/dashboard"
+                className="inline-flex h-12 items-center justify-center rounded-[9px] border border-[#D8CFC2] bg-white px-5 text-lg font-semibold text-[#5F5A54] transition hover:border-[#F2994A]/60 hover:text-[#A95815]"
+              >
+                Дашборд
+              </Link>
+            ) : null}
             <Link
               href="/admin/leads/new"
               className="inline-flex h-12 items-center justify-center rounded-[9px] bg-[#F2994A] px-5 text-lg font-bold text-[#25170B] transition hover:bg-[#de8232]"

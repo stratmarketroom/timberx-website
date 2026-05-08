@@ -5,9 +5,20 @@ import { cookies } from "next/headers";
 
 const adminSessionCookie = "timberx_admin_session";
 const adminActorCookie = "timberx_admin_actor";
+const adminRoleCookie = "timberx_admin_role";
+
+export type AdminRole = "manager" | "director";
 
 function getAdminPassword() {
   return process.env.TIMBERX_ADMIN_PASSWORD ?? process.env.ADMIN_PASSWORD ?? null;
+}
+
+function getDirectorPassword() {
+  return process.env.TIMBERX_DIRECTOR_PASSWORD ?? process.env.DIRECTOR_PASSWORD ?? null;
+}
+
+function isUsablePassword(password: string | null) {
+  return Boolean(password && !password.includes("PASTE_"));
 }
 
 function createSessionValue(password: string) {
@@ -41,23 +52,45 @@ function cleanActorName(value: unknown) {
 
 export function isAdminConfigured() {
   const password = getAdminPassword();
-  return Boolean(password && !password.includes("PASTE_"));
+  const directorPassword = getDirectorPassword();
+
+  return isUsablePassword(password) || isUsablePassword(directorPassword);
 }
 
-export async function isAdminAuthenticated() {
+export function isDirectorConfigured() {
+  return isUsablePassword(getDirectorPassword());
+}
+
+async function getAuthenticatedRole(): Promise<AdminRole | null> {
   const password = getAdminPassword();
-
-  if (!password || password.includes("PASTE_")) {
-    return false;
-  }
-
+  const directorPassword = getDirectorPassword();
   const session = (await cookies()).get(adminSessionCookie)?.value;
 
   if (!session) {
-    return false;
+    return null;
   }
 
-  return safeEquals(session, createSessionValue(password));
+  if (isUsablePassword(directorPassword) && safeEquals(session, createSessionValue(directorPassword as string))) {
+    return "director";
+  }
+
+  if (isUsablePassword(password) && safeEquals(session, createSessionValue(password as string))) {
+    return "manager";
+  }
+
+  return null;
+}
+
+export async function isAdminAuthenticated() {
+  return Boolean(await getAuthenticatedRole());
+}
+
+export async function isDirectorAuthenticated() {
+  return (await getAuthenticatedRole()) === "director";
+}
+
+export async function getAdminRole() {
+  return getAuthenticatedRole();
 }
 
 export async function getAdminActorName() {
@@ -72,18 +105,29 @@ export async function getAdminActorName() {
 
 export async function createAdminSession(passwordAttempt: string, actorName?: unknown) {
   const password = getAdminPassword();
+  const directorPassword = getDirectorPassword();
+  let matchedPassword: string | null = null;
+  let matchedRole: AdminRole | null = null;
 
-  if (!password || password.includes("PASTE_")) {
+  if (!isUsablePassword(password) && !isUsablePassword(directorPassword)) {
     return { ok: false as const, error: "Адмін-пароль не налаштований." };
   }
 
-  if (!safeEquals(passwordAttempt, password)) {
+  if (isUsablePassword(directorPassword) && safeEquals(passwordAttempt, directorPassword as string)) {
+    matchedPassword = directorPassword as string;
+    matchedRole = "director";
+  } else if (isUsablePassword(password) && safeEquals(passwordAttempt, password as string)) {
+    matchedPassword = password as string;
+    matchedRole = "manager";
+  }
+
+  if (!matchedPassword || !matchedRole) {
     return { ok: false as const, error: "Невірний пароль." };
   }
 
   const cookieStore = await cookies();
 
-  cookieStore.set(adminSessionCookie, createSessionValue(password), {
+  cookieStore.set(adminSessionCookie, createSessionValue(matchedPassword), {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -97,8 +141,15 @@ export async function createAdminSession(passwordAttempt: string, actorName?: un
     path: "/admin",
     maxAge: 60 * 60 * 12,
   });
+  cookieStore.set(adminRoleCookie, matchedRole, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/admin",
+    maxAge: 60 * 60 * 12,
+  });
 
-  return { ok: true as const };
+  return { ok: true as const, role: matchedRole };
 }
 
 export async function clearAdminSession() {
@@ -106,4 +157,5 @@ export async function clearAdminSession() {
 
   cookieStore.delete(adminSessionCookie);
   cookieStore.delete(adminActorCookie);
+  cookieStore.delete(adminRoleCookie);
 }
