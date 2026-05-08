@@ -9,7 +9,13 @@ type ProjectVisualSlide = {
   label: string;
 };
 
-export function ProjectVisualSlider({ slides }: { slides: ProjectVisualSlide[] }) {
+export function ProjectVisualSlider({
+  slides,
+  imageQuality,
+}: {
+  slides: ProjectVisualSlide[];
+  imageQuality?: number;
+}) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState<ProjectVisualSlide | null>(null);
 
@@ -43,6 +49,7 @@ export function ProjectVisualSlider({ slides }: { slides: ProjectVisualSlide[] }
                   fill
                   className="object-cover transition duration-500 group-hover:scale-[1.04]"
                   sizes="(min-width: 1280px) 64rem, (min-width: 768px) 76vw, 88vw"
+                  quality={imageQuality}
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,29,31,0),rgba(27,29,31,0.22)_100%)] opacity-80 transition group-hover:opacity-55" />
                 <span className="absolute bottom-5 left-5 rounded-full border border-white/42 bg-white/84 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5144] shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur">
@@ -97,6 +104,7 @@ export function ProjectVisualSlider({ slides }: { slides: ProjectVisualSlide[] }
               className="object-contain"
               sizes="100vw"
               priority
+              quality={imageQuality}
             />
           </div>
         </div>

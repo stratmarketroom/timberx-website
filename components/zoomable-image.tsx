@@ -13,6 +13,8 @@ type ZoomableImageProps = {
   height?: number;
   sizes?: string;
   priority?: boolean;
+  quality?: number;
+  modalQuality?: number;
 };
 
 export function ZoomableImage({
@@ -25,6 +27,8 @@ export function ZoomableImage({
   height,
   sizes,
   priority,
+  quality,
+  modalQuality,
 }: ZoomableImageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -65,6 +69,7 @@ export function ZoomableImage({
           className={imageClassName}
           sizes={sizes}
           priority={priority}
+          quality={quality}
         />
       </button>
 
@@ -94,6 +99,7 @@ export function ZoomableImage({
               className="object-contain"
               sizes="100vw"
               priority
+              quality={modalQuality}
             />
           </div>
         </div>

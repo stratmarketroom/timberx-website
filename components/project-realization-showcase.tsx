@@ -31,16 +31,21 @@ export function ProjectRealizationShowcase({
   videos,
   title = "Від дизайн-проєкту до готового модуля",
   text = "Показуємо не лише концепт, а й реалізований модуль: фасад, інженерні рішення, номерні блоки, фактичний вигляд після виготовлення та процес доставки.",
+  imageQuality,
+  posterQuality,
 }: {
   photos: RealizationPhoto[];
   sequence?: RealizationSequence;
   videos: RealizationVideo[];
   title?: string;
   text?: string;
+  imageQuality?: number;
+  posterQuality?: number;
 }) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activePhoto, setActivePhoto] = useState<RealizationPhoto | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const activeVideo = videos[activeVideoIndex];
   const sequenceFrames = sequence?.frames ?? [];
@@ -79,6 +84,7 @@ export function ProjectRealizationShowcase({
       return;
     }
 
+    setIsVideoPlaying(false);
     setActiveVideoIndex((index) => (index + 1) % videos.length);
   }
 
@@ -125,6 +131,7 @@ export function ProjectRealizationShowcase({
                     }`}
                     sizes="(min-width: 1024px) 62vw, 100vw"
                     priority={index < 2}
+                    quality={imageQuality}
                   />
                 ))}
                 <div className="absolute left-2 top-2 z-10 rounded-xl border border-white/46 bg-white/88 px-2 py-1.5 shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur sm:left-4 sm:top-4 sm:rounded-2xl sm:px-3 sm:py-2">
@@ -175,6 +182,7 @@ export function ProjectRealizationShowcase({
                         fill
                         className="object-contain transition duration-500 group-hover:scale-[1.035]"
                         sizes="(min-width: 1024px) 62vw, 100vw"
+                        quality={imageQuality}
                       />
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,29,31,0),rgba(27,29,31,0.28)_100%)]" />
                       <span className="absolute bottom-4 left-4 rounded-full border border-white/42 bg-white/84 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5144] shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur">
@@ -212,18 +220,46 @@ export function ProjectRealizationShowcase({
             <div className="mx-auto w-full max-w-[20rem] lg:max-w-none">
               <div className="rounded-[2rem] border border-[#d8cdbc] bg-[#1b1d1f] p-3 shadow-[0_22px_58px_rgba(41,36,30,0.14)]">
                 <div className="relative aspect-[9/16] overflow-hidden rounded-[1.35rem] bg-black">
-                  <video
-                    key={activeVideo.src}
-                    src={activeVideo.src}
-                    poster={activeVideo.poster}
-                    aria-label={activeVideo.title}
-                    className="h-full w-full object-cover"
-                    autoPlay
-                    muted
-                    playsInline
-                    loop={videos.length === 1}
-                    onEnded={playNextVideo}
-                  />
+                  {isVideoPlaying ? (
+                    <video
+                      key={activeVideo.src}
+                      src={activeVideo.src}
+                      poster={activeVideo.poster}
+                      aria-label={activeVideo.title}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      muted
+                      playsInline
+                      preload="metadata"
+                      loop={videos.length === 1}
+                      onEnded={playNextVideo}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setIsVideoPlaying(true)}
+                      className="group relative block h-full w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f2994a]"
+                      aria-label={`Запустити відео: ${activeVideo.title}`}
+                    >
+                      {activeVideo.poster ? (
+                        <Image
+                          src={activeVideo.poster}
+                          alt={activeVideo.title}
+                          fill
+                          className="object-cover transition duration-500 group-hover:scale-[1.035]"
+                          sizes="(min-width: 1024px) 22rem, 82vw"
+                          quality={posterQuality ?? imageQuality}
+                        />
+                      ) : null}
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,29,31,0.04),rgba(27,29,31,0.42))]" />
+                      <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/45 bg-white/88 text-2xl font-bold text-[#1b1d1f] shadow-[0_18px_42px_rgba(0,0,0,0.22)] transition group-hover:scale-105">
+                        ▶
+                      </span>
+                      <span className="absolute inset-x-4 bottom-4 rounded-full border border-white/42 bg-white/86 px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5144] shadow-[0_12px_28px_rgba(41,36,30,0.14)] backdrop-blur">
+                        Дивитися відео
+                      </span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -257,6 +293,7 @@ export function ProjectRealizationShowcase({
               className="object-contain"
               sizes="100vw"
               priority
+              quality={imageQuality}
             />
           </div>
         </div>

@@ -87,6 +87,9 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
   const adaptationOptions = project.adaptationOptions ?? project.formats;
   const realizationGallery = project.realizationGallery ?? [];
   const realizationVideos = project.realizationVideos ?? [];
+  const isHotelProject = project.slug === "hotelnyi-modul";
+  const projectImageQuality = isHotelProject ? 62 : undefined;
+  const projectPosterQuality = isHotelProject ? 54 : undefined;
   const hasWidePlanHeader =
     project.slug === "skaut-50" ||
     project.slug === "modulnyi-budynok-35m" ||
@@ -132,6 +135,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
             priority
             className="object-cover object-[58%_center]"
             sizes="100vw"
+            quality={projectImageQuality}
           />
           <div className="absolute inset-0 bg-[#f4f0e8]/82" />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(244,240,232,0.98)_0%,rgba(244,240,232,0.9)_45%,rgba(244,240,232,0.48)_100%)]" />
@@ -195,6 +199,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                 className="absolute inset-0"
                 imageClassName="scale-[1.03] object-cover transition duration-500 group-hover:scale-[1.075]"
                 sizes="(min-width: 1024px) 40vw, 100vw"
+                quality={projectImageQuality}
               />
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(242,153,74,0.12))] opacity-0 transition duration-300 group-hover:opacity-100" />
             </div>
@@ -203,7 +208,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
       </section>
 
       <main className="mx-auto flex w-full max-w-[88rem] flex-col gap-12 px-4 pb-12 pt-6 md:px-6 md:pb-16 md:pt-8 lg:gap-16 lg:pb-20 lg:pt-10">
-        <ProjectVisualSlider slides={atmosphereGallery} />
+        <ProjectVisualSlider slides={atmosphereGallery} imageQuality={projectImageQuality} />
 
         <section className="rounded-[2rem] border border-[#d8cdbc] bg-[#fffaf2]/62 p-5 shadow-[0_24px_70px_rgba(41,36,30,0.08)] sm:p-7 lg:p-9">
           <div
@@ -253,6 +258,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                     className="mx-auto block w-fit max-w-full"
                     imageClassName="h-auto max-h-[46rem] w-auto max-w-full object-contain"
                     sizes="(min-width: 1024px) 54vw, 100vw"
+                    quality={projectImageQuality}
                   />
                 ) : (
                   <div className="flex min-h-[24rem] flex-wrap content-start gap-2 rounded-[1rem] bg-[#fffaf2] p-5">
@@ -282,6 +288,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                         className="mx-auto block w-full"
                         imageClassName="h-auto w-full object-contain"
                         sizes="(min-width: 1024px) 54vw, 100vw"
+                        quality={projectImageQuality}
                       />
                     </div>
                   ))}
@@ -375,6 +382,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                         className="absolute inset-0"
                         imageClassName="object-cover"
                         sizes="(min-width: 1024px) 22vw, 50vw"
+                        quality={projectImageQuality}
                       />
                     </div>
                   ))}
@@ -464,6 +472,8 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
           videos={realizationVideos}
           title={project.realizationTitle}
           text={project.realizationText}
+          imageQuality={projectImageQuality}
+          posterQuality={projectPosterQuality}
         />
 
         <section id="cta">
@@ -584,6 +594,7 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                     fill
                     className="object-cover transition duration-300 group-hover:scale-[1.04]"
                     sizes="(min-width: 1024px) 28vw, 100vw"
+                    quality={isHotelProject ? 62 : undefined}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,29,31,0.02),rgba(27,29,31,0.64)_100%)]" />
                   <div className="relative flex h-full min-h-[17rem] flex-col justify-end p-5">
