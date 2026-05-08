@@ -34,6 +34,33 @@ function redirectBack(publicId: string, saved: string) {
   redirect(`/admin/leads/${publicId}?saved=${saved}`);
 }
 
+function redirectWithUploadError(publicId: string, errorCode: string) {
+  revalidatePath(`/admin/leads/${publicId}`);
+  redirect(`/admin/leads/${publicId}?uploadError=${errorCode}`);
+}
+
+function getUploadErrorCode(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+
+  if (message.includes("too large")) {
+    return "too_large";
+  }
+
+  if (message.includes("format")) {
+    return "format";
+  }
+
+  if (message.includes("required")) {
+    return "required";
+  }
+
+  if (message.includes("storage") || message.includes("bucket")) {
+    return "storage";
+  }
+
+  return "unknown";
+}
+
 export async function updateLeadAction(formData: FormData) {
   await requireAdmin();
 
@@ -122,12 +149,17 @@ export async function uploadFileAction(formData: FormData) {
     throw new Error("File is required");
   }
 
-  await uploadAdminLeadFile({
-    publicId,
-    file,
-    fileCategory: formData.get("fileCategory"),
-    actorName,
-  });
+  try {
+    await uploadAdminLeadFile({
+      publicId,
+      file,
+      fileCategory: formData.get("fileCategory"),
+      actorName,
+    });
+  } catch (error) {
+    console.error("Admin lead file upload failed", error);
+    redirectWithUploadError(publicId, getUploadErrorCode(error));
+  }
 
   redirectBack(publicId, "file");
 }

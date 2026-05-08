@@ -97,6 +97,28 @@ function getLeadFilesBucket() {
   return process.env.SUPABASE_LEAD_FILES_BUCKET ?? "lead-files";
 }
 
+const maxAdminUploadFileSize = 4 * 1024 * 1024;
+const allowedAdminUploadExtensions = new Set([
+  "pdf",
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "heic",
+  "heif",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "csv",
+  "dwg",
+  "dxf",
+  "zip",
+  "rar",
+  "txt",
+  "rtf",
+]);
+
 function encodeStoragePath(path: string) {
   return path.split("/").map(encodeURIComponent).join("/");
 }
@@ -318,6 +340,12 @@ function sanitizeFileName(value: string) {
     .slice(0, 140);
 
   return cleaned || fallback;
+}
+
+function getFileExtension(value: string) {
+  const match = value.toLowerCase().match(/\.([a-z0-9]+)$/);
+
+  return match?.[1] ?? null;
 }
 
 function createPublicId(prefix: "TX" | "TXC") {
@@ -1433,6 +1461,16 @@ export async function uploadAdminLeadFile({
 
   if (!file.name || file.size <= 0) {
     throw new Error("File is required");
+  }
+
+  if (file.size > maxAdminUploadFileSize) {
+    throw new Error("File is too large");
+  }
+
+  const fileExtension = getFileExtension(file.name);
+
+  if (!fileExtension || !allowedAdminUploadExtensions.has(fileExtension)) {
+    throw new Error("File format is not allowed");
   }
 
   const allowedFileCategories = new Set([

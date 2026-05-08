@@ -66,6 +66,27 @@ const fileCategoryLabels: Record<string, string> = {
   other: "Інше",
 };
 
+const acceptedFileExtensions = [
+  ".pdf",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".heic",
+  ".heif",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".csv",
+  ".dwg",
+  ".dxf",
+  ".zip",
+  ".rar",
+  ".txt",
+  ".rtf",
+].join(",");
+
 const clientTypeLabels: Record<string, string> = {
   developer: "Девелопер",
   builder: "Забудовник",
@@ -173,6 +194,23 @@ function savedMessage(value: string | undefined) {
       return "Контакт додано.";
     case "file":
       return "Файл додано.";
+    default:
+      return null;
+  }
+}
+
+function uploadErrorMessage(value: string | undefined) {
+  switch (value) {
+    case "too_large":
+      return "Файл завеликий. Зараз можна завантажувати файли до 4 МБ.";
+    case "format":
+      return "Формат файла не підтримується. Дозволені PDF, зображення, Word, Excel, DWG/DXF, архіви та TXT.";
+    case "required":
+      return "Оберіть файл для завантаження.";
+    case "storage":
+      return "Не вдалося зберегти файл у сховище. Перевіримо налаштування Supabase Storage.";
+    case "unknown":
+      return "Не вдалося завантажити файл. Спробуйте ще раз або оберіть інший файл.";
     default:
       return null;
   }
@@ -639,9 +677,13 @@ function UploadFileForm({ publicId }: { publicId: string }) {
         <input
           name="file"
           type="file"
+          accept={acceptedFileExtensions}
           required
           className="block w-full rounded-[9px] border border-[#D8CFC2] bg-[#FBFAF7] px-3 py-2 text-sm font-semibold text-[#25201A] file:mr-3 file:rounded-[7px] file:border-0 file:bg-[#F2994A] file:px-3 file:py-2 file:text-sm file:font-bold file:text-[#25170B]"
         />
+        <p className="mt-2 text-sm font-semibold leading-5 text-[#8A8176]">
+          До 4 МБ: PDF, зображення, Word, Excel, DWG/DXF, архіви, TXT.
+        </p>
       </FormField>
       <div className="flex justify-end">
         <button type="submit" className={submitClass}>
@@ -863,8 +905,9 @@ function LeadHeader({ lead }: { lead: AdminLeadDetails }) {
   );
 }
 
-function LeadDetail({ lead, saved }: { lead: AdminLeadDetails; saved?: string }) {
+function LeadDetail({ lead, saved, uploadError }: { lead: AdminLeadDetails; saved?: string; uploadError?: string }) {
   const message = savedMessage(saved);
+  const errorMessage = uploadErrorMessage(uploadError);
 
   return (
     <main className="min-h-screen bg-[#F6F1EA] px-4 py-6 text-[#25201A] md:px-6 lg:px-8">
@@ -876,6 +919,11 @@ function LeadDetail({ lead, saved }: { lead: AdminLeadDetails; saved?: string })
             {message ? (
               <section className="rounded-[10px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-base font-semibold text-emerald-700">
                 {message}
+              </section>
+            ) : null}
+            {errorMessage ? (
+              <section className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-base font-semibold text-red-700">
+                {errorMessage}
               </section>
             ) : null}
 
@@ -924,6 +972,7 @@ export default async function AdminLeadDetailsPage({ params, searchParams }: Pag
   const [{ publicId }, rawSearchParams] = await Promise.all([params, searchParams]);
   const authReason = firstValue(rawSearchParams?.auth);
   const saved = firstValue(rawSearchParams?.saved);
+  const uploadError = firstValue(rawSearchParams?.uploadError);
 
   if (!isAdminConfigured()) {
     return <AdminSetupPanel />;
@@ -939,5 +988,5 @@ export default async function AdminLeadDetailsPage({ params, searchParams }: Pag
     notFound();
   }
 
-  return <LeadDetail lead={lead} saved={saved} />;
+  return <LeadDetail lead={lead} saved={saved} uploadError={uploadError} />;
 }
