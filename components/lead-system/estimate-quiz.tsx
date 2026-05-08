@@ -20,6 +20,14 @@ const scaleOptions = [
   "ще не знаю",
 ];
 
+const projectQuantityOptions = [
+  "1–3",
+  "3–10",
+  "10–20",
+  "20+",
+  "ще не знаю",
+];
+
 const timelineOptions = [
   "терміново",
   "1–3 місяці",
@@ -89,12 +97,15 @@ export function EstimateQuiz({
   productInterest: initialProductInterest,
   sourceCta = "estimate_quiz",
 }: EstimateQuizContext) {
+  const isProjectEstimate = Boolean(projectTitle);
   const [productInterest, setProductInterest] = useState(
     initialProductInterest && productOptions.includes(initialProductInterest)
       ? initialProductInterest
       : productOptions[0],
   );
-  const [scale, setScale] = useState(scaleOptions[0]);
+  const [scale, setScale] = useState(
+    isProjectEstimate ? projectQuantityOptions[0] : scaleOptions[0],
+  );
   const [timeline, setTimeline] = useState(timelineOptions[1]);
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
@@ -190,16 +201,27 @@ export function EstimateQuiz({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {isProjectEstimate ? (
+        <div className="rounded-[12px] border border-[#F2994A]/24 bg-[#F2994A]/10 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#F2994A]">
+            Обраний типовий проєкт
+          </p>
+          <p className="mt-2 text-base font-bold leading-6 text-white">
+            {projectTitle}
+          </p>
+        </div>
+      ) : (
+        <OptionGroup
+          label="Що цікавить?"
+          value={productInterest}
+          options={productOptions}
+          onChange={setProductInterest}
+        />
+      )}
       <OptionGroup
-        label="Що цікавить?"
-        value={productInterest}
-        options={productOptions}
-        onChange={setProductInterest}
-      />
-      <OptionGroup
-        label="Орієнтовний масштаб"
+        label={isProjectEstimate ? "Орієнтовна кількість" : "Орієнтовний масштаб"}
         value={scale}
-        options={scaleOptions}
+        options={isProjectEstimate ? projectQuantityOptions : scaleOptions}
         onChange={setScale}
       />
       <OptionGroup
@@ -304,10 +326,10 @@ export function EstimateQuizModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const title = projectTitle
-    ? `Розкажіть коротко про проєкт «${projectTitle}»`
+    ? `Дані для прорахунку «${projectTitle}»`
     : "Розкажіть коротко про ваш проєкт";
   const description = projectTitle
-    ? "Зафіксуємо, який типовий проєкт вас зацікавив, і уточнимо параметри для попереднього прорахунку."
+    ? "Вкажіть кількість, локацію та орієнтовні строки. Менеджер отримає заявку вже з прив'язкою до цього типового проєкту."
     : "Відповіді допоможуть менеджеру швидше зорієнтуватися в задачі та повернутися до вас із предметною консультацією.";
 
   return (
