@@ -283,16 +283,6 @@ function StatusFlow({
   );
 }
 
-function MarketingValue({ label, value, hint }: { label: string; value: string; hint: string }) {
-  return (
-    <div className="rounded-[10px] border border-[#3A2D22] bg-[#17130F] p-4">
-      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
-      <p className="mt-3 text-2xl font-bold tracking-normal text-[#F8EFE4]">{value}</p>
-      <p className="mt-2 text-sm font-semibold leading-6 text-[#BEB2A6]">{hint}</p>
-    </div>
-  );
-}
-
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const rawSearchParams = (await searchParams) ?? {};
   const authReason = firstValue(rawSearchParams.auth);
@@ -391,33 +381,6 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
             <Section title="Канали">
               <BarList items={metrics.channels} />
-            </Section>
-
-            <Section title="Маркетинг">
-              <div className="grid gap-3 md:grid-cols-3">
-                <MarketingValue
-                  label="Трафік"
-                  value={metrics.traffic.sessions === null ? "Немає даних" : String(metrics.traffic.sessions)}
-                  hint="GA4 після підключення аналітики."
-                />
-                <MarketingValue
-                  label="Конверсія в заявку"
-                  value={
-                    metrics.traffic.leadConversionPercent === null
-                      ? "Немає даних"
-                      : `${metrics.traffic.leadConversionPercent}%`
-                  }
-                  hint="Заявки з сайту / трафік."
-                />
-                <MarketingValue
-                  label="Вартість заявки"
-                  value={metrics.traffic.costPerLead === null ? "Немає даних" : `${metrics.traffic.costPerLead} грн`}
-                  hint="Google Ads + Meta Ads / рекламні заявки."
-                />
-              </div>
-              <p className="mt-4 text-sm font-semibold leading-6 text-[#F2994A]">
-                Аналітика та рекламні кабінети ще не підключені.
-              </p>
             </Section>
           </div>
 

@@ -50,12 +50,6 @@ export type AdminDashboardMetrics = {
     proposalTotals: DashboardMoneyTotals;
     wonTotals: DashboardMoneyTotals;
   };
-  traffic: {
-    connected: boolean;
-    sessions: number | null;
-    leadConversionPercent: number | null;
-    costPerLead: number | null;
-  };
 };
 
 type DashboardLead = {
@@ -561,11 +555,5 @@ export async function getAdminDashboardMetrics(input?: {
     channels,
     sourceQuality,
     finance,
-    traffic: {
-      connected: false,
-      sessions: null,
-      leadConversionPercent: null,
-      costPerLead: null,
-    },
   };
 }
