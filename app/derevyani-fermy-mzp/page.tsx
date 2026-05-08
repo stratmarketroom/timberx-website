@@ -6,7 +6,7 @@ import { derevyaniFermyMzpPage } from "@/lib/product-pages/derevyani-fermy-mzp";
 import {
   buildBreadcrumbSchema,
   buildFaqSchema,
-  buildProductSchema,
+  buildServiceSchema,
 } from "@/lib/schema";
 import { getSeoRobots } from "@/lib/seo-pages";
 
@@ -31,7 +31,7 @@ export default function DerevyaniFermyMzpPage() {
               path: "/derevyani-fermy-mzp/",
             },
           ]),
-          buildProductSchema({
+          buildServiceSchema({
             name: derevyaniFermyMzpPage.hero.title,
             description: derevyaniFermyMzpPage.hero.description,
             path: "/derevyani-fermy-mzp/",
@@ -39,11 +39,8 @@ export default function DerevyaniFermyMzpPage() {
               src: derevyaniFermyMzpPage.hero.imageSrc,
               alt: derevyaniFermyMzpPage.hero.imageAlt,
             },
-            category: "Дерев'яні ферми з металозубчатими пластинами",
-            additionalProperties: derevyaniFermyMzpPage.specs.map((spec) => ({
-              name: spec.label,
-              value: spec.value,
-            })),
+            serviceType: "Проєктування, виробництво та монтаж дерев'яних ферм з металозубчатими пластинами",
+            audience: ["Девелопери", "Забудовники", "Генпідрядники"],
           }),
           buildFaqSchema(derevyaniFermyMzpPage.faq),
         ]}

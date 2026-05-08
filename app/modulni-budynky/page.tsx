@@ -6,7 +6,7 @@ import type { ProductPageData } from "@/lib/product-pages/types";
 import {
   buildBreadcrumbSchema,
   buildFaqSchema,
-  buildProductSchema,
+  buildServiceSchema,
 } from "@/lib/schema";
 import { getSeoRobots } from "@/lib/seo-pages";
 
@@ -312,7 +312,7 @@ export default function ModularHomesPage() {
             { name: "Головна", path: "/" },
             { name: "Модульні будинки", path: "/modulni-budynky/" },
           ]),
-          buildProductSchema({
+          buildServiceSchema({
             name: modulniBudynkyPage.hero.title,
             description: modulniBudynkyPage.hero.description,
             path: "/modulni-budynky/",
@@ -320,11 +320,8 @@ export default function ModularHomesPage() {
               src: modulniBudynkyPage.hero.imageSrc,
               alt: modulniBudynkyPage.hero.imageAlt,
             },
-            category: "Модульні будинки",
-            additionalProperties: modulniBudynkyPage.specs.map((spec) => ({
-              name: spec.label,
-              value: spec.value,
-            })),
+            serviceType: "Проєктування, виробництво та монтаж модульних будинків",
+            audience: ["Девелопери", "Забудовники", "Громади", "B2B", "B2G"],
           }),
           buildFaqSchema(modulniBudynkyPage.faq),
         ]}
