@@ -73,7 +73,7 @@ export function TypicalProjectCard({
           <div className="mt-7 grid grid-cols-2 gap-3">
             {project.specs.slice(0, 4).map((spec) => (
               <div key={spec.label} className="rounded-[14px] border border-white/10 bg-white/[0.035] p-3">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#828282]">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8A29A]">
                   {spec.label}
                 </p>
                 <p className={`${bodyClass} mt-2 text-sm font-semibold leading-5 text-white`}>

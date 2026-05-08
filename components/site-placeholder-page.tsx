@@ -62,7 +62,7 @@ export function SitePlaceholderPage({
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#828282]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#A8A29A]">
                   Статус
                 </p>
                 <p className="mt-3 text-lg font-semibold text-white">
@@ -70,7 +70,7 @@ export function SitePlaceholderPage({
                 </p>
               </div>
               <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#828282]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#A8A29A]">
                   URL
                 </p>
                 <p className="mt-3 break-all text-sm text-[#f4f4f4]">
@@ -78,7 +78,7 @@ export function SitePlaceholderPage({
                 </p>
               </div>
               <div className="rounded-[1.5rem] border border-white/10 bg-[#202326] p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#828282]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#A8A29A]">
                   Наступний крок
                 </p>
                 <p className="mt-3 text-sm leading-6 text-[#d0d0d0]">

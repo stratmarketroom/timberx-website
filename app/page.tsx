@@ -254,7 +254,7 @@ function SectionHeading({
   return (
     <div className="space-y-3">
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#828282]">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#A8A29A]">
           {eyebrow}
         </p>
       ) : null}
@@ -312,6 +312,7 @@ export default function Home() {
             alt="Виробництво дерев'яних конструкцій та модульних будинків TimberX"
             fill
             priority
+            quality={68}
             className="object-cover object-[62%_center]"
           />
           <div className="absolute inset-0 bg-[#1B1D1F]/48" />
@@ -532,6 +533,7 @@ export default function Home() {
                         src={audience.imageSrc}
                         alt={audience.title}
                         fill
+                        quality={58}
                         className={`object-cover transition duration-300 group-hover:scale-[1.04] ${audience.imageClassName}`}
                         sizes="(min-width: 768px) 50vw, 100vw"
                       />
@@ -906,7 +908,7 @@ export default function Home() {
                     <LineIcon name={step.icon} className="relative h-7 w-7" />
                   </div>
                   <div className="space-y-3 md:mt-6 md:text-left lg:text-center">
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#828282]">
+                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#A8A29A]">
                       {String(index + 1).padStart(2, "0")}
                     </p>
                     <p className={cardHeadingClass}>

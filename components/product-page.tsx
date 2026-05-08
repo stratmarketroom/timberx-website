@@ -1654,7 +1654,7 @@ export function ProductPage({ page }: { page: ProductPageData }) {
                       <LineIcon name={card.icon} className="relative h-7 w-7" />
                     </div>
                     <div className="space-y-3 md:mt-6 md:text-left lg:text-center">
-                      <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#828282]">
+                      <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#A8A29A]">
                         {card.step}
                       </p>
                       <p className={`${headingClass} text-[1.7rem] leading-[1.04] text-white sm:text-[2rem] lg:text-[1.5rem] xl:text-[1.7rem]`}>

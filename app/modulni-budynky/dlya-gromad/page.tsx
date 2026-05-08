@@ -412,7 +412,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                   {String(itemIndex + 1).padStart(2, "0")}
                 </div>
                 <h3 className={`${headingClass} text-[1.8rem] leading-[1.08] text-[#1B1D1F] sm:text-[2rem]`}>{item.title}</h3>
-                <p className={`${bodyClass} mt-4 text-base leading-8 text-[#828282]`}>{item.text}</p>
+                <p className={`${bodyClass} mt-4 text-base leading-8 text-[#A8A29A]`}>{item.text}</p>
               </article>
             ))}
           </div>
@@ -727,7 +727,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                     <p className={`${headingClass} text-[1.45rem] leading-[1.12] text-[#1B1D1F]`}>
                       {step.title}
                     </p>
-                    <p className={`${bodyClass} max-w-xs text-base leading-7 text-[#828282] md:mx-0 lg:mx-auto`}>
+                    <p className={`${bodyClass} max-w-xs text-base leading-7 text-[#A8A29A] md:mx-0 lg:mx-auto`}>
                       {step.description}
                     </p>
                   </div>
@@ -763,7 +763,7 @@ export function SolutionSegmentPage({ copy }: { copy: SolutionSegmentPageCopy })
                     </span>
                   </summary>
                   <div className="pb-6 pr-14">
-                    <p className={`${bodyClass} text-base leading-8 text-[#828282]`}>
+                    <p className={`${bodyClass} text-base leading-8 text-[#A8A29A]`}>
                       {brandifyTimberX(item.answer)}
                     </p>
                   </div>
