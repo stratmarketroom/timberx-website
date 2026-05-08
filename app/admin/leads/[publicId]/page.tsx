@@ -78,6 +78,12 @@ const clientTypeLabels: Record<string, string> = {
   unknown: "Не визначено",
 };
 
+const currencyLabels: Record<string, string> = {
+  UAH: "Гривня",
+  EUR: "Євро",
+  USD: "Долар",
+};
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { publicId } = await params;
 
@@ -117,6 +123,16 @@ function formatFileSize(value: number | null) {
   }
 
   return `${(value / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function formatMoney(amount: number | null, currency: string | null) {
+  if (amount === null) {
+    return "Не вказано";
+  }
+
+  return new Intl.NumberFormat("uk-UA", {
+    maximumFractionDigits: 2,
+  }).format(amount) + ` ${currency ?? "UAH"}`;
 }
 
 function formatAdminActor(value: string | null | undefined) {
@@ -440,6 +456,55 @@ function LeadEditForm({ lead }: { lead: AdminLeadDetails }) {
         <FormField label="Строки">
           <input name="timeline" defaultValue={lead.timeline ?? ""} className={inputClass} />
         </FormField>
+      </div>
+      <div className="rounded-[10px] border border-[#E3DBD0] bg-[#FBFAF7] p-4">
+        <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8A8176]">Фінанси</h3>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <FormField label="Сума КП">
+            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_150px]">
+              <input
+                name="proposalAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                defaultValue={lead.proposalAmount ?? ""}
+                placeholder="0.00"
+                className={inputClass}
+              />
+              <select name="proposalCurrency" defaultValue={lead.proposalCurrency ?? "UAH"} className={selectClass}>
+                {Object.entries(currencyLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </FormField>
+          <FormField label="Сума виграної угоди">
+            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_150px]">
+              <input
+                name="wonAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                defaultValue={lead.wonAmount ?? ""}
+                placeholder="0.00"
+                className={inputClass}
+              />
+              <select name="wonCurrency" defaultValue={lead.wonCurrency ?? "UAH"} className={selectClass}>
+                {Object.entries(currencyLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </FormField>
+        </div>
+        <div className="mt-4 grid gap-3 text-base font-semibold text-[#6F675E] md:grid-cols-2">
+          <p>КП: {formatMoney(lead.proposalAmount, lead.proposalCurrency)}</p>
+          <p>Виграна угода: {formatMoney(lead.wonAmount, lead.wonCurrency)}</p>
+        </div>
       </div>
       <div className="flex justify-end">
         <button type="submit" className={submitClass}>

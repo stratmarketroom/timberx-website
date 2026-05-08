@@ -25,6 +25,10 @@ export type AdminLead = {
   scale: string | null;
   location: string | null;
   timeline: string | null;
+  proposalAmount: number | null;
+  proposalCurrency: string | null;
+  wonAmount: number | null;
+  wonCurrency: string | null;
   client: {
     id: string;
     publicId: string | null;
@@ -214,6 +218,19 @@ function asNumber(value: unknown) {
   return typeof value === "number" ? value : null;
 }
 
+function asMoneyAmount(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+}
+
 function asRecord(value: unknown) {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as SupabaseRow)
@@ -240,6 +257,42 @@ function cleanString(value: unknown, maxLength = 500) {
 
 function cleanActorName(value: unknown) {
   return cleanString(value, 80) ?? "Менеджер";
+}
+
+function cleanMoneyAmount(value: unknown) {
+  if (typeof value !== "string" && typeof value !== "number") {
+    return null;
+  }
+
+  const normalized = String(value).trim().replace(",", ".");
+
+  if (!normalized) {
+    return null;
+  }
+
+  const amount = Number(normalized);
+
+  if (!Number.isFinite(amount) || amount < 0) {
+    throw new Error("Invalid amount");
+  }
+
+  return Math.round(amount * 100) / 100;
+}
+
+const allowedCurrencies = new Set(["UAH", "EUR", "USD"]);
+
+function cleanCurrency(value: unknown) {
+  const currency = cleanString(value, 3)?.toUpperCase() ?? null;
+
+  if (!currency) {
+    return null;
+  }
+
+  if (!allowedCurrencies.has(currency)) {
+    throw new Error("Invalid currency");
+  }
+
+  return currency;
 }
 
 function normalizeContactValue(contactType: string, value: string) {
@@ -292,7 +345,7 @@ async function createLeadPublicId() {
 function createLeadParams(searchParams: AdminLeadSearchParams) {
   const params = new URLSearchParams({
     select:
-      "id,public_id,client_id,source_page,source_cta,initial_channel,product_interest,project_type,scale,location,timeline,status,priority,created_at,updated_at,clients(id,public_id,name,company,client_type)",
+      "id,public_id,client_id,source_page,source_cta,initial_channel,product_interest,project_type,scale,location,timeline,status,priority,proposal_amount,proposal_currency,won_amount,won_currency,created_at,updated_at,clients(id,public_id,name,company,client_type)",
     order: "created_at.desc",
     limit: "50",
   });
@@ -578,6 +631,10 @@ export async function getAdminLeads(searchParams: AdminLeadSearchParams = {}) {
         scale: asString(row.scale),
         location: asString(row.location),
         timeline: asString(row.timeline),
+        proposalAmount: asMoneyAmount(row.proposal_amount),
+        proposalCurrency: asString(row.proposal_currency),
+        wonAmount: asMoneyAmount(row.won_amount),
+        wonCurrency: asString(row.won_currency),
         client: {
           id: clientId,
           publicId: asString(client?.public_id),
@@ -634,7 +691,7 @@ export async function getAdminLeadDetails(publicId: string) {
     "leads",
     new URLSearchParams({
       select:
-        "id,public_id,client_id,source_page,source_cta,initial_channel,product_interest,project_type,scale,location,timeline,status,priority,created_at,updated_at,clients(id,public_id,name,company,client_type)",
+        "id,public_id,client_id,source_page,source_cta,initial_channel,product_interest,project_type,scale,location,timeline,status,priority,proposal_amount,proposal_currency,won_amount,won_currency,created_at,updated_at,clients(id,public_id,name,company,client_type)",
       public_id: `eq.${publicId}`,
       limit: "1",
     }),
@@ -709,6 +766,10 @@ export async function getAdminLeadDetails(publicId: string) {
     scale: asString(leadRow.scale),
     location: asString(leadRow.location),
     timeline: asString(leadRow.timeline),
+    proposalAmount: asMoneyAmount(leadRow.proposal_amount),
+    proposalCurrency: asString(leadRow.proposal_currency),
+    wonAmount: asMoneyAmount(leadRow.won_amount),
+    wonCurrency: asString(leadRow.won_currency),
     client: {
       id: clientId,
       publicId: asString(client?.public_id),
@@ -796,6 +857,10 @@ export async function updateAdminLeadWorkingFields({
   timeline,
   status,
   priority,
+  proposalAmount,
+  proposalCurrency,
+  wonAmount,
+  wonCurrency,
   note,
   actorName,
 }: {
@@ -807,6 +872,10 @@ export async function updateAdminLeadWorkingFields({
   timeline: unknown;
   status: unknown;
   priority: unknown;
+  proposalAmount?: unknown;
+  proposalCurrency?: unknown;
+  wonAmount?: unknown;
+  wonCurrency?: unknown;
   note?: unknown;
   actorName?: unknown;
 }) {
@@ -818,6 +887,10 @@ export async function updateAdminLeadWorkingFields({
 
   const nextStatus = cleanString(status, 80);
   const nextPriority = cleanString(priority, 40);
+  const nextProposalAmount = cleanMoneyAmount(proposalAmount);
+  const nextProposalCurrency = nextProposalAmount === null ? null : cleanCurrency(proposalCurrency) ?? "UAH";
+  const nextWonAmount = cleanMoneyAmount(wonAmount);
+  const nextWonCurrency = nextWonAmount === null ? null : cleanCurrency(wonCurrency) ?? "UAH";
 
   if (!nextStatus || !allowedLeadStatuses.has(nextStatus)) {
     throw new Error("Invalid lead status");
@@ -835,6 +908,10 @@ export async function updateAdminLeadWorkingFields({
     timeline: lead.timeline,
     status: lead.status,
     priority: lead.priority,
+    proposal_amount: lead.proposalAmount,
+    proposal_currency: lead.proposalCurrency,
+    won_amount: lead.wonAmount,
+    won_currency: lead.wonCurrency,
   };
   const after = {
     product_interest: cleanString(productInterest, 220),
@@ -844,6 +921,10 @@ export async function updateAdminLeadWorkingFields({
     timeline: cleanString(timeline, 220),
     status: nextStatus,
     priority: nextPriority,
+    proposal_amount: nextProposalAmount,
+    proposal_currency: nextProposalCurrency,
+    won_amount: nextWonAmount,
+    won_currency: nextWonCurrency,
   };
   const fields = changedFields(before, after);
   const managerNote = cleanString(note, 1200);

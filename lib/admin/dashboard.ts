@@ -25,6 +25,8 @@ export type DashboardSourceQualityMetric = DashboardGroupMetric & {
   qualityPercent: number;
 };
 
+export type DashboardMoneyTotals = Record<"UAH" | "EUR" | "USD", number>;
+
 export type DashboardStaleLead = {
   publicId: string;
   clientName: string;
@@ -44,6 +46,10 @@ export type AdminDashboardMetrics = {
   directions: DashboardGroupMetric[];
   channels: DashboardGroupMetric[];
   sourceQuality: DashboardSourceQualityMetric[];
+  finance: {
+    proposalTotals: DashboardMoneyTotals;
+    wonTotals: DashboardMoneyTotals;
+  };
   traffic: {
     connected: boolean;
     sessions: number | null;
@@ -63,6 +69,10 @@ type DashboardLead = {
   sourcePage: string | null;
   sourceCta: string | null;
   productInterest: string | null;
+  proposalAmount: number | null;
+  proposalCurrency: string | null;
+  wonAmount: number | null;
+  wonCurrency: string | null;
 };
 
 type DashboardEvent = {
@@ -151,6 +161,19 @@ async function selectRows(table: string, params: URLSearchParams) {
 
 function asString(value: unknown) {
   return typeof value === "string" ? value : null;
+}
+
+function asMoneyAmount(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
 }
 
 function asRecord(value: unknown) {
@@ -340,6 +363,39 @@ function getDirectionMetrics(leads: DashboardLead[]) {
   return metrics;
 }
 
+function createEmptyMoneyTotals(): DashboardMoneyTotals {
+  return {
+    UAH: 0,
+    EUR: 0,
+    USD: 0,
+  };
+}
+
+function addMoney(totals: DashboardMoneyTotals, amount: number | null, currency: string | null) {
+  if (amount === null) {
+    return;
+  }
+
+  if (currency === "EUR" || currency === "USD" || currency === "UAH") {
+    totals[currency] += amount;
+  }
+}
+
+function getFinanceTotals(leads: DashboardLead[]) {
+  const proposalTotals = createEmptyMoneyTotals();
+  const wonTotals = createEmptyMoneyTotals();
+
+  for (const lead of leads) {
+    addMoney(proposalTotals, lead.proposalAmount, lead.proposalCurrency);
+    addMoney(wonTotals, lead.wonAmount, lead.wonCurrency);
+  }
+
+  return {
+    proposalTotals,
+    wonTotals,
+  };
+}
+
 function activityTimestamp(lead: DashboardLead, events: DashboardEvent[]) {
   const eventDates = events
     .filter((event) => event.leadId === lead.id)
@@ -375,6 +431,10 @@ function mapLead(row: SupabaseRow): DashboardLead | null {
     sourcePage: asString(row.source_page),
     sourceCta: asString(row.source_cta),
     productInterest: asString(row.product_interest),
+    proposalAmount: asMoneyAmount(row.proposal_amount),
+    proposalCurrency: asString(row.proposal_currency),
+    wonAmount: asMoneyAmount(row.won_amount),
+    wonCurrency: asString(row.won_currency),
   };
 }
 
@@ -402,7 +462,7 @@ export async function getAdminDashboardMetrics(input?: {
   const rangeStart = getRangeStart(range);
   const leadParams = new URLSearchParams({
     select:
-      "id,public_id,source_page,source_cta,initial_channel,product_interest,status,created_at,updated_at,clients(name)",
+      "id,public_id,source_page,source_cta,initial_channel,product_interest,status,proposal_amount,proposal_currency,won_amount,won_currency,created_at,updated_at,clients(name)",
     order: "created_at.desc",
     limit: "1000",
   });
@@ -472,6 +532,7 @@ export async function getAdminDashboardMetrics(input?: {
   );
   const directions = getDirectionMetrics(leads);
   const channels = groupMetrics(leads, sourceGroup, sourceLabel, totalLeads);
+  const finance = getFinanceTotals(leads);
   const sourceQuality = channels.map((channel) => {
     const channelLeads = leads.filter((lead) => sourceGroup(lead) === channel.key);
     const qualityLeads = channelLeads.filter((lead) => qualityStatuses.has(lead.status)).length;
@@ -499,6 +560,7 @@ export async function getAdminDashboardMetrics(input?: {
     directions,
     channels,
     sourceQuality,
+    finance,
     traffic: {
       connected: false,
       sessions: null,

@@ -49,6 +49,10 @@ export async function updateLeadAction(formData: FormData) {
     timeline: formData.get("timeline"),
     status: formData.get("status"),
     priority: formData.get("priority"),
+    proposalAmount: formData.get("proposalAmount"),
+    proposalCurrency: formData.get("proposalCurrency"),
+    wonAmount: formData.get("wonAmount"),
+    wonCurrency: formData.get("wonCurrency"),
     note: formData.get("note"),
     actorName,
   });

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { isAdminAuthenticated, isDirectorAuthenticated, isDirectorConfigured } from "@/lib/admin/auth";
-import { getAdminDashboardMetrics, type DashboardGroupMetric } from "@/lib/admin/dashboard";
+import {
+  getAdminDashboardMetrics,
+  type DashboardGroupMetric,
+  type DashboardMoneyTotals,
+} from "@/lib/admin/dashboard";
 import { loginAdmin, logoutAdmin } from "../leads/actions";
 
 export const dynamic = "force-dynamic";
@@ -59,6 +63,12 @@ function formatHours(value: number | null) {
   }
 
   return `${value.toFixed(value < 10 ? 1 : 0)} год`;
+}
+
+function formatMoneyValue(value: number) {
+  return new Intl.NumberFormat("uk-UA", {
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 
 function formatDate(value: string) {
@@ -261,6 +271,28 @@ function MarketingValue({ label, value, hint }: { label: string; value: string; 
   );
 }
 
+function FinanceTotalsCard({ title, totals }: { title: string; totals: DashboardMoneyTotals }) {
+  return (
+    <div className="rounded-[10px] border border-[#3A2D22] bg-[#17130F] p-4">
+      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{title}</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {[
+          ["UAH", "грн"],
+          ["EUR", "євро"],
+          ["USD", "долар"],
+        ].map(([currency, label]) => (
+          <div key={currency} className="rounded-[9px] border border-[#3A2D22] bg-[#211B16] p-3">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
+            <p className="mt-2 text-2xl font-bold tabular-nums text-[#F8EFE4]">
+              {formatMoneyValue(totals[currency as keyof DashboardMoneyTotals])}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const rawSearchParams = (await searchParams) ?? {};
   const authReason = firstValue(rawSearchParams.auth);
@@ -357,6 +389,13 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
             <Section title="Канали">
               <BarList items={metrics.channels} />
+            </Section>
+
+            <Section title="Фінанси">
+              <div className="grid gap-3 lg:grid-cols-2">
+                <FinanceTotalsCard title="Сума КП" totals={metrics.finance.proposalTotals} />
+                <FinanceTotalsCard title="Сума виграних угод" totals={metrics.finance.wonTotals} />
+              </div>
             </Section>
 
             <Section title="Маркетинг">
