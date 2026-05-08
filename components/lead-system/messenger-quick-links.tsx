@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 type MessengerChannel = "telegram" | "viber";
 
 type MessengerLink = {
@@ -44,6 +46,11 @@ function ViberIcon() {
 }
 
 function trackMessengerClick(link: MessengerLink, sourceCtaPrefix: string) {
+  trackAnalyticsEvent(`${link.channel}_click`, {
+    source_cta: `${sourceCtaPrefix}_${link.channel}`,
+    placement: sourceCtaPrefix,
+  });
+
   const payload = {
     eventType: "messenger_click",
     channel: link.channel,

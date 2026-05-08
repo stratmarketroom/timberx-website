@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AnalyticsLink } from "../components/analytics-link";
 import { LineIcon } from "../components/home-visuals";
 import type { IconName } from "../components/home-visuals";
 import { MessengerQuickLinks } from "../components/lead-system/messenger-quick-links";
@@ -1005,15 +1006,25 @@ export default function Home() {
               <div className="flex max-w-[30rem] flex-col gap-3 text-[1.03rem] leading-8 text-white/82 lg:items-start">
                 <p>
                   <span className="font-medium text-white/88">Телефон:</span>{" "}
-                  <a href="tel:+380674121310" className="font-medium transition hover:text-[#F2994A]">
+                  <AnalyticsLink
+                    href="tel:+380674121310"
+                    eventName="phone_click"
+                    eventParams={{ placement: "home_footer" }}
+                    className="font-medium transition hover:text-[#F2994A]"
+                  >
                     +380674121310
-                  </a>
+                  </AnalyticsLink>
                 </p>
                 <p>
                   <span className="font-medium text-white/88">Email:</span>{" "}
-                  <a href="mailto:office@timberx.com.ua" className="font-medium transition hover:text-[#F2994A]">
+                  <AnalyticsLink
+                    href="mailto:office@timberx.com.ua"
+                    eventName="email_click"
+                    eventParams={{ placement: "home_footer" }}
+                    className="font-medium transition hover:text-[#F2994A]"
+                  >
                     office@timberx.com.ua
-                  </a>
+                  </AnalyticsLink>
                 </p>
                 <p>
                   <span className="font-medium text-white/88">Офіс:</span> 10001, м. Житомир, проспект

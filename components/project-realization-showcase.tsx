@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type RealizationPhoto = {
   src: string;
@@ -237,7 +238,13 @@ export function ProjectRealizationShowcase({
                   ) : (
                     <button
                       type="button"
-                      onClick={() => setIsVideoPlaying(true)}
+                      onClick={() => {
+                        trackAnalyticsEvent("project_video_play", {
+                          video_title: activeVideo.title,
+                          video_src: activeVideo.src,
+                        });
+                        setIsVideoPlaying(true);
+                      }}
                       className="group relative block h-full w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f2994a]"
                       aria-label={`Запустити відео: ${activeVideo.title}`}
                     >

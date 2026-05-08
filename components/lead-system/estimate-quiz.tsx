@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const productOptions = [
   "Модульні будинки",
@@ -156,6 +157,14 @@ export function EstimateQuiz({
 
       setLeadPublicId(result.leadPublicId);
       setStatus("success");
+      trackAnalyticsEvent("lead_success", {
+        lead_public_id: result.leadPublicId,
+        source_cta: sourceCta,
+        product_interest: productInterest,
+        project_slug: projectSlug,
+        project_category: projectCategory,
+        is_project_estimate: isProjectEstimate,
+      });
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -184,12 +193,26 @@ export function EstimateQuiz({
             href={telegramHref}
             target="_blank"
             rel="noreferrer"
+            onClick={() =>
+              trackAnalyticsEvent("telegram_click", {
+                source_cta: `${sourceCta}_success`,
+                lead_public_id: leadPublicId,
+                placement: "quiz_success",
+              })
+            }
             className="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-[#F2994A] px-5 py-3 text-sm font-bold text-[#1B1D1F] transition hover:bg-[#de8232]"
           >
             Продовжити в Telegram
           </a>
           <a
             href="viber://chat?number=%2B380674121310"
+            onClick={() =>
+              trackAnalyticsEvent("viber_click", {
+                source_cta: `${sourceCta}_success`,
+                lead_public_id: leadPublicId,
+                placement: "quiz_success",
+              })
+            }
             className="inline-flex min-h-12 items-center justify-center rounded-[10px] border border-white/18 px-5 py-3 text-sm font-bold text-white transition hover:border-[#F2994A]/48 hover:bg-white/[0.06]"
           >
             Написати у Viber
@@ -336,7 +359,19 @@ export function EstimateQuizModal({
     <>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          const eventParams = {
+            cta_name: buttonLabel,
+            source_cta: sourceCta ?? "estimate_quiz",
+            project_slug: projectSlug,
+            project_category: projectCategory,
+            product_interest: productInterest,
+          };
+
+          trackAnalyticsEvent("cta_click", eventParams);
+          trackAnalyticsEvent("lead_quiz_start", eventParams);
+          setIsOpen(true);
+        }}
         className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
       >
         {buttonLabel}
