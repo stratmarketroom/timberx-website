@@ -187,6 +187,28 @@ function MetricCard({ label, value, hint }: { label: string; value: string | num
   );
 }
 
+function MoneyMetricCard({ label, totals }: { label: string; totals: DashboardMoneyTotals }) {
+  return (
+    <div className="rounded-[14px] border border-[#4B3828]/80 bg-[#211B16] px-5 py-5 shadow-[0_18px_55px_rgba(0,0,0,0.28)]">
+      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
+      <div className="mt-4 space-y-2">
+        {[
+          ["UAH", "грн"],
+          ["EUR", "євро"],
+          ["USD", "долар"],
+        ].map(([currency, currencyLabel]) => (
+          <div key={currency} className="flex items-baseline justify-between gap-3">
+            <span className="text-sm font-bold uppercase tracking-[0.14em] text-[#B6A89A]">{currencyLabel}</span>
+            <span className="text-2xl font-bold tabular-nums text-[#F8EFE4]">
+              {formatMoneyValue(totals[currency as keyof DashboardMoneyTotals])}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BarList({ items }: { items: DashboardGroupMetric[] }) {
   if (!items.length) {
     return <p className="text-base leading-7 text-[#BEB2A6]">Даних поки немає.</p>;
@@ -271,28 +293,6 @@ function MarketingValue({ label, value, hint }: { label: string; value: string; 
   );
 }
 
-function FinanceTotalsCard({ title, totals }: { title: string; totals: DashboardMoneyTotals }) {
-  return (
-    <div className="rounded-[10px] border border-[#3A2D22] bg-[#17130F] p-4">
-      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{title}</p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        {[
-          ["UAH", "грн"],
-          ["EUR", "євро"],
-          ["USD", "долар"],
-        ].map(([currency, label]) => (
-          <div key={currency} className="rounded-[9px] border border-[#3A2D22] bg-[#211B16] p-3">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
-            <p className="mt-2 text-2xl font-bold tabular-nums text-[#F8EFE4]">
-              {formatMoneyValue(totals[currency as keyof DashboardMoneyTotals])}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const rawSearchParams = (await searchParams) ?? {};
   const authReason = firstValue(rawSearchParams.auth);
@@ -373,10 +373,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           })}
         </nav>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-7">
           <MetricCard label={`Заявки, ${metrics.rangeLabel}`} value={metrics.totalLeads} />
           <MetricCard label="КП" value={proposals} hint="Заявки, що дійшли до комерційної пропозиції." />
+          <MoneyMetricCard label="Сума по КП" totals={metrics.finance.proposalTotals} />
           <MetricCard label="Виграні" value={won} />
+          <MoneyMetricCard label="Сума виграних" totals={metrics.finance.wonTotals} />
           <MetricCard label="Втрачені" value={lost} />
           <MetricCard label="Якість" value={`${qualityPercent}%`} hint="Дійшли до КП або продажу." />
         </div>
@@ -389,13 +391,6 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
             <Section title="Канали">
               <BarList items={metrics.channels} />
-            </Section>
-
-            <Section title="Фінанси">
-              <div className="grid gap-3 lg:grid-cols-2">
-                <FinanceTotalsCard title="Сума КП" totals={metrics.finance.proposalTotals} />
-                <FinanceTotalsCard title="Сума виграних угод" totals={metrics.finance.wonTotals} />
-              </div>
             </Section>
 
             <Section title="Маркетинг">
