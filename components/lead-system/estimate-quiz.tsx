@@ -34,6 +34,14 @@ type LeadResponse = {
   leadPublicId?: string;
 };
 
+type EstimateQuizContext = {
+  projectTitle?: string;
+  projectSlug?: string;
+  projectCategory?: string;
+  productInterest?: string;
+  sourceCta?: string;
+};
+
 function OptionGroup({
   label,
   value,
@@ -74,8 +82,18 @@ function OptionGroup({
   );
 }
 
-export function EstimateQuiz() {
-  const [productInterest, setProductInterest] = useState(productOptions[0]);
+export function EstimateQuiz({
+  projectTitle,
+  projectSlug,
+  projectCategory,
+  productInterest: initialProductInterest,
+  sourceCta = "estimate_quiz",
+}: EstimateQuizContext) {
+  const [productInterest, setProductInterest] = useState(
+    initialProductInterest && productOptions.includes(initialProductInterest)
+      ? initialProductInterest
+      : productOptions[0],
+  );
   const [scale, setScale] = useState(scaleOptions[0]);
   const [timeline, setTimeline] = useState(timelineOptions[1]);
   const [location, setLocation] = useState("");
@@ -110,8 +128,12 @@ export function EstimateQuiz() {
           scale,
           location,
           timeline,
+          projectTitle,
+          projectSlug,
+          projectCategory,
+          projectType: projectTitle,
           sourcePage: window.location.pathname,
-          sourceCta: "estimate_quiz",
+          sourceCta,
         }),
       });
 
@@ -270,8 +292,23 @@ export function EstimateQuiz() {
   );
 }
 
-export function EstimateQuizModal() {
+export function EstimateQuizModal({
+  buttonLabel = "Почати прорахунок",
+  projectTitle,
+  projectSlug,
+  projectCategory,
+  productInterest,
+  sourceCta,
+}: EstimateQuizContext & {
+  buttonLabel?: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const title = projectTitle
+    ? `Розкажіть коротко про проєкт «${projectTitle}»`
+    : "Розкажіть коротко про ваш проєкт";
+  const description = projectTitle
+    ? "Зафіксуємо, який типовий проєкт вас зацікавив, і уточнимо параметри для попереднього прорахунку."
+    : "Відповіді допоможуть менеджеру швидше зорієнтуватися в задачі та повернутися до вас із предметною консультацією.";
 
   return (
     <>
@@ -280,7 +317,7 @@ export function EstimateQuizModal() {
         onClick={() => setIsOpen(true)}
         className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
       >
-        Почати прорахунок
+        {buttonLabel}
       </button>
 
       {isOpen ? (
@@ -314,14 +351,19 @@ export function EstimateQuizModal() {
                 id="estimate-quiz-title"
                 className="mt-3 font-['Montserrat',_Arial,_sans-serif] text-2xl font-bold leading-tight text-white sm:text-3xl"
               >
-                Розкажіть коротко про ваш проєкт
+                {title}
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-white/68">
-                Відповіді допоможуть менеджеру швидше зорієнтуватися в задачі
-                та повернутися до вас із предметною консультацією.
+                {description}
               </p>
             </div>
-            <EstimateQuiz />
+            <EstimateQuiz
+              projectTitle={projectTitle}
+              projectSlug={projectSlug}
+              projectCategory={projectCategory}
+              productInterest={productInterest}
+              sourceCta={sourceCta}
+            />
           </div>
         </div>
       ) : null}

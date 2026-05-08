@@ -10,6 +10,9 @@ export type LeadRequestInput = {
   hasConsent?: unknown;
   productInterest?: unknown;
   projectType?: unknown;
+  projectTitle?: unknown;
+  projectSlug?: unknown;
+  projectCategory?: unknown;
   scale?: unknown;
   location?: unknown;
   timeline?: unknown;
@@ -227,6 +230,9 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
   const audienceType = cleanString(input.audienceType, 220);
   const productInterest = cleanString(input.productInterest, 220);
   const projectType = cleanString(input.projectType, 220);
+  const projectTitle = cleanString(input.projectTitle, 220);
+  const projectSlug = cleanString(input.projectSlug, 220);
+  const projectCategory = cleanString(input.projectCategory, 120);
   const hasConsent = input.hasConsent === true;
 
   if (!rawPhone) {
@@ -272,7 +278,7 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
       source_cta: cleanString(input.sourceCta, 160) ?? "estimate_quiz",
       initial_channel: "site",
       product_interest: productInterest,
-      project_type: projectType,
+      project_type: projectType ?? projectTitle,
       scale: cleanString(input.scale, 220),
       location: cleanString(input.location, 220),
       timeline: cleanString(input.timeline, 220),
@@ -305,7 +311,10 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
         personal_data_consent: hasConsent,
         audience_type: audienceType,
         product_interest: productInterest,
-        project_type: projectType,
+        project_type: projectType ?? projectTitle,
+        project_title: projectTitle,
+        project_slug: projectSlug,
+        project_category: projectCategory,
       },
     },
   });
@@ -323,7 +332,7 @@ export async function createLeadFromQuiz(input: LeadRequestInput) {
 export async function findLeadByPublicId(publicId: string) {
   const rows = await selectSupabaseRows({
     table: "leads",
-    select: "id,public_id,client_id",
+    select: "id,public_id,client_id,source_page,source_cta,product_interest,project_type",
     filters: {
       public_id: publicId,
     },
@@ -340,5 +349,10 @@ export async function findLeadByPublicId(publicId: string) {
     id: row.id,
     publicId: typeof row.public_id === "string" ? row.public_id : publicId,
     clientId: row.client_id,
+    sourcePage: typeof row.source_page === "string" ? row.source_page : null,
+    sourceCta: typeof row.source_cta === "string" ? row.source_cta : null,
+    productInterest:
+      typeof row.product_interest === "string" ? row.product_interest : null,
+    projectType: typeof row.project_type === "string" ? row.project_type : null,
   };
 }

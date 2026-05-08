@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { LineIcon } from "@/components/home-visuals";
 import type { IconName } from "@/components/home-visuals";
+import { EstimateQuizModal } from "@/components/lead-system/estimate-quiz";
 import { ProjectRealizationShowcase } from "@/components/project-realization-showcase";
 import { ProjectVisualSlider } from "@/components/project-visual-slider";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -17,6 +18,18 @@ import { findTypicalProject, modularTypicalProjects } from "@/lib/typical-projec
 const headingClass = "font-['Montserrat',_Arial,_sans-serif] font-bold";
 const bodyClass = "font-['Inter',_Arial,_sans-serif]";
 const technicalSpecIcons: IconName[] = ["settings", "blueprint", "projects", "delivery"];
+
+function getProjectProductInterest(category: string) {
+  if (category === "frame") {
+    return "Каркасно-панельні будинки";
+  }
+
+  if (category === "fachwerk") {
+    return "Фахверк";
+  }
+
+  return "Модульні будинки";
+}
 
 type RouteParams = {
   slug: string;
@@ -487,12 +500,13 @@ export default async function TypicalProjectPage({ params }: RouteProps) {
                 </ul>
 
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-                  <Link
-                    href="/contacts/"
-                    className="inline-flex w-full items-center justify-center rounded bg-[#F2994A] px-6 py-4 text-base font-semibold text-[#1B1D1F] transition hover:bg-[#de8232] sm:w-auto"
-                  >
-                    Почати прорахунок
-                  </Link>
+                  <EstimateQuizModal
+                    projectTitle={project.title}
+                    projectSlug={project.slug}
+                    projectCategory={project.category}
+                    productInterest={getProjectProductInterest(project.category)}
+                    sourceCta="typical_project_estimate"
+                  />
                   <Link
                     href="/modulni-budynky/proekty/"
                     className="inline-flex w-full items-center justify-center rounded border border-white/20 px-6 py-4 text-center text-base font-semibold text-white transition hover:border-white/40 hover:bg-white/5 sm:w-auto"

@@ -305,6 +305,7 @@ async function registerTelegramStart({
   return {
     client,
     created: !existingClient,
+    lead,
   };
 }
 
@@ -339,9 +340,13 @@ export async function handleTelegramUpdate(update: TelegramUpdate) {
       `Користувач: ${userLabel}`,
       `Клієнт у базі: ${registration.client.publicId ?? registration.client.id}`,
       `Статус клієнта: ${registration.created ? "створено" : "знайдено існуючого"}`,
+      registration.lead?.publicId ? `Заявка: ${registration.lead.publicId}` : null,
+      registration.lead?.productInterest ? `Напрям: ${registration.lead.productInterest}` : null,
+      registration.lead?.projectType ? `Проєкт: ${registration.lead.projectType}` : null,
+      registration.lead?.sourcePage ? `Сторінка: ${registration.lead.sourcePage}` : null,
       `Telegram chat_id: ${chat.id}`,
       `Джерело: ${startPayload}`,
-    ].join("\n"),
+    ].filter(Boolean).join("\n"),
   );
 
   return { ok: true, ignored: false, startPayload };
