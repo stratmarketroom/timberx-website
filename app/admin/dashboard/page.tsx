@@ -7,6 +7,7 @@ import {
   type DashboardGroupMetric,
   type DashboardMoneyTotals,
 } from "@/lib/admin/dashboard";
+import { refreshDashboardAnalytics } from "./actions";
 import { loginAdmin, logoutAdmin } from "../leads/actions";
 
 export const dynamic = "force-dynamic";
@@ -78,6 +79,30 @@ function formatDate(value: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
+}
+
+function formatAnalyticsRefreshDate(value: string | null) {
+  if (!value) {
+    return "Ще не оновлювали";
+  }
+
+  return new Intl.DateTimeFormat("uk-UA", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+function analyticsStatusMessage(status: string | undefined, fallback: string) {
+  const messages: Record<string, string> = {
+    ready: "Аналітику оновлено.",
+    limit_reached: "Денний ліміт запитів уже використано.",
+    not_configured: "Google Analytics OAuth env ще не налаштовані.",
+    error: "Не вдалося оновити аналітику. Перевірте env, доступи GA4 і таблицю кешу.",
+  };
+
+  return status ? messages[status] ?? fallback : fallback;
 }
 
 function LoginPanel({ reason }: { reason?: string }) {
@@ -283,9 +308,20 @@ function StatusFlow({
   );
 }
 
+function MarketingValue({ label, value, hint }: { label: string; value: string; hint: string }) {
+  return (
+    <div className="rounded-[10px] border border-[#3A2D22] bg-[#17130F] p-4">
+      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B6A89A]">{label}</p>
+      <p className="mt-3 text-2xl font-bold tracking-normal text-[#F8EFE4]">{value}</p>
+      <p className="mt-2 text-sm font-semibold leading-6 text-[#BEB2A6]">{hint}</p>
+    </div>
+  );
+}
+
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const rawSearchParams = (await searchParams) ?? {};
   const authReason = firstValue(rawSearchParams.auth);
+  const analyticsStatus = firstValue(rawSearchParams.analytics);
   const range = firstValue(rawSearchParams.range);
 
   if (!isDirectorConfigured()) {
@@ -381,6 +417,51 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
             <Section title="Канали">
               <BarList items={metrics.channels} />
+            </Section>
+
+            <Section title="Маркетинг">
+              <div className="grid gap-3 md:grid-cols-3">
+                <MarketingValue
+                  label="Трафік"
+                  value={metrics.traffic.sessions === null ? "Немає даних" : String(metrics.traffic.sessions)}
+                  hint="GA4 після підключення аналітики."
+                />
+                <MarketingValue
+                  label="Конверсія в заявку"
+                  value={
+                    metrics.traffic.leadConversionPercent === null
+                      ? "Немає даних"
+                      : `${metrics.traffic.leadConversionPercent}%`
+                  }
+                  hint="Заявки з сайту / трафік."
+                />
+                <MarketingValue
+                  label="Вартість заявки"
+                  value={metrics.traffic.costPerLead === null ? "Немає даних" : `${metrics.traffic.costPerLead} грн`}
+                  hint="Google Ads + Meta Ads / рекламні заявки."
+                />
+              </div>
+              <div className="mt-4 flex flex-col gap-3 border-t border-[#3A2D22] pt-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-sm font-semibold leading-6 text-[#F2994A]">
+                    {analyticsStatusMessage(analyticsStatus, metrics.traffic.message)}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold leading-6 text-[#BEB2A6]">
+                    Оновлено: {formatAnalyticsRefreshDate(metrics.traffic.refreshedAt)} · Запити сьогодні:{" "}
+                    {metrics.traffic.refreshesToday}/{metrics.traffic.dailyLimit}
+                  </p>
+                </div>
+                <form action={refreshDashboardAnalytics}>
+                  <input type="hidden" name="range" value={metrics.range} />
+                  <button
+                    type="submit"
+                    disabled={metrics.traffic.refreshesToday >= metrics.traffic.dailyLimit}
+                    className="h-11 rounded-[9px] border border-[#F2994A]/70 bg-[#F2994A] px-4 text-base font-bold text-[#25170B] transition hover:bg-[#de8232] disabled:cursor-not-allowed disabled:border-[#4B3828] disabled:bg-[#33281F] disabled:text-[#817568]"
+                  >
+                    Оновити GA4
+                  </button>
+                </form>
+              </div>
             </Section>
           </div>
 

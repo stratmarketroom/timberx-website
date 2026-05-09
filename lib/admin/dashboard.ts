@@ -1,5 +1,7 @@
 import "server-only";
 
+import { getMarketingAnalyticsMetrics, type DashboardTrafficMetrics } from "@/lib/admin/marketing-analytics";
+
 type SupabaseRow = Record<string, unknown>;
 
 export type DashboardRange = "7" | "30" | "90" | "all";
@@ -50,6 +52,7 @@ export type AdminDashboardMetrics = {
     proposalTotals: DashboardMoneyTotals;
     wonTotals: DashboardMoneyTotals;
   };
+  traffic: DashboardTrafficMetrics;
 };
 
 type DashboardLead = {
@@ -527,6 +530,8 @@ export async function getAdminDashboardMetrics(input?: {
   const directions = getDirectionMetrics(leads);
   const channels = groupMetrics(leads, sourceGroup, sourceLabel, totalLeads);
   const finance = getFinanceTotals(leads);
+  const siteLeadCount = leads.filter((lead) => lead.initialChannel !== "admin").length;
+  const traffic = await getMarketingAnalyticsMetrics({ range, siteLeadCount });
   const sourceQuality = channels.map((channel) => {
     const channelLeads = leads.filter((lead) => sourceGroup(lead) === channel.key);
     const qualityLeads = channelLeads.filter((lead) => qualityStatuses.has(lead.status)).length;
@@ -555,5 +560,6 @@ export async function getAdminDashboardMetrics(input?: {
     channels,
     sourceQuality,
     finance,
+    traffic,
   };
 }
