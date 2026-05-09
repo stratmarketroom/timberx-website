@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from "next/script";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { StructuredData } from "@/components/structured-data";
 import {
   absoluteUrl,
@@ -10,8 +10,6 @@ import {
 } from "@/lib/seo-config";
 import { getRootStructuredData } from "@/lib/structured-data";
 import "./globals.css";
-
-const googleAnalyticsId = "G-XDD646T1D0";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -59,18 +57,7 @@ export default function RootLayout({
   return (
     <html lang="uk" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${googleAnalyticsId}');
-          `}
-        </Script>
+        <GoogleAnalytics />
         <StructuredData data={getRootStructuredData()} />
         {children}
       </body>

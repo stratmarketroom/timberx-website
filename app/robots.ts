@@ -5,9 +5,12 @@ import { nonIndexableSeoPages } from "@/lib/seo-pages";
 
 const disallowedPaths = Array.from(
   new Set(
-    nonIndexableSeoPages
-      .filter((page) => page.status === "draft/placeholder" || page.status === "deprecated")
-      .map((page) => page.path),
+    [
+      "/admin/",
+      ...nonIndexableSeoPages
+        .filter((page) => page.status === "draft/placeholder" || page.status === "deprecated")
+        .map((page) => page.path),
+    ],
   ),
 ).sort();
 
