@@ -1,8 +1,20 @@
 import { createLeadEvent } from "@/lib/lead-system/lead-events";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  const clientIp = getClientIp(request);
+  const rateLimit = checkRateLimit({
+    key: `lead-event:${clientIp}`,
+    limit: 60,
+    windowMs: 10 * 60 * 1000,
+  });
+
+  if (!rateLimit.allowed) {
+    return rateLimitResponse(rateLimit);
+  }
+
   let body: unknown;
 
   try {
@@ -40,4 +52,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
