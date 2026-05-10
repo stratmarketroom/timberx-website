@@ -7,7 +7,10 @@ const allowedChannels = new Set([
   "phone",
   "email",
   "whatsapp",
-  "admin",
+]);
+
+const allowedPublicEventTypes = new Set([
+  "messenger_click",
 ]);
 
 export type LeadEventInput = {
@@ -60,6 +63,14 @@ export async function createLeadEvent(input: LeadEventInput) {
     };
   }
 
+  if (!allowedPublicEventTypes.has(eventType)) {
+    return {
+      ok: false as const,
+      status: 400,
+      error: "eventType is invalid",
+    };
+  }
+
   if (!allowedChannels.has(channel)) {
     return {
       ok: false as const,
@@ -94,4 +105,3 @@ export async function createLeadEvent(input: LeadEventInput) {
     createdAt: typeof row?.created_at === "string" ? row.created_at : null,
   };
 }
-
