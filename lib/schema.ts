@@ -1,4 +1,4 @@
-import { absoluteUrl, defaultOgImage, siteName, siteUrl } from "./seo-config";
+import { absoluteUrl, defaultOgImage, siteUrl } from "./seo-config";
 
 type BreadcrumbItem = {
   name: string;
@@ -102,18 +102,14 @@ export function buildServiceSchema(input: ServiceSchemaInput) {
 export function buildProductSchema(input: ProductSchemaInput) {
   return {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": `${absoluteUrl(input.path)}#product`,
+    "@type": "CreativeWork",
+    "@id": `${absoluteUrl(input.path)}#project`,
     name: input.name,
     description: input.description,
     url: absoluteUrl(input.path),
     image: absoluteUrl(input.image?.src ?? defaultOgImage),
-    category: input.category,
-    brand: {
-      "@type": "Brand",
-      name: siteName,
-    },
-    manufacturer: {
+    about: input.category,
+    publisher: {
       "@id": `${siteUrl}/#organization`,
     },
     additionalProperty: input.additionalProperties?.map((property) => ({
